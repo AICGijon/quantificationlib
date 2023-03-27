@@ -1,0 +1,38 @@
+{#
+    basic/localtoc.html
+    ~~~~~~~~~~~~~~~~~~~
+
+    Sphinx sidebar template: local table of contents.
+
+    :copyright: Copyright 2007-2023 by the Sphinx team, see AUTHORS.
+    :license: BSD, see LICENSE for details.
+#}
+
+{# 
+Esto de abajo era lo predefinido pero no mostraba la tabla de contenidos
+si solo habia una sección en la página:
+
+{%- if display_toc %}
+  <div>
+    <h3><a href="{{ pathto(root_doc)|e }}">{{ _('Table of Contents') }}</a></h3>
+    {{ toc }}
+  </div>
+{%- endif %}
+
+#}
+
+{#
+JAIME: Nuevo códogo:
+#}
+
+<h3><a href="{{ pathto(root_doc)|e }}">{{ _('Table of Contents') }}</a></h3>
+{{ toc }}
+
+
+{#
+  JAIME: Esto visualizaria el globaltoc
+
+<h3><a href="{{ pathto(root_doc)|e }}">{{ _('Table of Contents') }}</a></h3>
+{{ toctree() }}
+
+#}
