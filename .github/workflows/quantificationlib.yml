@@ -1,0 +1,28 @@
+name: Build Docs and Open PR
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  docs:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+      # You can test your matrix by printing the current Python version
+    - name: Upgrade pip, install package, install requirements, build docs
+      run: |
+        pip install --upgrade pip
+        pip install .
+        pip install -r ./docs/requirements.txt
+        pip install sphinx
+        sphinx-build docs ./docs/_build/html/
+    - uses: actions/upload-artifact@v1
+      with:
+        name: DocumentationHTML
+        path: docs/_build/html/
+    - uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs/_build/html/ # The folder the action should deploy.
