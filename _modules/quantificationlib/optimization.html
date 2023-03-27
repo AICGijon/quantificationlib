@@ -1,0 +1,607 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.optimization &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.optimization</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.optimization</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Optimization related functions. Needed by those quantifiers that solve optimization problems to compute the</span>
+<span class="sd">estimated prevalence given a testing bag</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cvxpy</span>
+<span class="kn">import</span> <span class="nn">quadprog</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+
+<span class="c1">############</span>
+<span class="c1">#  Functions for solving optimization problems using CVXPY, loss functions: L1, HD</span>
+<span class="c1">############</span>
+<div class="viewcode-block" id="solve_l1"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l1">[docs]</a><span class="k">def</span> <span class="nf">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, PDF and Friedman optimization problems for L1 loss function</span>
+
+<span class="sd">        min   |train_distrib * prevalences - test_distrib|</span>
+<span class="sd">        s.t.  prevalences_i &gt;=0</span>
+<span class="sd">              sum prevalences_i = 1</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_distrib : array, shape depends on the optimization problem</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+<span class="sd">            PDF: shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            AC, PAC, Friedman: shape (n_classes, n_classes)</span>
+
+<span class="sd">        test_distrib : array, shape depends on the optimization problem</span>
+<span class="sd">            Represents the distribution of the testing set</span>
+<span class="sd">            PDF: shape shape (n_bins * n_classes, 1)</span>
+<span class="sd">            AC, PAC, Friedman: shape (n_classes, 1)</span>
+
+<span class="sd">        n_classes : int</span>
+<span class="sd">            Number of classes</span>
+
+<span class="sd">        problem : a cvxpy Problem object (default=None)</span>
+<span class="sd">            The first time a problem is solved (this corresponds to the first testing bag) this parameter is None. For</span>
+<span class="sd">            the rest testing bags, a Problem object is passed here to allow a warm start. This accelerates the solving</span>
+<span class="sd">            process.</span>
+
+<span class="sd">        solver : str, (default=None)</span>
+<span class="sd">            The solver used to solve the optimization problem. cvxpy automatically selects the best solver (among those</span>
+<span class="sd">            installed) according to the type of the optimization problem. If a particular solver is prefered maybe</span>
+<span class="sd">            you need to install additional libraries</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        problem : a cvxpy Problem</span>
+<span class="sd">            A cvxpy Problem already created</span>
+
+<span class="sd">        prevalences : array, shape=(n_classes, )</span>
+<span class="sd">           Vector containing the predicted prevalence for each class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">test_d</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">),</span> <span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">objective</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="n">cvxpy</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">test_d</span> <span class="o">-</span> <span class="n">train_distrib</span> <span class="o">@</span> <span class="n">prevalences</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">test_d</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
+        <span class="n">contraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cvxpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">contraints</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_classes</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">parameters</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">solver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">primal_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="solve_hd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_hd">[docs]</a><span class="k">def</span> <span class="nf">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;ECOS&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for PDF methods using Hellinger Distance</span>
+
+<span class="sd">        This method just uses cvxpy library</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_distrib : array, shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+
+<span class="sd">        test_distrib : array, shape (n_bins * n_classes, 1)</span>
+<span class="sd">            Represents the distribution of the testing set</span>
+
+<span class="sd">        n_classes : int</span>
+<span class="sd">            Number of classes</span>
+
+<span class="sd">        problem : a cvxpy Problem object (default=None)</span>
+<span class="sd">            The first time a problem is solved (this corresponds to the first testing bag) this parameter is None. For</span>
+<span class="sd">            the rest testing bags, a Problem object is passed here to allow a warm start. This accelerates the solving</span>
+<span class="sd">            process.</span>
+
+<span class="sd">        solver : str, (default=&#39;ECOS&#39;)</span>
+<span class="sd">            The solver used to solve the optimization problem. Here &#39;ECOS&#39; is used. If another solver is prefered,</span>
+<span class="sd">            you may need to install additional libraries</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        prevalences : array, shape=(n_classes, )</span>
+<span class="sd">            Vector containing the predicted prevalence for each class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">test_d</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">),</span> <span class="n">nonneg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="n">test_d</span><span class="p">,</span> <span class="n">train_distrib</span> <span class="o">@</span> <span class="n">prevalences</span><span class="p">)</span>
+        <span class="n">test_d</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
+        <span class="n">objective</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Minimize</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cvxpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">)))</span>
+        <span class="n">contraints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cvxpy</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">problem</span> <span class="o">=</span> <span class="n">cvxpy</span><span class="o">.</span><span class="n">Problem</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">contraints</span><span class="p">)</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">feastol</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_classes</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">parameters</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
+        <span class="n">problem</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">warm_start</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="n">solver</span><span class="p">,</span> <span class="n">feastol</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">primal_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1">############</span>
+<span class="c1">#  Functions for solving optimization problems using QUADPROG (L2 loss function)</span>
+<span class="c1">############</span>
+<div class="viewcode-block" id="solve_l2"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l2">[docs]</a><span class="k">def</span> <span class="nf">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, PDF and Friedman optimization problems for L2 loss function</span>
+
+<span class="sd">        min    (test_distrib - train_distrib * prevalences).T (test_distrib - train_distrib * prevalences)</span>
+<span class="sd">        s.t.   prevalences_i &gt;=0</span>
+<span class="sd">               sum prevalences_i = 1</span>
+
+<span class="sd">        Expanding the objective function, we obtain:</span>
+
+<span class="sd">        prevalences.T train_distrib.T train_distrib prevalences</span>
+<span class="sd">        - 2 prevalences train_distrib.T test_distrib + test_distrib.T test_distrib</span>
+
+<span class="sd">        Notice that the last term is constant w.r.t prevalences.</span>
+
+<span class="sd">        Let G = 2 train_distrib.T train_distrib  and a = 2 * train_distrib.T test_distrib, we can use directly</span>
+<span class="sd">        quadprog.solve_qp because it solves the following kind of problems:</span>
+
+<span class="sd">        Minimize     1/2 x^T G x - a^T x</span>
+<span class="sd">        Subject to   C.T x &gt;= b</span>
+
+<span class="sd">        `solve_l2` just computes the term a, shape (n_classes,1), and then calls quadprog.solve_qp.</span>
+<span class="sd">        G, C and b were computed by `compute_l2_param_train` before, in the &#39;fit&#39; method` of the PDF/Friedman object.</span>
+<span class="sd">        quadprog is used here because it is faster than cvxpy.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_distrib : array, shape depends on the optimization problem</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+<span class="sd">            PDF: shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            AC, PAC Friedman: shape (n_classes, n_classes)</span>
+
+<span class="sd">        test_distrib : array, shape depends on the optimization problem</span>
+<span class="sd">            Represents the distribution of the testing set</span>
+<span class="sd">            PDF: shape shape (n_bins * n_classes, 1)</span>
+<span class="sd">            AC, PAC, Friedman: shape (n_classes, 1)</span>
+
+<span class="sd">        G : array, shape (n_classes, n_classes)</span>
+
+<span class="sd">        C : array, shape (n_classes, n_constraints)</span>
+<span class="sd">            n_constraints will be n_classes + 1</span>
+
+<span class="sd">        b : array, shape (n_constraints,)</span>
+
+<span class="sd">        G, C and b are computed by `compute_l2_param_train` in the &#39;fit&#39; method</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        prevalences : array, shape=(n_classes, )</span>
+<span class="sd">           Vector containing the predicted prevalence for each class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">train_distrib</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="n">prevalences</span> <span class="o">=</span> <span class="n">quadprog</span><span class="o">.</span><span class="n">solve_qp</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">,</span> <span class="n">meq</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="compute_l2_param_train"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_l2_param_train">[docs]</a><span class="k">def</span> <span class="nf">compute_l2_param_train</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving PDF optimization problems using</span>
+<span class="sd">        L2 loss function</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        train_distrib : array, shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+
+<span class="sd">        classes : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        G : array, shape (n_classes, n_classes)</span>
+
+<span class="sd">        C : array, shape (n_classes, n_constraints)</span>
+<span class="sd">            n_constraints will be n_classes + 1  (n_classes constraints to guarantee that prevalences_i&gt;=0, and</span>
+<span class="sd">            an additional constraints for ensuring that sum(prevalences)==1</span>
+
+<span class="sd">        b : array, shape (n_constraints,)</span>
+
+<span class="sd">        quadprog.solve_qp solves the following kind of problems:</span>
+
+<span class="sd">        Minimize     1/2 x^T G x  a^T x</span>
+<span class="sd">        Subject to   C.T x &gt;= b</span>
+
+<span class="sd">        Thus, the values of G, C and b must be the following</span>
+
+<span class="sd">        G = train_distrib.T train_distrib</span>
+<span class="sd">        C = [[ 1, 1, ...,  1],</span>
+<span class="sd">             [ 1, 0, ...,  0],</span>
+<span class="sd">             [ 0, 1, 0,.., 0],</span>
+<span class="sd">             ...</span>
+<span class="sd">             [ 0, 0, ..,0, 1]].T</span>
+<span class="sd">        C shape (n_classes+1, n_classes)</span>
+<span class="sd">        b = [1, 0, ..., 0]</span>
+<span class="sd">        b shape (n_classes, )</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">train_distrib</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_pd</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nearest_pd</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="c1">#  constraints, sum prevalences = 1, every prevalence &gt;=0</span>
+    <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span></div>
+
+
+<span class="c1">############</span>
+<span class="c1"># Functions to check if a matrix is positive definite and to compute the nearest positive definite matrix</span>
+<span class="c1"># if it is not</span>
+<span class="c1">############</span>
+<div class="viewcode-block" id="nearest_pd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.nearest_pd">[docs]</a><span class="k">def</span> <span class="nf">nearest_pd</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Find the nearest positive-definite matrix to input</span>
+
+<span class="sd">        A Python/Numpy port of John D&#39;Errico&#39;s `nearestSPD` MATLAB code [1], which credits [2].</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        [1] https://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd</span>
+
+<span class="sd">        [2] N.J. Higham, &quot;Computing a nearest symmetric positive semidefinite</span>
+<span class="sd">        matrix&quot; (1988): https://doi.org/10.1016/0024-3795(88)90223-6</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">+</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+
+    <span class="n">H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">s</span><span class="p">),</span> <span class="n">V</span><span class="p">))</span>
+
+    <span class="n">A2</span> <span class="o">=</span> <span class="p">(</span><span class="n">B</span> <span class="o">+</span> <span class="n">H</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="n">A3</span> <span class="o">=</span> <span class="p">(</span><span class="n">A2</span> <span class="o">+</span> <span class="n">A2</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+
+    <span class="k">if</span> <span class="n">is_pd</span><span class="p">(</span><span class="n">A3</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">A3</span>
+
+    <span class="n">spacing</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">spacing</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">A</span><span class="p">))</span>
+    <span class="c1"># The above is different from [1]. It appears that MATLAB&#39;s `chol` Cholesky</span>
+    <span class="c1"># decomposition will accept matrixes with exactly 0-eigenvalue, whereas</span>
+    <span class="c1"># Numpy&#39;s will not. So where [1] uses `eps(mineig)` (where `eps` is Matlab</span>
+    <span class="c1"># for `np.spacing`), we use the above definition. CAVEAT: our `spacing`</span>
+    <span class="c1"># will be much larger than [1]&#39;s `eps(mineig)`, since `mineig` is usually on</span>
+    <span class="c1"># the order of 1e-16, and `eps(1e-16)` is on the order of 1e-34, whereas</span>
+    <span class="c1"># `spacing` will, for Gaussian random matrixes of small dimension, be on</span>
+    <span class="c1"># othe order of 1e-16. In practice, both ways converge, as the unit test</span>
+    <span class="c1"># below suggests.</span>
+    <span class="n">indendity_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">is_pd</span><span class="p">(</span><span class="n">A3</span><span class="p">):</span>
+        <span class="n">mineig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvals</span><span class="p">(</span><span class="n">A3</span><span class="p">)))</span>
+        <span class="n">A3</span> <span class="o">+=</span> <span class="n">indendity_matrix</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">mineig</span> <span class="o">*</span> <span class="n">k</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">spacing</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">A3</span></div>
+
+
+<div class="viewcode-block" id="dpofa"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.dpofa">[docs]</a><span class="k">def</span> <span class="nf">dpofa</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Factors a symmetric positive definite matrix</span>
+
+<span class="sd">        This is a version of the dpofa function included in quadprog library. Here, it is mainly used to check</span>
+<span class="sd">        whether a matrix is positive definite or not</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m : symmetric matrix, typically the shape is (n_classes, n_classes)</span>
+<span class="sd">            The matrix to be factored. Only the diagonal and upper triangle are used</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        k : int,</span>
+<span class="sd">            == 0  m is positive definite and the factorization has been completed</span>
+<span class="sd">            &gt;  0  the leading minor of order k is not positive definite</span>
+
+<span class="sd">        r : array, an upper triangular matrix</span>
+<span class="sd">            When k==0, the factorization is complete and r.T.dot(r) == m</span>
+<span class="sd">            The strict lower triangle is unaltered (it is equal to the strict lower triangle of matrix m), so it</span>
+<span class="sd">            could be different from 0.</span>
+<span class="sd">   &quot;&quot;&quot;</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">):</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">])</span>
+                <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">s</span>
+        <span class="k">if</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">r</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span></div>
+
+
+<div class="viewcode-block" id="is_pd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.is_pd">[docs]</a><span class="k">def</span> <span class="nf">is_pd</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks whether a matrix is positive definite or not</span>
+
+<span class="sd">        It is based on dpofa function, a version of the dpofa function included in quadprog library. When dpofa</span>
+<span class="sd">        returns 0 the matrix is positive definite.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        m : symmetric matrix, typically the shape is (n_classes, n_classes)</span>
+<span class="sd">            The matrix to check whether it is positive definite or not</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        A boolean, True when m is positive definite and False otherwise</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">dpofa</span><span class="p">(</span><span class="n">m</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+<span class="c1">############</span>
+<span class="c1"># Functions for solving ED-based methods based on QUADPROG</span>
+<span class="c1">############</span>
+<div class="viewcode-block" id="solve_ed"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_ed">[docs]</a><span class="k">def</span> <span class="nf">solve_ed</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for ED-based quantifiers</span>
+
+<span class="sd">        It just calls `quadprog.solve_qp` with the appropriate parameters. These paremeters were computed</span>
+<span class="sd">        before by calling `compute_ed_param_train` and `compute_ed_param_test`.</span>
+<span class="sd">        In the derivation of the optimization problem, the last class is put in terms of the rest of classes. Thus,</span>
+<span class="sd">        we have to add 1-prevalences.sum() which it is the prevalence of the last class</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        G : array, shape (n_classes, n_classes)</span>
+
+<span class="sd">        C : array, shape (n_classes, n_constraints)</span>
+<span class="sd">            n_constraints will be n_classes + 1</span>
+
+<span class="sd">        b : array, shape (n_constraints,)</span>
+
+<span class="sd">        a : array, shape (n_classes, )</span>
+
+<span class="sd">        G, C and b are computed by `compute_ed_param_train` and a by `compute_ed_param_test`</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        prevalences : array, shape=(n_classes, )</span>
+<span class="sd">           Vector containing the predicted prevalence for each class</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,</span>
+<span class="sd">        Juan José del Coz: An analysis of quantification methods based on matching distributions</span>
+
+<span class="sd">        Hideko Kawakubo, Marthinus Christoffel Du Plessis, and Masashi Sugiyama. 2016. Computationally efficient</span>
+<span class="sd">        class-prior estimation under class balance change using energy distance. Transactions on Information</span>
+<span class="sd">        and Systems 99, 1 (2016), 176–186.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">sol</span> <span class="o">=</span> <span class="n">quadprog</span><span class="o">.</span><span class="n">solve_qp</span><span class="p">(</span><span class="n">G</span><span class="o">=</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">a</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">prevalences</span> <span class="o">=</span> <span class="n">sol</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># the last class was removed from the problem, its prevalence is 1 - the sum of prevalences for the other classes</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="compute_ed_param_train"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_train">[docs]</a><span class="k">def</span> <span class="nf">compute_ed_param_train</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving ED-problems using `quadprog.solve_qp`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distance_func : function</span>
+<span class="sd">            The function used to measure the distance between each pair of examples</span>
+
+<span class="sd">        train_distrib : array, shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+
+<span class="sd">        classes : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        n_cls_i: ndarray, shape (n_classes, )</span>
+<span class="sd">            The number of examples of each class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        K : array, shape (n_classes, n_classes)</span>
+<span class="sd">            Average distance between each pair of classes in the training set</span>
+
+<span class="sd">        G : array, shape (n_classes - 1, n_classes - 1)</span>
+
+<span class="sd">        C : array, shape (n_classes - 1, n_constraints)</span>
+<span class="sd">            n_constraints will be equal to the number of classes (n_classes)</span>
+
+<span class="sd">        b : array, shape (n_constraints,)</span>
+
+<span class="sd">        See references below for further details</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,</span>
+<span class="sd">        Juan José del Coz: An analysis of quantification methods based on matching distributions</span>
+
+<span class="sd">        Hideko Kawakubo, Marthinus Christoffel Du Plessis, and Masashi Sugiyama. 2016. Computationally efficient</span>
+<span class="sd">        class-prior estimation under class balance change using energy distance. Transactions on Information</span>
+<span class="sd">        and Systems 99, 1 (2016), 176–186.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+    <span class="c1">#  computing sum de distances for each pair of classes</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+        <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">train_distrib</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">):</span>
+            <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">train_distrib</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">j</span><span class="p">]])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">K</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+    <span class="c1">#  average distance</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">K</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n_cls_i</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="n">i</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1">#  computing the terms for the optimization problem</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_pd</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
+        <span class="n">G</span> <span class="o">=</span> <span class="n">nearest_pd</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+
+    <span class="n">C</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)),</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span></div>
+
+
+<div class="viewcode-block" id="compute_ed_param_test"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_test">[docs]</a><span class="k">def</span> <span class="nf">compute_ed_param_test</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the test distribution for solving ED-problems using `quadprog.solve_qp`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distance_func : function</span>
+<span class="sd">            The function used to measure the distance between each pair of examples</span>
+
+<span class="sd">        train_distrib : array, shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            Represents the distribution of each class in the training set</span>
+
+<span class="sd">        test_distrib : array, shape (n_bins * n_classes, 1)</span>
+<span class="sd">            Represents the distribution of the testing set</span>
+
+<span class="sd">        K : array, shape (n_classes, n_classes)</span>
+<span class="sd">            Average distance between each pair of classes in the training set</span>
+
+<span class="sd">        classes : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        n_cls_i: ndarray, shape (n_classes, )</span>
+<span class="sd">            The number of examples of each class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        a : array, shape (n_classes, )</span>
+<span class="sd">            Term a for solving optimization problems using `quadprog.solve_qp`</span>
+
+<span class="sd">        See references below for further details</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,</span>
+<span class="sd">        Juan José del Coz: An analysis of quantification methods based on matching distributions</span>
+
+<span class="sd">        Hideko Kawakubo, Marthinus Christoffel Du Plessis, and Masashi Sugiyama. 2016. Computationally efficient</span>
+<span class="sd">        class-prior estimation under class balance change using energy distance. Transactions on Information</span>
+<span class="sd">        and Systems 99, 1 (2016), 176–186.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+    <span class="n">Kt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span><span class="p">):</span>
+        <span class="n">Kt</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance_func</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">[</span><span class="n">classes</span><span class="p">[</span><span class="n">i</span><span class="p">]],</span> <span class="n">test_distrib</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="n">Kt</span> <span class="o">=</span> <span class="n">Kt</span> <span class="o">/</span> <span class="p">(</span><span class="n">n_cls_i</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)))</span>
+
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span> <span class="n">Kt</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Kt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">a</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.optimization</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

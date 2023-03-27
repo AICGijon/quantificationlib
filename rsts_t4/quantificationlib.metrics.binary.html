@@ -1,0 +1,338 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.metrics.binary module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.metrics.multiclass module" href="quantificationlib.metrics.multiclass.html" />
+    <link rel="prev" title="quantificationlib.metrics package" href="quantificationlib.metrics.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.multiclass.html" title="quantificationlib.metrics.multiclass module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.html" title="quantificationlib.metrics package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.metrics.html" accesskey="U">quantificationlib.metrics package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.binary module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.metrics.binary">
+<span id="quantificationlib-metrics-binary-module"></span><h1>quantificationlib.metrics.binary module<a class="headerlink" href="#module-quantificationlib.metrics.binary" title="Permalink to this heading">¶</a></h1>
+<p>Score functions and loss functions for binary quantification problems</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.absolute_error">
+<span class="sig-name descname"><span class="pre">absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.absolute_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary version of the absolute error</p>
+<p>Absolute difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(ae = | \hat{p} - p |\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>absolute error</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p |\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.bias">
+<span class="sig-name descname"><span class="pre">bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.bias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bias of a binary quantifier</p>
+<p>It is just the difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(bias = \hat{p} - p\)</span></p>
+</div></blockquote>
+<p>It measures whether the binary quantifier tends to overestimate or underestimate the proportion of positives</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bias</strong> – It is equal to <span class="math notranslate nohighlight">\(\hat{p} - p\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.binary_kld">
+<span class="sig-name descname"><span class="pre">binary_kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#binary_kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.binary_kld" title="Permalink to this definition">¶</a></dt>
+<dd><p>A binary version of the Kullback - Leiber divergence (KLD)</p>
+<blockquote>
+<div><p>:math:<a href="#id1"><span class="problematic" id="id2">`</span></a>kld = p cdot log(p/hat{p}) + (1-p) cdot log((1-p)/(1-hat{p}))</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>array_like</em><em>, </em><em>shape =</em><em> (</em><em>n_classes</em><em>)</em>) – True prevalences</p></li>
+<li><p><strong>p_pred</strong> (<em>array_like</em><em>, </em><em>shape =</em><em> (</em><em>n_classes</em><em>)</em>) – Predicted prevalences.</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-12</em><em>)</em>) – To prevent a division by zero exception</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KLD</strong> – It is equal to <span class="math notranslate nohighlight">\(p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.normalized_absolute_score">
+<span class="sig-name descname"><span class="pre">normalized_absolute_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_absolute_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_absolute_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>A score version of the normalized binary absolute error</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(nas = 1 - | \hat{p} - p | / max(p, 1-p)\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NAS</strong> – It is equal to <span class="math notranslate nohighlight">\(1 - | \hat{p} - p | / max(p, 1-p)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.normalized_squared_score">
+<span class="sig-name descname"><span class="pre">normalized_squared_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_squared_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_squared_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>A score version of the normalized binary squared error</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(nss = 1 - ( (\hat{p} - p) / max(p, 1-p) )^2\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NSS</strong> – It is equal to <span class="math notranslate nohighlight">\(1 - ( (\hat{p} - p) / max(p, 1-p) )^2\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.relative_absolute_error">
+<span class="sig-name descname"><span class="pre">relative_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#relative_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.relative_absolute_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>A binary relative version of the absolute error</p>
+<p>It is the relation between the absolute error and the true prevalence.</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(rae = | \hat{p} - p | / p\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+<li><p><strong>eps</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-12</em><em>)</em>) – To prevent a division by zero exception</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>relative_absolute_error</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p | / p\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.squared_error">
+<span class="sig-name descname"><span class="pre">squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.squared_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Binary version of the squared error. Only the prevalence of the positive class is used</p>
+<p>It is the quadratic difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and
+the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(se = (\hat{p} - p)^2\)</span></p>
+</div></blockquote>
+<p>It penalizes larger errors</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>squared_error</strong> – It is equal to <span class="math notranslate nohighlight">\((\hat{p} - p)^2\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.binary.symmetric_absolute_percentage_error">
+<span class="sig-name descname"><span class="pre">symmetric_absolute_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#symmetric_absolute_percentage_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.symmetric_absolute_percentage_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>A symmetric binary version of RAE</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(sape = | \hat{p} - p | / (\hat{p} + p)\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>float</em>) – True prevalence for the positive class</p></li>
+<li><p><strong>p_pred</strong> (<em>float</em>) – Predicted prevalence for the positive class</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>SAPE</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p | / (\hat{p} + p)\)</span></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.metrics.binary module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.absolute_error"><code class="docutils literal notranslate"><span class="pre">absolute_error()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.bias"><code class="docutils literal notranslate"><span class="pre">bias()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.binary_kld"><code class="docutils literal notranslate"><span class="pre">binary_kld()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.normalized_absolute_score"><code class="docutils literal notranslate"><span class="pre">normalized_absolute_score()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.normalized_squared_score"><code class="docutils literal notranslate"><span class="pre">normalized_squared_score()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.relative_absolute_error"><code class="docutils literal notranslate"><span class="pre">relative_absolute_error()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.squared_error"><code class="docutils literal notranslate"><span class="pre">squared_error()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.binary.symmetric_absolute_percentage_error"><code class="docutils literal notranslate"><span class="pre">symmetric_absolute_percentage_error()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.html"
+                          title="previous chapter">quantificationlib.metrics package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.multiclass.html"
+                          title="next chapter">quantificationlib.metrics.multiclass module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.metrics.binary.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.multiclass.html" title="quantificationlib.metrics.multiclass module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.html" title="quantificationlib.metrics package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.metrics.html" >quantificationlib.metrics package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.binary module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

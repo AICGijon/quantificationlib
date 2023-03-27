@@ -1,0 +1,168 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.multiclass package &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.multiclass.df module" href="quantificationlib.multiclass.df.html" />
+    <link rel="prev" title="quantificationlib.metrics.ordinal module" href="quantificationlib.metrics.ordinal.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.df.html" title="quantificationlib.multiclass.df module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.ordinal.html" title="quantificationlib.metrics.ordinal module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.multiclass">
+<span id="quantificationlib-multiclass-package"></span><h1>quantificationlib.multiclass package<a class="headerlink" href="#module-quantificationlib.multiclass" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.df.html">quantificationlib.multiclass.df module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFX"><code class="docutils literal notranslate"><span class="pre">DFX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFy"><code class="docutils literal notranslate"><span class="pre">DFy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.HDX"><code class="docutils literal notranslate"><span class="pre">HDX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.HDy"><code class="docutils literal notranslate"><span class="pre">HDy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.MMy"><code class="docutils literal notranslate"><span class="pre">MMy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.compute_bincuts"><code class="docutils literal notranslate"><span class="pre">compute_bincuts()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.em.html">quantificationlib.multiclass.em module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.em.html#quantificationlib.multiclass.em.EM"><code class="docutils literal notranslate"><span class="pre">EM</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.energy.html">quantificationlib.multiclass.energy module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.energy.html#quantificationlib.multiclass.energy.CvMy"><code class="docutils literal notranslate"><span class="pre">CvMy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.energy.html#quantificationlib.multiclass.energy.EDX"><code class="docutils literal notranslate"><span class="pre">EDX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.energy.html#quantificationlib.multiclass.energy.EDy"><code class="docutils literal notranslate"><span class="pre">EDy</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.friedman.html">quantificationlib.multiclass.friedman module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.friedman.html#quantificationlib.multiclass.friedman.FriedmanME"><code class="docutils literal notranslate"><span class="pre">FriedmanME</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.knn.html">quantificationlib.multiclass.knn module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.knn.html#quantificationlib.multiclass.knn.PWKQuantifier"><code class="docutils literal notranslate"><span class="pre">PWKQuantifier</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.multiclass.regression.html">quantificationlib.multiclass.regression module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG"><code class="docutils literal notranslate"><span class="pre">REG</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX"><code class="docutils literal notranslate"><span class="pre">REGX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy"><code class="docutils literal notranslate"><span class="pre">REGy</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.multiclass package</a></li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.ordinal.html"
+                          title="previous chapter">quantificationlib.metrics.ordinal module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.multiclass.df.html"
+                          title="next chapter">quantificationlib.multiclass.df module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.multiclass.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.df.html" title="quantificationlib.multiclass.df module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.ordinal.html" title="quantificationlib.metrics.ordinal module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

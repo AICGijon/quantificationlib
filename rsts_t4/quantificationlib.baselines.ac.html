@@ -1,0 +1,654 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.baselines.ac module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.baselines.cc module" href="quantificationlib.baselines.cc.html" />
+    <link rel="prev" title="quantificationlib.baselines package" href="quantificationlib.baselines.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.baselines.cc.html" title="quantificationlib.baselines.cc module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.baselines.html" title="quantificationlib.baselines package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.baselines.html" accesskey="U">quantificationlib.baselines package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.baselines.ac module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.baselines.ac">
+<span id="quantificationlib-baselines-ac-module"></span><h1>quantificationlib.baselines.ac module<a class="headerlink" href="#module-quantificationlib.baselines.ac" title="Permalink to this heading">¶</a></h1>
+<p>Multiclass versions of AC and PAC quantifiers</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#AC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.AC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Multiclass Adjusted Count method</p>
+<p>This class works in two different ways:</p>
+<ol class="arabic simple">
+<li><p>Two estimators are used to classify the examples of the training set and the testing set in order to
+compute the confusion matrix of both sets. Estimators can be already trained</p></li>
+<li><p>You can directly provide the predictions for the examples in the <cite>fit</cite>/<a href="#id1"><span class="problematic" id="id2">`</span></a>predict methods. This is useful
+for synthetic/artificial experiments</p></li>
+</ol>
+<p>The idea in both cases is to guarantee that all methods based on distribution matching are using <strong>exactly</strong>
+the same predictions when you compare this kind of quantifiers (and others that also employ an underlying
+classifier, for instance, CC/PCC). In the first case, estimators are only trained once and can be shared
+for several quantifiers of this kind</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict</cite>. It is used to classify the examples of the training
+set and to compute the confusion matrix</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict</cite>. It is used to classify the examples of the testing
+set and to obtain their predictions</p></li>
+<li><p><strong>distance</strong> (<em>str</em><em>, </em><em>representing the distance function</em><em> (</em><em>default='HD'</em><em>)</em>) – It is the name of the distance used to compute the difference between the mixture of the training
+distribution and the testing distribution. Only used in multiclass problems.
+Distances supported: ‘HD’, ‘L2’ and ‘L1’</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimators could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because AC quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id13"><span class="problematic" id="id14">predictions_test_</span></a> contains crisp predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, False</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, ) (crisp estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, ) (crisp estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id17"><span class="problematic" id="id18">y_ext_</span></a> == y.
+<a href="#id19"><span class="problematic" id="id20">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id21"><span class="problematic" id="id22">predictions_train_</span></a>, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.cm_">
+<span class="sig-name descname"><span class="pre">cm_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.cm_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confusion matrix. The true classes are in the rows and the predicted classes in the columns. So, for
+the binary case, the count of true negatives is cm_[0,0], false negatives is cm_[1,0],
+true positives is cm_[1,1] and false positives is cm_[0,1] .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">G_,</span> <span class="pre">C_,</span> <span class="pre">b_</span></span></dt>
+<dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+using <cite>quadprog.solve_qp</cite>. See <cite>compute_l2_param_train</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>variables of different kind for defining the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.problem_">
+<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.problem_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
+predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
+case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
+solving process is faster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a cvxpy Problem object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.AC.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
+must be not None. If both are None a ValueError exception will be raised. If both are not None,
+predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
+<p>George Forman. 2008. Quantifying counts and costs via classification. Data Mining Knowledge Discovery 17,
+2 (2008), 164–206.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#AC.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.AC.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
+testing set (if needed), and 2) computes <a href="#id23"><span class="problematic" id="id24">predictions_train_</span></a> (crisp values) if needed. Both operations are
+performed by the <cite>fit</cite> method of its superclass.
+Finally the method computes the confusion matrix of the training set using <a href="#id25"><span class="problematic" id="id26">predictions_train_</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>) or </em><em>(</em><em>n_examples</em><em>, </em><em>n_classes</em><em>)</em>) – Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are
+converted to crisp values by <a href="#id3"><span class="problematic" id="id4">`</span></a>super().fit()</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_train and predictions_train are both None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.AC.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#AC.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.AC.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>First, <a href="#id27"><span class="problematic" id="id28">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<cite>super().predict()</cite> method.</p>
+<p>After that, the prevalences are computed solving a system of linear scalar equations:</p>
+<blockquote>
+<div><p><a href="#id29"><span class="problematic" id="id30">cm_</span></a>.T * prevalences = CC(X)</p>
+</div></blockquote>
+<p>For binary problems the system is directly solved using the original AC algorithm proposed by Forman</p>
+<blockquote>
+<div><p>p = (p_0 - fpr ) / ( tpr - fpr)</p>
+</div></blockquote>
+<p>For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
+optimization problem of this kind:</p>
+<blockquote>
+<div><p>Min   distance ( <a href="#id31"><span class="problematic" id="id32">cm_</span></a>.T * prevalences, CC(X) )
+s.t.  sum(prevalences) = 1</p>
+<blockquote>
+<div><p>prevalecences_i &gt;= 0</p>
+</div></blockquote>
+</div></blockquote>
+<p>in which distance can be ‘HD’ (defect value), ‘L1’ or ‘L2’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <a href="#id5"><span class="problematic" id="id6">`</span></a>predict_proba method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id33"><span class="problematic" id="id34">predictions_test_</span></a> and used.
+If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
+method of estimator_test (it must be an actual estimator)</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_test and predictions_test are both None</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PAC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L2'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#PAC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.PAC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Multiclass Probabilistic Adjusted Count method</p>
+<p>This class works in two different ways:</p>
+<ol class="arabic simple">
+<li><p>Two estimators are used to classify the examples of the training set and the testing set in order to
+compute the (probabilistic) confusion matrix of both sets. Estimators can be already trained</p></li>
+<li><p>You can directly provide the predictions for the examples in the <cite>fit</cite>/<a href="#id7"><span class="problematic" id="id8">`</span></a>predict methods. This is useful
+for synthetic/artificial experiments</p></li>
+</ol>
+<p>The idea in both cases is to guarantee that all methods based on distribution matching are using <strong>exactly</strong>
+the same predictions when you compare this kind of quantifiers (and others that also employ an underlying
+classifier, for instance, CC/PCC). In the first case, estimators are only trained once and can be shared
+for several quantifiers of this kind</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+training set and to compute the confusion matrix</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to obtain the confusion matrix of the testing set</p></li>
+<li><p><strong>distance</strong> (<em>str</em><em>, </em><em>representing the distance function</em><em> (</em><em>default='L2'</em><em>)</em>) – It is the name of the distance used to compute the difference between the mixture of the training
+distribution and the testing distribution. Only used in multiclass problems.
+Distances supported: ‘HD’, ‘L2’ and ‘L1’</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimators could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilistic estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilistic estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because PAC quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id35"><span class="problematic" id="id36">predictions_test_</span></a> contains probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id37"><span class="problematic" id="id38">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id39"><span class="problematic" id="id40">y_ext_</span></a> == y.
+<a href="#id41"><span class="problematic" id="id42">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id43"><span class="problematic" id="id44">predictions_train_</span></a>, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="simple">
+<dt><a href="#id45"><span class="problematic" id="id46">cm_</span></a><span class="classifier">ndarray, shape (n_classes, n_classes)</span></dt><dd><p>Confusion matrix</p>
+</dd>
+<dt><a href="#id47"><span class="problematic" id="id48">G_</span></a>, <a href="#id49"><span class="problematic" id="id50">C_</span></a>, <a href="#id51"><span class="problematic" id="id52">b_</span></a>: variables of different kind for defining the optimization problem</dt><dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+using <cite>quadprog.solve_qp</cite>. See <cite>compute_l2_param_train</cite> function</p>
+</dd>
+<dt><a href="#id53"><span class="problematic" id="id54">problem_</span></a><span class="classifier">a cvxpy Problem object</span></dt><dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
+predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
+case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
+solving process is faster.</p>
+</dd>
+<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
+must be not None. If both are None a ValueError exception will be raised. If both are not None,
+predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
+<p>Antonio Bella, Cèsar Ferri, José Hernández-Orallo, and María José Ramírez-Quintana. 2010. Quantification
+via probability estimators. In Proceedings of the IEEE International Conference on Data Mining (ICDM’10).
+IEEE, 737–742.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#PAC.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
+testing set (if needed), and 2) computes <a href="#id55"><span class="problematic" id="id56">predictions_train_</span></a> (probabilities) if needed. Both operations are
+performed by the <a href="#id9"><span class="problematic" id="id10">`</span></a>fit method of its superclass.
+Finally the method computes the (probabilistic) confusion matrix using predictions_train</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>)</em>) – Predictions of the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_train and predictions_train are both None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.baselines.ac.PAC.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/ac.html#PAC.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.ac.PAC.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>First, <a href="#id57"><span class="problematic" id="id58">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<a href="#id11"><span class="problematic" id="id12">`</span></a>super().predict() method.</p>
+<p>After that, the prevalences are computed solving a system of linear scalar equations:</p>
+<blockquote>
+<div><p><a href="#id59"><span class="problematic" id="id60">cm_</span></a>.T * prevalences = PCC(X)</p>
+</div></blockquote>
+<p>For binary problems the system is directly solved using the original PAC algorithm proposed by Bella et al.</p>
+<blockquote>
+<div><p>p = (p_0 - PA(negatives) ) / ( PA(positives) - PA(negatives) )</p>
+</div></blockquote>
+<p>in which PA stands for probability average.</p>
+<p>For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
+optimization problem of this kind:</p>
+<blockquote>
+<div><p>Min   distance ( <a href="#id61"><span class="problematic" id="id62">cm_</span></a>.T * prevalences, PCC(X) )
+s.t.  sum(prevalences) = 1</p>
+<blockquote>
+<div><p>prevalecences_i &gt;= 0</p>
+</div></blockquote>
+</div></blockquote>
+<p>in which distance can be ‘HD’, ‘L1’ or ‘L2’ (defect value)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id63"><span class="problematic" id="id64">predictions_test_</span></a> and used.
+If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
+method of estimator_test (it must be an actual estimator)</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_test and predictions_test are both None</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.baselines.ac module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC"><code class="docutils literal notranslate"><span class="pre">AC</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.distance"><code class="docutils literal notranslate"><span class="pre">distance</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.cm_"><code class="docutils literal notranslate"><span class="pre">cm_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.problem_"><code class="docutils literal notranslate"><span class="pre">problem_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.AC.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC"><code class="docutils literal notranslate"><span class="pre">PAC</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.distance"><code class="docutils literal notranslate"><span class="pre">distance</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.baselines.ac.PAC.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.baselines.html"
+                          title="previous chapter">quantificationlib.baselines package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.baselines.cc.html"
+                          title="next chapter">quantificationlib.baselines.cc module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.baselines.ac.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.baselines.cc.html" title="quantificationlib.baselines.cc module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.baselines.html" title="quantificationlib.baselines package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.baselines.html" >quantificationlib.baselines package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.baselines.ac module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

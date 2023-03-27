@@ -1,0 +1,847 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.multiclass.energy module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.multiclass.friedman module" href="quantificationlib.multiclass.friedman.html" />
+    <link rel="prev" title="quantificationlib.multiclass.em module" href="quantificationlib.multiclass.em.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.friedman.html" title="quantificationlib.multiclass.friedman module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.em.html" title="quantificationlib.multiclass.em module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.multiclass.html" accesskey="U">quantificationlib.multiclass package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.energy module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.multiclass.energy">
+<span id="quantificationlib-multiclass-energy-module"></span><h1>quantificationlib.multiclass.energy module<a class="headerlink" href="#module-quantificationlib.multiclass.energy" title="Permalink to this heading">¶</a></h1>
+<p>Multiclass versions for quantifiers based on the Energy Distance</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CvMy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Multiclass CvMy method</p>
+<p>As described in (Castaño et al 2019), the predicted prevalences can be analytically calculated solving an
+optimization problem (with quadprog.solve_qp in this library). All ED-based methods share several functions
+in distribution_matching.utils. These functions are used to compute the elements of the optimization
+problem (<cite>compute_ed_param_train</cite>, <cite>compute_ed_param_test</cite>) and to solve the optimization problem (<cite>solve_ed</cite>)</p>
+<p>This class (as every other class based on distribution matching using classifiers) works in two different ways:</p>
+<ol class="arabic simple">
+<li><p>Two estimators are used to classify training examples and testing examples in order to
+compute the distribution of both sets. Estimators can be already trained</p></li>
+<li><p>You can directly provide the predictions for the examples in the fit/predict methods. This is useful
+for synthetic/artificial experiments</p></li>
+</ol>
+<p>The idea in both cases is to guarantee that all methods based on distribution matching are using <strong>exactly</strong>
+the same predictions when you compare this kind of quantifiers (and others that also employ an underlying
+classifier, for instance, CC/PCC and AC/PAC). In the first case, estimators are only trained once and can
+be shared for several quantifiers of this kind</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+training set and to compute the distribution of each class individually</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to compute the distribution of the whole testing set</p></li>
+<li><p><strong>distance</strong> (<em>distance function</em><em> (</em><em>default=manhattan_distances</em><em>)</em>) – It is the function used to compute the distance between every pair of examples</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because CvMy quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a>/<a href="#id3"><span class="problematic" id="id4">predictions_test_</span></a> contain probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> == y.
+<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> i used in <cite>predict</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a>, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to compute the distance between every pair of examples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>distance function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.train_n_cls_i_">
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.train_distrib_">
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
+problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id13"><span class="problematic" id="id14">classes_</span></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.test_distrib_">
+<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.test_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distribution of the test distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_examples, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.K_">
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.K_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average distance between the examples in the training set of each pair of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">G_,</span> <span class="pre">C_,</span> <span class="pre">b_</span></span></dt>
+<dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>variables of different kind for definining the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.a_">
+<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.a_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This one is computed in the <cite>predict</cite> method, just before solving the optimization problem</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>another variable of the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
+must be not None. If both are None a ValueError exception will be raised. If both are not None,
+predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
+<p>Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,
+Juan José del Coz: An analysis of quantification methods based on matching distributions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
+testing set (if needed), and 2) computes <a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a> (probabilities) if needed. Both operations are
+performed by the <cite>fit</cite> method of its superclass.
+After that, the method stores the true classes in <a href="#id17"><span class="problematic" id="id18">y_train_</span></a> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>probabilities</em><em>)</em>) – Predictions of the examples in the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_train and predictions_train are both None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>First, <a href="#id19"><span class="problematic" id="id20">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<cite>super().predict()</cite> method.</p>
+<p>Then, the method computes all the elements of the optimization problem after computing the combined
+ranking of the predictions for the training examples and the testing examples using <cite>rankdata</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id21"><span class="problematic" id="id22">predictions_test_</span></a> and used.
+If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
+method of estimator_test (it must be an actual estimator)</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_test and predictions_test are at the same time None or not None</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">euclidean_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a></p>
+<p>Multiclass EDX method</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distance</strong> (<em>distance function</em><em> (</em><em>default=euclidean_distances</em><em>)</em>) – It is the function used to compute the distance between every pair of examples</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.distance_">
+<span class="sig-name descname"><span class="pre">distance_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.distance_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The distance fuction used for computing the distance between every pair of examples</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>distance function</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.train_n_cls_i_">
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.train_distrib_">
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
+problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id23"><span class="problematic" id="id24">classes_</span></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.K_">
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.K_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average distance between the examples in the training set of each pair of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">G_,</span> <span class="pre">C_,</span> <span class="pre">b_</span></span></dt>
+<dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>variables of different kind for definining the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Hideko Kawakubo, Marthinus Christoffel Du Plessis, and Masashi Sugiyama. 2016. Computationally efficient
+class-prior estimation under class balance change using energy distance. Transactions on Information
+and Systems 99, 1 (2016), 176–186.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method computes all the elements of the optimization that involve just the training data:
+<a href="#id25"><span class="problematic" id="id26">K_</span></a>, <a href="#id27"><span class="problematic" id="id28">G_</span></a>, <a href="#id29"><span class="problematic" id="id30">C_</span></a> and <a href="#id31"><span class="problematic" id="id32">b_</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>This method computes a, the only element of the optimization problem that needs the testing
+data. Then, it solves the optimization problem using <cite>quadprog.solve_qp</cite> in <cite>solve_ed</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Multiclass EDy method</p>
+<p>As described in (Castaño et al 2019), the predicted prevalences can be analytically calculated solving an
+optimization problem (with quadprog.solve_qp in this library). All ED-based methods share several functions
+in distribution_matching.utils. These functions are used to compute the elements of the optimization
+problem (<cite>compute_ed_param_train</cite>, <cite>compute_ed_param_test</cite>) and to solve the optimization problem (<cite>solve_ed</cite>)</p>
+<p>This class (as every other class based on distribution matching using classifiers) works in two different ways:</p>
+<ol class="arabic simple">
+<li><p>Two estimators are used to classify training examples and testing examples in order to
+compute the distribution of both sets. Estimators can be already trained</p></li>
+<li><p>You can directly provide the predictions for the examples in the fit/predict methods. This is useful
+for synthetic/artificial experiments</p></li>
+</ol>
+<p>The idea in both cases is to guarantee that all methods based on distribution matching are using <strong>exactly</strong>
+the same predictions when you compare this kind of quantifiers (and others that also employ an underlying
+classifier, for instance, CC/PCC and AC/PAC). In the first case, estimators are only trained once and can
+be shared for several quantifiers of this kind</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+training set and to compute the distribution of each class individually</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to compute the distribution of the whole testing set</p></li>
+<li><p><strong>distance</strong> (<em>distance function</em><em> (</em><em>default=manhattan_distances</em><em>)</em>) – It is the function used to compute the distance between every pair of examples</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because EDy quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id33"><span class="problematic" id="id34">predictions_train_</span></a>/<a href="#id35"><span class="problematic" id="id36">predictions_test_</span></a> contain probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id37"><span class="problematic" id="id38">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id39"><span class="problematic" id="id40">y_ext_</span></a> == y.
+<a href="#id41"><span class="problematic" id="id42">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id43"><span class="problematic" id="id44">predictions_train_</span></a>, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.train_n_cls_i_">
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes, 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.train_distrib_">
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
+problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id45"><span class="problematic" id="id46">classes_</span></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.K_">
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.K_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Average distance between the examples in the training set of each pair of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">G_,</span> <span class="pre">C_,</span> <span class="pre">b_</span></span></dt>
+<dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>variables of different kind for definining the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.a_">
+<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.a_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This one is computed in the <cite>predict</cite> method, just before solving the optimization problem</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>another variable of the optimization problem</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
+must be not None. If both are None a ValueError exception will be raised. If both are not None,
+predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
+<p>Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,
+Juan José del Coz: An analysis of quantification methods based on matching distributions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
+testing set (if needed), and 2) computes <a href="#id47"><span class="problematic" id="id48">predictions_train_</span></a> (probabilities) if needed. Both operations are
+performed by the <cite>fit</cite> method of its superclass.
+After that, the method computes all the elements of the optimization problem that involve just the
+training data:
+<a href="#id49"><span class="problematic" id="id50">K_</span></a>, <a href="#id51"><span class="problematic" id="id52">G_</span></a>, <a href="#id53"><span class="problematic" id="id54">C_</span></a> and <a href="#id55"><span class="problematic" id="id56">b_</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>probabilities</em><em>)</em>) – Predictions of the examples in the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_train and predictions_train are both None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>First, <a href="#id57"><span class="problematic" id="id58">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<cite>super().predict()</cite> method.</p>
+<p>After that, the method computes a, the only element of the optimization problem that needs the testing
+data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id59"><span class="problematic" id="id60">predictions_test_</span></a> and used.
+If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
+method of estimator_test (it must be an actual estimator)</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_test and predictions_test are at the same time None or not None</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.multiclass.energy module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy"><code class="docutils literal notranslate"><span class="pre">CvMy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.distance"><code class="docutils literal notranslate"><span class="pre">distance</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.train_n_cls_i_"><code class="docutils literal notranslate"><span class="pre">train_n_cls_i_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.train_distrib_"><code class="docutils literal notranslate"><span class="pre">train_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.test_distrib_"><code class="docutils literal notranslate"><span class="pre">test_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.K_"><code class="docutils literal notranslate"><span class="pre">K_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.a_"><code class="docutils literal notranslate"><span class="pre">a_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX"><code class="docutils literal notranslate"><span class="pre">EDX</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.distance_"><code class="docutils literal notranslate"><span class="pre">distance_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.train_n_cls_i_"><code class="docutils literal notranslate"><span class="pre">train_n_cls_i_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.train_distrib_"><code class="docutils literal notranslate"><span class="pre">train_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.K_"><code class="docutils literal notranslate"><span class="pre">K_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy"><code class="docutils literal notranslate"><span class="pre">EDy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.train_n_cls_i_"><code class="docutils literal notranslate"><span class="pre">train_n_cls_i_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.train_distrib_"><code class="docutils literal notranslate"><span class="pre">train_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.K_"><code class="docutils literal notranslate"><span class="pre">K_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.a_"><code class="docutils literal notranslate"><span class="pre">a_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.multiclass.em.html"
+                          title="previous chapter">quantificationlib.multiclass.em module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.multiclass.friedman.html"
+                          title="next chapter">quantificationlib.multiclass.friedman module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.multiclass.energy.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.friedman.html" title="quantificationlib.multiclass.friedman module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.em.html" title="quantificationlib.multiclass.em module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.multiclass.html" >quantificationlib.multiclass package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.energy module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

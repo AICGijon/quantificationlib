@@ -1,0 +1,716 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.multiclass.regression &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.regression</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.multiclass.regression</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">import</span> <span class="nn">six</span>
+
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">WithoutClassifiers</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.bag_generator</span> <span class="kn">import</span> <span class="n">PriorShift_BagGenerator</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.multiclass.df</span> <span class="kn">import</span> <span class="n">compute_bincuts</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
+
+
+<div class="viewcode-block" id="REG"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG">[docs]</a><span class="k">class</span> <span class="nc">REG</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; REG base class for REGX y REGy</span>
+
+<span class="sd">        The idea of these quantifiers is to learn a regression model able to predict the prevalences. To learn said</span>
+<span class="sd">        regression model, this kind of objects generates a training set of bag of examples using a selected kind of</span>
+<span class="sd">        shift (prior probability shift, covariate shift or a mix of both). The training set contains a collection of</span>
+<span class="sd">        pairs (PDF distribution, prevalences) in which each pair is obtained from a bag of examples. The PDF tries</span>
+<span class="sd">        to capture the distribution of the bag.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bag_generator : BagGenerator object (default=PriorShift_BagGenerator())</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        n_bins : int (default=8)</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;normal&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
+<span class="sd">                            distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">        regression_estimator: estimator object (default=None)</span>
+<span class="sd">            A regression estimator object. If the value is None the regression estimator used is a Generalized Linear</span>
+<span class="sd">            Model (GLM) from statsmodels package with logit link and Binomial family as parameters (see Baum 2008).</span>
+<span class="sd">            It is used to learn a regression model able to predict the prevalence for each class, so the method will</span>
+<span class="sd">            fit as many regression estimators as classes in multiclass problems and just one for binary problems.</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bag_generator : BagGenerator object</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str</span>
+<span class="sd">            Method to compute the boundaries of the bins</span>
+
+<span class="sd">        regression_estimator: estimator object, None</span>
+<span class="sd">            A regression estimator object</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        dataX_ : array-like, shape(n_bags, n_features)</span>
+<span class="sd">            X data for training REGX/REGy&#39;s regressor model. Each row corresponds to the collection of histograms (one</span>
+<span class="sd">            per input feature) of the corresponding bag</span>
+
+<span class="sd">        dataY_ : array-like, shape(n_bags, n_classes)</span>
+<span class="sd">            Y data for training REGX/REGy&#39;s regressor model. Each value corresponds to the prevalences of the</span>
+<span class="sd">            corresponding bag</span>
+
+<span class="sd">        bincuts_ : ndarray, shape (n_features, n_bins + 1)</span>
+<span class="sd">            Bin cuts for each feature</span>
+
+<span class="sd">        estimators_ : array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span>
+<span class="sd">            It stores the estimators. For multiclass problems, the method learns an individual estimator</span>
+<span class="sd">            for each class</span>
+
+<span class="sd">        models_ : array of models, i.e., fitted estimators, shape (n_classes, )</span>
+<span class="sd">            This is the fitted regressor model for each class. It is needed when regression_estimator is None and</span>
+<span class="sd">            a GML models are used (these objects do not store the fitted model).</span>
+
+<span class="sd">        n_classes_ : int</span>
+<span class="sd">            The number of classes</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bag_generator</span><span class="o">=</span><span class="n">PriorShift_BagGenerator</span><span class="p">(),</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span>
+                 <span class="n">regression_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">REG</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bag_generator</span> <span class="o">=</span> <span class="n">bag_generator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span> <span class="o">=</span> <span class="n">bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span> <span class="o">=</span> <span class="n">regression_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">models_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="REG.create_training_set_of_distributions"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.create_training_set_of_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">create_training_set_of_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a training set for REG objects. Each example corresponds to a histogram of a bag</span>
+<span class="sd">            of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because</span>
+<span class="sd">            it is formed by concatenating the histogram for each input feature. This method computes the values</span>
+<span class="sd">            for dataX_, dataY_ and bincuts_ attributes</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            att_range: array-like, (2,1)</span>
+<span class="sd">                Min and Max possible values of the input feature x. These values might not coincide with the actual</span>
+<span class="sd">                Min and Max values of vector x. For instance, in the case of x represents a set of probabilistic</span>
+<span class="sd">                predictions, these values will be 0 and 1. These values may be needed by compute_bincuts function</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+        <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+        <span class="n">n_examples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">#  compute bincuts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_features</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">compute_bincuts</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="n">att</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="n">classes</span><span class="p">,</span>
+                                                    <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                                    <span class="n">att_range</span><span class="o">=</span><span class="n">att_range</span><span class="p">)</span>
+
+        <span class="c1">#  compute bags</span>
+        <span class="n">prevalences</span><span class="p">,</span> <span class="n">indexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bag_generator</span><span class="o">.</span><span class="n">generate_bags</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">bag_generator</span><span class="o">.</span><span class="n">n_bags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">*</span> <span class="n">n_features</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">nbag</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bag_generator</span><span class="o">.</span><span class="n">n_bags</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">[</span><span class="n">nbag</span><span class="p">,</span> <span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">nbag</span><span class="p">],</span> <span class="n">att</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_examples</span></div>
+
+<div class="viewcode-block" id="REG.fit_regressor"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.fit_regressor">[docs]</a>    <span class="k">def</span> <span class="nf">fit_regressor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method trains the regressor model using dataX_ and dataY_</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="c1">#  checking if it is a binary problem</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">endog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span><span class="p">,</span> <span class="n">exog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">,</span> <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Binomial</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">n_cls</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">models_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">n_cls</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">endog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataY_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">],</span> <span class="n">exog</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">,</span>
+                                                     <span class="n">family</span><span class="o">=</span><span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">Binomial</span><span class="p">())</span>
+                    <span class="c1">#_[:, self.n_bins * n_cls:self.n_bins * (n_cls + 1)],</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">models_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="REG.predict_bag"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.predict_bag">[docs]</a>    <span class="k">def</span> <span class="nf">predict_bag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bagX</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method makes a prediction for a testing bag represented by its PDF, bagX parameter</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            bagX : array-like, shape (n_bins * n_classes, ) for REGy and (n_bins * n_features, ) for REGX</span>
+<span class="sd">                Testing bag&#39;s PDF</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences: ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># binary case</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">regression_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models_</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">exog</span><span class="o">=</span><span class="n">bagX</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">bagX</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;predicted prevalences by object of class </span><span class="si">%s</span><span class="s2"> are all 0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#  multiclass</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n_cls</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">):</span>
+                    <span class="n">prevalences</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">models_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span><span class="o">.</span><span class="n">params</span><span class="p">,</span> <span class="n">exog</span><span class="o">=</span><span class="n">bagX</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">prevalences</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">bagX</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="REGX"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX">[docs]</a><span class="k">class</span> <span class="nc">REGX</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; REGX</span>
+
+<span class="sd">        The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,</span>
+<span class="sd">        the distributions are represented using PDFs of the input features (X). To learn such regression model, this</span>
+<span class="sd">        object generates a training set of bags of examples using a selected kind of shift (prior probability shift,</span>
+<span class="sd">        covariate shift or a mix of both)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bag_generator : BagGenerator object (default=PriorShift_BagGenerator())</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        n_bins : int (default=8)</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;normal&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
+<span class="sd">                            distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">        regression_estimator: estimator object (default=None)</span>
+<span class="sd">            A regression estimator object. If the value is None the regression estimator used is a Generalized Linear</span>
+<span class="sd">            Model (GLM) from statsmodels package with logit link and Binomial family as parameters (see Baum 2008).</span>
+<span class="sd">            It is used to learn a regression model able to predict the prevalence for each class, so the method will</span>
+<span class="sd">            fit as many regression estimators as classes in multiclass problems and just one for binary problems.</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        bag_generator : BagGenerator object</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str</span>
+<span class="sd">            Method to compute the boundaries of the bins</span>
+
+<span class="sd">        regression_estimator: estimator object, None</span>
+<span class="sd">            A regression estimator object</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        dataX_ : array-like, shape(n_bags, n_features)</span>
+<span class="sd">            X data for training REGX&#39;s regressor model. Each row corresponds to the collection of histograms (one</span>
+<span class="sd">            per input feature) of the corresponding bag</span>
+
+<span class="sd">        dataY_ : array-like, shape(n_bags, n_classes)</span>
+<span class="sd">            Y data for training REGX&#39;s regressor model. Each value corresponds to the prevalences of the</span>
+<span class="sd">            corresponding bag</span>
+
+<span class="sd">        bincuts_ : ndarray, shape (n_features, n_bins + 1)</span>
+<span class="sd">            Bin cuts for each feature</span>
+
+<span class="sd">        estimators_ : array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span>
+<span class="sd">            It stores the estimators. For multiclass problems, the method learns an individual estimator</span>
+<span class="sd">            for each class</span>
+
+<span class="sd">        models_ : array of models, i.e., fitted estimators, shape (n_classes, )</span>
+<span class="sd">            This is the fitted regressor model for each class. It is needed when regression_estimator is None and</span>
+<span class="sd">            a GML models are used (this objects do not store the fitted model).</span>
+
+<span class="sd">        n_classes_ : int</span>
+<span class="sd">            The number of classes</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bag_generator</span><span class="o">=</span><span class="n">PriorShift_BagGenerator</span><span class="p">(),</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;normal&#39;</span><span class="p">,</span>
+                 <span class="n">regression_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bag_generator</span><span class="o">=</span><span class="n">bag_generator</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                   <span class="n">regression_estimator</span><span class="o">=</span><span class="n">regression_estimator</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+<div class="viewcode-block" id="REGX.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just has two steps: 1) it computes a training dataset formed by a collection of bags of</span>
+<span class="sd">            examples (using create_training_set_of_distributions) and 2) it trains a regression model using said</span>
+<span class="sd">            training set just calling fit_regressor, a inherited method from REG base class</span>
+
+<span class="sd">             Parameters</span>
+<span class="sd">             ----------</span>
+<span class="sd">             X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                 Data</span>
+
+<span class="sd">             y : array-like, shape (n_examples, )</span>
+<span class="sd">                 True classes</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Creating training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">create_training_set_of_distributions</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Learning regression model...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit_regressor</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="REGX.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method computes the histogram for the testing set X, using the bincuts for each input feature</span>
+<span class="sd">            computed by fit method and then it makes a prediction applying the regression model using the</span>
+<span class="sd">            inherited method predict_bag</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences: ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_examples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_features</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">bagX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_features</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_features</span><span class="p">):</span>
+            <span class="n">bagX</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">att</span><span class="p">],</span>
+                                                                           <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span>\
+                                                                           <span class="n">n_examples</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="REGy"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy">[docs]</a><span class="k">class</span> <span class="nc">REGy</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; REGy</span>
+
+<span class="sd">        The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,</span>
+<span class="sd">        the distributions are represented using PDFs of the predictions (y) from a classifer. To learn such regression</span>
+<span class="sd">        model, this object first trains a classifier using all data and then generates a training set of bags of</span>
+<span class="sd">        examples (in this case the predictions of each example) using a selected kind of shift (prior probability</span>
+<span class="sd">        shift, covariate shift or a mix of both)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to train a classifier using the</span>
+<span class="sd">            examples of the training set. This classifier is used to obtain the predictions for the training</span>
+<span class="sd">            examples and to compute the PDF of each class individually using such predictions</span>
+
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            testing set and to compute the distribution of the whole testing set</span>
+
+<span class="sd">        bag_generator : BagGenerator object (default=PriorShift_BagGenerator())</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        n_bins : int (default=8)</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;normal&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
+<span class="sd">                            distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">        regression_estimator: estimator object (default=None)</span>
+<span class="sd">            A regression estimator object. If it is None the regression estimator used is a Generalized Linear</span>
+<span class="sd">            Model (GLM) from statsmodels package with logit link and Binomial family as parameters.</span>
+<span class="sd">            It is used to learn a regression model able to predict the prevalence for each class, so the method will</span>
+<span class="sd">            fit as many regression estimators as classes in multiclass problem and just one for binary problems.</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        bag_generator : BagGenerator object</span>
+<span class="sd">            Object to generate the bags with a selected shift</span>
+
+<span class="sd">        needs_predictions_train : bool, True</span>
+<span class="sd">            It is True because PDFy quantifiers need to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool, True</span>
+<span class="sd">             This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            Number of bins to compute the PDF of each distribution</span>
+
+<span class="sd">        bin_strategy : str</span>
+<span class="sd">            Method to compute the boundaries of the bins</span>
+
+<span class="sd">        regression_estimator: estimator object, None</span>
+<span class="sd">            A regression estimator object</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        dataX_ : array-like, shape(n_bags, n_features)</span>
+<span class="sd">            X data for training REGy&#39;s regressor model. Each row corresponds to the predictions histogram for the</span>
+<span class="sd">            examples of the corresponding bag</span>
+
+<span class="sd">        dataY_ : array-like, shape(n_bags, n_classes)</span>
+<span class="sd">            Y data for training REGy&#39;s regressor model. Each value corresponds to the prevalences of the</span>
+<span class="sd">            corresponding bag</span>
+
+<span class="sd">        bincuts_ : ndarray, shape (n_features, n_bins + 1)</span>
+<span class="sd">            Bin cuts for each feature</span>
+
+<span class="sd">        estimators_ : array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span>
+<span class="sd">            It stores the estimators. For multiclass problems, the method learns an individual estimator</span>
+<span class="sd">            for each class</span>
+
+<span class="sd">        models_ : array of models, i.e., fitted estimators, shape (n_classes, )</span>
+<span class="sd">            This is the fitted regressor model for each class. It is needed when regression_estimator is None and</span>
+<span class="sd">            a GML models are used (this objects do not store the fitted model).</span>
+
+<span class="sd">        n_classes_ : int</span>
+<span class="sd">            The number of classes</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">bag_generator</span><span class="o">=</span><span class="n">PriorShift_BagGenerator</span><span class="p">(),</span>
+                 <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">regression_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bag_generator</span><span class="o">=</span><span class="n">bag_generator</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                   <span class="n">regression_estimator</span><span class="o">=</span><span class="n">regression_estimator</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                   <span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                   <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="REGy.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just has two steps: 1) it computes a training dataset formed by a collection of bags of</span>
+<span class="sd">            examples (using create_training_set_of_distributions) and 2) it trains a regression model using said</span>
+<span class="sd">            training set just calling fit_regressor, a inherited method from REG base class</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, shape (n_examples, n_classes)</span>
+<span class="sd">                Predictions of the examples in the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train and predictions_train are both None</span>
+<span class="sd">         &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">predictions_train</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Creating training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">create_training_set_of_distributions</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">preds</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Learning regression model...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">fit_regressor</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="REGy.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method first computes the histogram for the testing set X, using the bincuts computed by the fit</span>
+<span class="sd">            method and the predictions for the testing bag (X, y). These predictions may be explicited given in the</span>
+<span class="sd">            predictions_test parameter. Then it makes a prediction applying the regression model using the</span>
+<span class="sd">            inherited method predict_bag</span>
+<span class="sd">            </span>
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
+
+<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences: ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">)</span>
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="n">n_classes</span>
+
+        <span class="n">bagX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_descriptors</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">descr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_descriptors</span><span class="p">):</span>
+            <span class="n">bagX</span><span class="p">[</span><span class="n">descr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">descr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">[:,</span> <span class="n">descr</span><span class="p">],</span>
+                                                                               <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">descr</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> \
+                                                                               <span class="n">n_examples</span>
+
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.regression</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

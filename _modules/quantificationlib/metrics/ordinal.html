@@ -1,0 +1,177 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.metrics.ordinal &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.ordinal</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.metrics.ordinal</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Score functions and loss functions for ordinal quantification problems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">check_pairwise_arrays</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.metrics.multiclass</span> <span class="kn">import</span> <span class="n">check_prevalences</span>
+
+
+<div class="viewcode-block" id="emd"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd">[docs]</a><span class="k">def</span> <span class="nf">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distances between two sets of prevalences</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true: array-like, shape (n_classes, 1)</span>
+
+<span class="sd">        p_pred: array-like, shape (n_classes, 1)</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        emd : float, the EMD distance between p_true and p_pred</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">)))</span></div>
+    <span class="c1"># return sum([abs(sum(p_pred[:j+1]) - sum(p_true[:j+1])) for j in range(len(p_true)-1)])</span>
+
+
+<div class="viewcode-block" id="emd_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score">[docs]</a><span class="k">def</span> <span class="nf">emd_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">left_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p_true</span><span class="p">)</span>
+    <span class="n">left_mass</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">right_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p_true</span><span class="p">)</span>
+    <span class="n">right_mass</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">max_emd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">left_mass</span><span class="p">),</span> <span class="n">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">right_mass</span><span class="p">))</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">max_emd</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))))</span> <span class="o">/</span> <span class="n">max_emd</span></div>
+
+
+<div class="viewcode-block" id="emd_distances"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_distances">[docs]</a><span class="k">def</span> <span class="nf">emd_distances</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distances between the rows of A and B</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        A: array-like, shape (n_samples_1, n_features)</span>
+
+<span class="sd">        B: array-like, shape (n_samples_2, n_features)</span>
+
+<span class="sd">        A and B should have the same number of columns</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        distances : array, shape (n_samples_1, n_samples_2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># version #1: the most inefficient</span>
+    <span class="c1"># return np.sum(np.abs(np.cumsum(A[:, np.newaxis] - B, axis=2)), axis=2)</span>
+
+    <span class="c1"># version #2: this is more efficient that version#1 but a little bit worse than version#3</span>
+    <span class="c1"># differences = A[:, 0].reshape(-1, 1) - B[:, 0].reshape(-1, 1).T</span>
+    <span class="c1"># distances = np.abs(differences)</span>
+    <span class="c1"># for i in range(1, A.shape[1]):</span>
+    <span class="c1">#     differences = A[:, i].reshape(-1, 1) - B[:, i].reshape(-1, 1).T + differences</span>
+    <span class="c1">#     distances = distances + np.abs(differences)</span>
+    <span class="c1"># return distances</span>
+
+    <span class="c1"># version #3: the most efficient one</span>
+    <span class="n">A</span><span class="p">,</span> <span class="n">B</span> <span class="o">=</span> <span class="n">check_pairwise_arrays</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">)</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">distances</span> <span class="o">=</span> <span class="n">distances</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">B</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distances</span></div>
+
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.ordinal</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,308 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.metrics.binary &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.binary</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.metrics.binary</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Score functions and loss functions for binary quantification problems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="binary_kld"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.binary_kld">[docs]</a><span class="k">def</span> <span class="nf">binary_kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A binary version of the Kullback - Leiber divergence (KLD)</span>
+
+<span class="sd">            :math:`kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences.</span>
+
+<span class="sd">        eps : float, (default=1e-12)</span>
+<span class="sd">            To prevent a division by zero exception</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        KLD: float</span>
+<span class="sd">            It is equal to :math:`p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">p_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">kld</span> <span class="o">=</span> <span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kld</span> <span class="o">=</span> <span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">p_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">kld</span> <span class="o">=</span> <span class="n">kld</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">kld</span> <span class="o">=</span> <span class="n">kld</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">kld</span></div>
+
+
+<div class="viewcode-block" id="bias"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.bias">[docs]</a><span class="k">def</span> <span class="nf">bias</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Bias of a binary quantifier</span>
+
+<span class="sd">        It is just the difference between the predicted prevalence (:math:`\hat{p}`) and the true prevalence (:math:`p`)</span>
+
+<span class="sd">            :math:`bias = \hat{p} - p`</span>
+
+<span class="sd">        It measures whether the binary quantifier tends to overestimate or underestimate the proportion of positives</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bias: float</span>
+<span class="sd">            It is equal to :math:`\hat{p} - p`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span></div>
+
+
+<div class="viewcode-block" id="absolute_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.absolute_error">[docs]</a><span class="k">def</span> <span class="nf">absolute_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Binary version of the absolute error</span>
+
+<span class="sd">        Absolute difference between the predicted prevalence (:math:`\hat{p}`) and the true prevalence (:math:`p`)</span>
+
+<span class="sd">            :math:`ae = | \hat{p} - p |`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        absolute error: float</span>
+<span class="sd">            It is equal to :math:`| \hat{p} - p |`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="squared_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.squared_error">[docs]</a><span class="k">def</span> <span class="nf">squared_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Binary version of the squared error. Only the prevalence of the positive class is used</span>
+
+<span class="sd">        It is the quadratic difference between the predicted prevalence (:math:`\hat{p}`) and</span>
+<span class="sd">        the true prevalence (:math:`p`)</span>
+
+<span class="sd">            :math:`se = (\hat{p} - p)^2`</span>
+
+<span class="sd">        It penalizes larger errors</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        squared_error: float</span>
+<span class="sd">            It is equal to :math:`(\hat{p} - p)^2`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="relative_absolute_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.relative_absolute_error">[docs]</a><span class="k">def</span> <span class="nf">relative_absolute_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A binary relative version of the absolute error</span>
+
+<span class="sd">        It is the relation between the absolute error and the true prevalence.</span>
+
+<span class="sd">            :math:`rae = | \hat{p} - p | / p`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        eps : float, (default=1e-12)</span>
+<span class="sd">            To prevent a division by zero exception</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        relative_absolute_error: float</span>
+<span class="sd">            It is equal to :math:`| \hat{p} - p | / p`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">p_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">p_true</span></div>
+
+
+<div class="viewcode-block" id="symmetric_absolute_percentage_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.symmetric_absolute_percentage_error">[docs]</a><span class="k">def</span> <span class="nf">symmetric_absolute_percentage_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A symmetric binary version of RAE</span>
+
+<span class="sd">            :math:`sape = | \hat{p} - p | / (\hat{p} + p)`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        SAPE: float</span>
+<span class="sd">            It is equal to :math:`| \hat{p} - p | / (\hat{p} + p)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">p_pred</span> <span class="o">+</span> <span class="n">p_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">+</span> <span class="n">p_true</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="normalized_absolute_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.normalized_absolute_score">[docs]</a><span class="k">def</span> <span class="nf">normalized_absolute_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A score version of the normalized binary absolute error</span>
+
+<span class="sd">            :math:`nas = 1 - | \hat{p} - p | / max(p, 1-p)`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NAS: float</span>
+<span class="sd">            It is equal to :math:`1 - | \hat{p} - p | / max(p, 1-p)`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="normalized_squared_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.normalized_squared_score">[docs]</a><span class="k">def</span> <span class="nf">normalized_squared_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A score version of the normalized binary squared error</span>
+
+<span class="sd">            :math:`nss = 1 - ( (\hat{p} - p) / max(p, 1-p) )^2`</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : float</span>
+<span class="sd">            True prevalence for the positive class</span>
+
+<span class="sd">        p_pred : float</span>
+<span class="sd">            Predicted prevalence for the positive class</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        NSS: float</span>
+<span class="sd">            It is equal to :math:`1 - ( (\hat{p} - p) / max(p, 1-p) )^2`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">]))</span> <span class="o">**</span> <span class="mi">2</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.binary</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

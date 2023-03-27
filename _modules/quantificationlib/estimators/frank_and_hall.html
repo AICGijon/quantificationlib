@@ -1,0 +1,1090 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.estimators.frank_and_hall &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.frank_and_hall</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.estimators.frank_and_hall</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Estimators based on Frank and Hall decomposition</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_X_y</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelBinarizer</span>
+
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">copy</span><span class="p">,</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.metrics.binary</span> <span class="kn">import</span> <span class="n">binary_kld</span>
+
+
+<div class="viewcode-block" id="FrankAndHallClassifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier">[docs]</a><span class="k">class</span> <span class="nc">FrankAndHallClassifier</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Ordinal Classifier following Frank and Hall binary decomposition</span>
+
+<span class="sd">        This type of decomposition works as follows. For instance, in a ordinal classification problem with classes</span>
+<span class="sd">        ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:</span>
+<span class="sd">        1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is the base estimator</span>
+<span class="sd">            used to learn the set of binary classifiers</span>
+
+<span class="sd">        n_jobs : int or None, optional (default=None)</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+<span class="sd">            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">            ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
+<span class="sd">            for more details.</span>
+
+<span class="sd">        params_fit : list of dictionaries with parameters for each binary estimator, optional</span>
+<span class="sd">            Example: 5 classes/4 binary estimators:</span>
+
+<span class="sd">                params_fit = [{&#39;C&#39;:0.0001} , {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.01}]</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object</span>
+<span class="sd">            The base estimator used to build the FH decomposition</span>
+
+<span class="sd">        n_jobs : int or None,</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+
+<span class="sd">        params_fit : list of dictionaries</span>
+<span class="sd">             It has the parameters for each binary estimator</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        estimators_ : ndarray, shape(n_classes-1,)</span>
+<span class="sd">            List of binary estimators following the same order of the Frank and Hall decomposition:</span>
+<span class="sd">                estimators_[0] -&gt; 1 vs 2-3-4-5</span>
+<span class="sd">                estimators_[1] -&gt; 1-2 vs 3-4-5</span>
+<span class="sd">                ...</span>
+
+<span class="sd">        label_binarizer_ :  FHLabelBinarizer object</span>
+<span class="sd">            Object used to transform multiclass labels to binary labels and vice-versa</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Eibe Frank and Mark Hall. 2001. A simple approach to ordinal classification.</span>
+<span class="sd">        In Proceedings of the European Conference on Machine Learning. Springer, 145156.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">params_fit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">params_fit</span> <span class="o">=</span> <span class="n">params_fit</span>
+        <span class="c1"># computed variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_binarizer_</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_fit_binary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y_bin</span><span class="p">,</span> <span class="n">pos_class</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits just one binary classifier of the FH decomposition</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y_bin : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes of the binary problem. The label of classes are: 1 (positive class) and 0 (negative class)</span>
+
+<span class="sd">            pos_class : int</span>
+<span class="sd">                Index of the estimator in the FH decomposition, beginning in 0. pos_class + 1 is also the number of the</span>
+<span class="sd">                last class that belongs to the left group</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fitting estimator [1..</span><span class="si">{}</span><span class="s2">] vs [</span><span class="si">{}</span><span class="s2">..</span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pos_class</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pos_class</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)))</span>
+        <span class="n">clf</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">)</span>
+        <span class="c1">######</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_fit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">params_fit</span><span class="p">[</span><span class="n">pos_class</span><span class="p">]</span>
+            <span class="n">clf</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Estimator &quot;</span><span class="p">,</span> <span class="n">pos_class</span><span class="p">,</span> <span class="s2">&quot; params: &quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="c1">#######</span>
+        <span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_bin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">clf</span>
+
+<div class="viewcode-block" id="FrankAndHallClassifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the set of estimators for the training set following the Frank and Hall decomposition</span>
+
+<span class="sd">            It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</span>
+<span class="sd">                estimators_[0] -&gt; 1 vs 2-3-4-5</span>
+<span class="sd">                estimators_[1] -&gt; 1-2 vs 3-4-5</span>
+<span class="sd">                ...</span>
+
+<span class="sd">            The left group of each classifier ({1}, {1,2}, ...) is the positive class</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;An estimator is needed for </span><span class="si">%s</span><span class="s2"> objects&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># if self.estimators_ is not None:</span>
+        <span class="c1"># self.estimators_ = None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_binarizer_</span> <span class="o">=</span> <span class="n">FHLabelBinarizer</span><span class="p">()</span>
+        <span class="n">y_bin_fh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_binarizer_</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># column i contains y_bin for estimator i (in FH order)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_binarizer_</span><span class="o">.</span><span class="n">classes_</span>
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># fit the estimator for each binary combination of classes, n_estimators = n_classes -1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+
+        <span class="c1"># In cases where individual estimators are very fast to train, setting n_jobs &gt; 1 can result in slower</span>
+        <span class="c1"># performance due to the overhead of spawning threads.  See joblib issue #112.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fit_binary</span><span class="p">)(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_bin_fh</span><span class="p">[:,</span> <span class="n">pos_class</span><span class="p">],</span> <span class="n">pos_class</span><span class="p">)</span>
+                                                        <span class="k">for</span> <span class="n">pos_class</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FrankAndHallClassifier.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class for each testing example</span>
+
+<span class="sd">            The method computes the probability of each class (using `predict_proba`) and returns the class with</span>
+<span class="sd">            highest probability</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, ) with the predicted class for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">best_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">best_classes</span><span class="p">]</span>  <span class="c1"># this returns the label of the winner class instead of its index</span></div>
+
+<div class="viewcode-block" id="FrankAndHallClassifier.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class probabilities for each example following the original rule proposed by Frank &amp; Hall</span>
+
+<span class="sd">            If the classes are c_1 to c_k:</span>
+
+<span class="sd">                Pr(y = c_1) = Pr (y &lt;= c_1)</span>
+<span class="sd">                Pr(y = c_i) = Pr(y &gt; c_i−1)  x (1 − Pr(y &gt; c_i)) ; 1 &lt; i &lt; k</span>
+<span class="sd">                Pr(y = c_k) = Pr(y &gt; c_k−1)</span>
+
+<span class="sd">                Notice that :  :math:`sum_{i=1}^{i=k} Pr(c_i) \neq 1`</span>
+
+<span class="sd">            Example with 5 classes</span>
+
+<span class="sd">                We have 4 binary estimators that return two probabilities: the probability of the left group and the</span>
+<span class="sd">                probability of the right group, denoted as e_i.left and e_i.right respectively, in which i is the</span>
+<span class="sd">                number of the estimator 1&lt;=i&lt;k</span>
+
+<span class="sd">                Estimator 0:	c1  |   c2, c3, c4, c5          e1.left	| e1.right</span>
+<span class="sd">                Estimator 2:	c1, c2  |   c3, c4, c5          e2.left	| e2.right</span>
+<span class="sd">                Estimator 3:	c1, c2, c3  |   c4, c5          e3.left	| e3.right</span>
+<span class="sd">                Estimator 4:	c1, c2, c3  c4  |   c5          e4.left	| e4.right</span>
+
+<span class="sd">                Pr(y = c_1) = e1.left</span>
+<span class="sd">                Pr(y = c_2) = e1.right x e2.left</span>
+<span class="sd">                Pr(y = c_3) = e2.right x e3.left</span>
+<span class="sd">                Pr(y = c_4) = e3.right x e4.left</span>
+<span class="sd">                Pr(y = c_5) = e4.right</span>
+
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, n_classes) with the class probabilities for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># computing the probabilites of the left group for all estimators</span>
+        <span class="c1"># notice that the probabilities of the right group is 1 - probability of the left group</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+        <span class="c1"># the probability of the first class is just the probability of the left group of the first estimator</span>
+        <span class="n">probs_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># for the rest of class (except the last one), the probability of that class is the product of the probability</span>
+        <span class="c1"># of the right group of the c_i-1 estimator, and the probability of the left group of the c_i estimator</span>
+        <span class="k">for</span> <span class="n">c_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Pr(y = c_i) = p_right_estimator_i-1 * p_left_estimator_i</span>
+            <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">c_i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="n">c_i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="n">c_i</span><span class="p">]</span>
+        <span class="c1"># the probability of the last class is the probability of the right group of the last estimator</span>
+        <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">probs_samples</span></div>
+
+<div class="viewcode-block" id="FrankAndHallClassifier.compute_binary_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba">[docs]</a>    <span class="k">def</span> <span class="nf">compute_binary_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Compute the class probabilities of the internal binary estimators</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            ndarray, shape(n_samples, n_estimators)</span>
+<span class="sd">                For each sample, this matrix contains the probabily that such sample belongs to left group of classes</span>
+<span class="sd">                of each estimator of the FH decomposition</span>
+<span class="sd">                Recall that n_estimators = n_classes-1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">n_estimators</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="c1"># we compute the predictions for the first estimator to know the lenght of the predictions. Sometimes,</span>
+        <span class="c1"># for instance when a CV_estimator is used, len(X) does not match with len(predictions)</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># the method just returns the probabilities of the left_group</span>
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">),</span> <span class="n">n_estimators</span><span class="p">))</span>
+        <span class="n">predictions_left</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># now for the rest of estimators</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_estimators</span><span class="p">):</span>
+            <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="n">predictions_left</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">predictions_left</span></div></div>
+
+
+<div class="viewcode-block" id="FrankAndHallMonotoneClassifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier">[docs]</a><span class="k">class</span> <span class="nc">FrankAndHallMonotoneClassifier</span><span class="p">(</span><span class="n">FrankAndHallClassifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Ordinal Classifier following Frank and Hall binary decomposition but returning consistent probabilities</span>
+
+<span class="sd">        This type of decomposition works as follows. For instance, in a ordinal classification problem with classes</span>
+<span class="sd">        ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:</span>
+<span class="sd">        1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</span>
+
+<span class="sd">        The difference with FrankAndHallClassifier is that the original method devised by Frank &amp; Hall was intented</span>
+<span class="sd">        just for crips predictions. The computed probabilities for all classes may be not consistent (their sum is</span>
+<span class="sd">        not 1 in many cases)</span>
+
+<span class="sd">        Following (Destercke, Yang, 2014) this class computes the upper (adjusting from  left to right) and the lower</span>
+<span class="sd">        (from right to left) cumulative probabilities for each group of classes. These sets of values are</span>
+<span class="sd">        monotonically increasing (from left to right) and monotonically decreasing (from right to left), respectively.</span>
+<span class="sd">        The final probability assigned to each group is the average of both values, and the probality of each class</span>
+<span class="sd">        is computed as:</span>
+
+<span class="sd">                Pr({y_k}) = Pr({y_1,...,y_k}) - Pr({y_1,...,y_k-1})</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is the base estimator</span>
+<span class="sd">            used to learn the set of binary classifiers</span>
+
+<span class="sd">        n_jobs : int or None, optional (default=None)</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+<span class="sd">            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">            ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
+<span class="sd">            for more details.</span>
+
+<span class="sd">        params_fit : list of dictionaries with parameters for each binary estimator, optional</span>
+<span class="sd">            Example: 5 classes/4 binary estimators:</span>
+
+<span class="sd">                params_fit = [{&#39;C&#39;:0.0001} , {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.01}]</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object</span>
+<span class="sd">            The base estimator used to build the FH decomposition</span>
+
+<span class="sd">        n_jobs : int or None,</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        params_fit : list of dictionaries</span>
+<span class="sd">             It has the parameters for each binary estimator (not used in this class)</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        estimators_ : ndarray, shape(n_classes-1,)</span>
+<span class="sd">            List of binary estimators following the same order of the Frank and Hall decomposition:</span>
+<span class="sd">                estimators_[0] -&gt; 1 vs 2-3-4-5</span>
+<span class="sd">                estimators_[1] -&gt; 1-2 vs 3-4-5</span>
+<span class="sd">                ...</span>
+
+<span class="sd">        label_binarizer_ :  FHLabelBinarizer object</span>
+<span class="sd">            Object used to transform multiclass labels to binary labels and vice-versa</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.</span>
+<span class="sd">        Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,</span>
+<span class="sd">        Sep 2014, Nancy, France. pp.323 - 337, 2014,</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">params_fit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FrankAndHallMonotoneClassifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                                             <span class="n">params_fit</span><span class="o">=</span><span class="n">params_fit</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FrankAndHallMonotoneClassifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the set of estimators for the training set following the Frank and Hall decomposition</span>
+
+<span class="sd">            It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</span>
+<span class="sd">                estimators_[0] -&gt; 1 vs 2-3-4-5</span>
+<span class="sd">                estimators_[1] -&gt; 1-2 vs 3-4-5</span>
+<span class="sd">                ...</span>
+
+<span class="sd">            The left group of each classifier ({1}, {1,2}, ...) is the positive class</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FrankAndHallMonotoneClassifier.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class for each testing example</span>
+
+<span class="sd">            The method computes the probability of each class (using `predict_proba`) and returns the class with</span>
+<span class="sd">            highest probability</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, ) with the predicted class for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">best_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">best_classes</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FrankAndHallMonotoneClassifier.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class probabilities for each example following a new rule (different from the original</span>
+<span class="sd">            one proposed by Frank &amp; Hall)</span>
+
+<span class="sd">            To obtain consistent probabilities, we need to ensure that the aggregated consecutive</span>
+<span class="sd">            probabilities do not decrease.</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                Classifier 1 vs 2-3-4   Pr({1}) = 0.3</span>
+<span class="sd">                Classifier 1-2 vs 3-4   Pr({1,2}) = 0.2</span>
+<span class="sd">                Classifier 1-2-3 vs 4   Pr({1,2,3}) = 0.6</span>
+
+<span class="sd">            This is inconsistent. Following (Destercke and Yang, 2014) the method computes the upper (adjusting from</span>
+<span class="sd">            left to right) and the lower (from right to left) cumulative probabilities. These sets of values are</span>
+<span class="sd">            monotonically increasing (from left to right) and monotonically decreasing (from right to left),</span>
+<span class="sd">            respectively. The average value is assigned to each group and the probability for each class is computed as:</span>
+
+<span class="sd">                Pr({y_k}) = Pr({y_1,...,y_k}) - Pr({y_1,...,y_k-1})</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                {1}   {1-2}  {1-2-3}</span>
+
+<span class="sd">                0.3   0.3    0.6    Upper cumulative probabilities (adjusting from left to right)</span>
+
+<span class="sd">                0.2   0.2    0.6    Lower cumulative probabilities (adjusting from right to left)</span>
+<span class="sd">                ----------------</span>
+<span class="sd">                0.25  0.25   0.6    Averaged probability</span>
+
+<span class="sd">                Pr({1}) = 0.25</span>
+<span class="sd">                Pr({2}) = Pr({1,2}) - Pr({1}) = 0.25 - 0 .25 = 0</span>
+<span class="sd">                Pr({3}) = Pr({1,2,3}} - Pr({1,2}) = 0.6 - 0.25 = 0.35</span>
+
+<span class="sd">                The last class is computed as 1 - the sum of the probabilities for the rest of classes</span>
+
+<span class="sd">                Pr({4}) = 1 - Pr({1,2,3}} = 1 - 0.6 = 0.4</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, n_classes) with the class probabilities for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions_left</span><span class="p">)</span>
+
+        <span class="c1"># the probabilities are corrected (if needed) to ensure that they increase (not strictly) from left to right</span>
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="n">FrankAndHallMonotoneClassifier</span><span class="o">.</span><span class="n">__check_and_correct_probabilities_asc</span><span class="p">(</span><span class="n">predictions_left</span><span class="p">)</span>
+
+        <span class="c1"># we treat the prevalence for each group following FH decomposition from left to right</span>
+        <span class="c1"># &quot;c_i&quot; is largest class of the left group: {c_0,c_1,..,c_i}vs{c_i+1,...,c_k}   {left}vs{right}</span>
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+        <span class="c1"># the probability of the first class is the same given for the first estimator (the left group has only one</span>
+        <span class="c1"># class in this case)</span>
+        <span class="n">probs_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions_left</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">c_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">p_left</span> <span class="o">=</span> <span class="n">predictions_left</span><span class="p">[:,</span> <span class="n">c_i</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">c_i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># we use clip() to solve some precision issues, specially  when a probability is close to 0.</span>
+            <span class="c1"># Sometimes p_left - s gives a small negative value</span>
+            <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">c_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">p_left</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># the probability of the last class is 1 minus the sum of the prevalences for the rest of classes</span>
+        <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">probs_samples</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">probs_samples</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__check_and_correct_probabilities_asc</span><span class="p">(</span><span class="n">probabilities</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This function checks and corrects those probabilities of the binary models of a Frank and Hall estimator</span>
+<span class="sd">            that are inconsistent. It is used by FrankAndHallMonotoneClassifier.</span>
+
+<span class="sd">            To obtain consistent probabilities, we need to ensure that the consecutive probabilities do not decrease.</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                Classifier 1 vs 2-3-4   Pr({1}) = 0.3</span>
+<span class="sd">                Classifier 1-2 vs 3-4   Pr({1,2}) = 0.2</span>
+<span class="sd">                Classifier 1-2-3 vs 4   Pr({1,2,3}) = 0.6</span>
+
+<span class="sd">            This is inconsistent. Following (Destercke and Yang, 2014) the method computes the upper (adjusting from</span>
+<span class="sd">            left to right) and the lower (from right to left) cumulative probabilities. These sets of values are</span>
+<span class="sd">            monotonically increasing (from left to right) and monotonically decreasing (from right to left),</span>
+<span class="sd">            respectively. The average value is assigned to each group.</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                {1}   {1-2}  {1-2-3}</span>
+
+<span class="sd">                0.3   0.3    0.6    Upper cumulative probabilities (adjusting from left to right)</span>
+
+<span class="sd">                0.2   0.2    0.6    Lower cumulative probabilities (adjusting from right to left)</span>
+<span class="sd">                ----------------</span>
+<span class="sd">                0.25  0.25   0.6    Averaged probability</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            probabilities : array, shape(n_examples, n_classes-1)</span>
+<span class="sd">                The probabilities of the binary models of a FrankAndHonotone estimator for a complete dataset</span>
+
+<span class="sd">            Return</span>
+<span class="sd">            ------</span>
+<span class="sd">            probabilities_ok : array, shape(n_examples, n_classes-1)</span>
+<span class="sd">                The corrected probabilities ensuring that do not decrease (from left to right)</span>
+
+<span class="sd">            References</span>
+<span class="sd">            ----------</span>
+<span class="sd">            Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.</span>
+<span class="sd">            Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,</span>
+<span class="sd">            Sep 2014, Nancy, France. pp.323 - 337, 2014,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ascending</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">probabilities</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">samples_to_correct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">ascending</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples_to_correct</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">probabilities</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">probabilities_ok</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">probabilities</span><span class="p">)</span>
+        <span class="c1"># correct those samples in which their probabilities are incosistent</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples_to_correct</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">probabilities_ok</span><span class="p">[</span><span class="n">sample</span><span class="p">])</span>
+            <span class="c1"># left to right corrections</span>
+            <span class="n">probs1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">probabilities_ok</span><span class="p">[</span><span class="n">sample</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">probs1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">probs1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">probs1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># right to left correction</span>
+            <span class="n">probs2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">probabilities_ok</span><span class="p">[</span><span class="n">sample</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">probs2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">probs2</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                    <span class="n">probs2</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">probs2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1"># storing the average of both corrections</span>
+            <span class="n">probabilities_ok</span><span class="p">[</span><span class="n">sample</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">probs1</span> <span class="o">+</span> <span class="n">probs2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="k">return</span> <span class="n">probabilities_ok</span></div>
+
+
+<div class="viewcode-block" id="FrankAndHallTreeClassifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier">[docs]</a><span class="k">class</span> <span class="nc">FrankAndHallTreeClassifier</span><span class="p">(</span><span class="n">FrankAndHallClassifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Ordinal Classifier following Frank and Hall binary decomposition but organizing the binary models in a</span>
+<span class="sd">        tree to compute the predictions</span>
+
+<span class="sd">        This type of decomposition works as follows. For instance, in a ordinal classification problem with classes</span>
+<span class="sd">        ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:</span>
+<span class="sd">        1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</span>
+
+<span class="sd">        The difference with FrankAndHallClassifier is that the original method devised by Frank &amp; Hall computes the</span>
+<span class="sd">        probability of each class applying the binary models from left to right: 1 vs 2-3-4-5, 1-2 vs 3-4-5, and so on.</span>
+<span class="sd">        This classifier is based on the method proposed by (San Martino, Gao and Sebastiani, 2016). The idea is to</span>
+<span class="sd">        build a binary tree with the binary models of the Frank and Hall decomposition, selecting at each point of the</span>
+<span class="sd">        tree the best possible model according to their quantification performance (applying PCC algorithm with each</span>
+<span class="sd">        binary classifier and using the KLD as performance measure).</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">                                             1-2-3 vs 4-5</span>
+<span class="sd">                         1 vs 2-3-4-5                            1-2-3-4 vs 5</span>
+<span class="sd">                      1                1-2 vs 3-4-5           4                5</span>
+<span class="sd">                                     2              3</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is the base estimator</span>
+<span class="sd">            used to learn the set of binary classifiers</span>
+
+<span class="sd">        n_jobs : int or None, optional (default=None)</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+<span class="sd">            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">            ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
+<span class="sd">            for more details.</span>
+
+<span class="sd">        performance_measure : a binary quantification performance measure, (default=binary_kld)</span>
+<span class="sd">            The binary quantification performance measure used to estimate the goodness of each binary classifier used</span>
+<span class="sd">            as quantifier</span>
+
+<span class="sd">        params_fit : list of dictionaries with parameters for each binary estimator, optional</span>
+<span class="sd">            Example: 5 classes/4 binary estimators:</span>
+
+<span class="sd">                params_fit = [{&#39;C&#39;:0.0001} , {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.000001}, {&#39;C&#39;:0.01}]</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator : estimator object</span>
+<span class="sd">            The base estimator used to build the FH decomposition</span>
+
+<span class="sd">        n_jobs : int or None,</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+
+<span class="sd">        performance_measure : str, or any binary quantification performance measure</span>
+<span class="sd">            The binary quantification performance measure used to estimate the goodness of each binary classifier used</span>
+<span class="sd">            as quantifier</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        params_fit : list of dictionaries</span>
+<span class="sd">             It has the parameters for each binary estimator</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        estimators_ : ndarray, shape(n_classes-1,)</span>
+<span class="sd">            List of binary estimators following the same order of the Frank and Hall decomposition:</span>
+<span class="sd">                estimators_[0] -&gt; 1 vs 2-3-4-5</span>
+<span class="sd">                estimators_[1] -&gt; 1-2 vs 3-4-5</span>
+<span class="sd">                ...</span>
+
+<span class="sd">        label_binarizer_ :  FHLabelBinarizer object</span>
+<span class="sd">            Object used to transform multiclass labels to binary labels and vice-versa</span>
+
+<span class="sd">        tree_ : A tree</span>
+<span class="sd">            A tree with the binary classifiers ordered by their quantification performance (using KLD or other measure)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Giovanni Da San Martino, Wei Gao, and Fabrizio Sebastiani. 2016a. Ordinal text quantification.</span>
+<span class="sd">        In Proceedings of the International ACM SIGIR Conference on  Research and Development</span>
+<span class="sd">        in Information Retrieval. 937940.</span>
+
+<span class="sd">        Giovanni Da San Martino,Wei Gao, and Fabrizio Sebastiani. 2016b.</span>
+<span class="sd">        QCRI at SemEval-2016 Task 4: Probabilistic methods for binary and ordinal quantification.</span>
+<span class="sd">        In Proceedings of the 10th InternationalWorkshop on Semantic Evaluation (SemEval’16).</span>
+<span class="sd">        Association for Computational Linguistics, A, 5863.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">performance_measure</span><span class="o">=</span><span class="n">binary_kld</span><span class="p">,</span> <span class="n">params_fit</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FrankAndHallTreeClassifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">,</span>
+                                                         <span class="n">params_fit</span><span class="o">=</span><span class="n">params_fit</span><span class="p">)</span>
+        <span class="c1"># specific attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">performance_measure</span> <span class="o">=</span> <span class="n">performance_measure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FrankAndHallTreeClassifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the set of estimators for the training set following the Frank and Hall decomposition and builds</span>
+<span class="sd">            the binary tree to organize such estimators</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># building the tree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FrankAndHallTreeClassifier.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class for each testing example</span>
+
+<span class="sd">            The method computes the probability of each class (using `predict_proba`) and returns the class with</span>
+<span class="sd">            highest probability</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, ) with the predicted class for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">best_classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">probs_samples</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">best_classes</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FrankAndHallTreeClassifier.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class probabilities for each example applying the binary tree of models</span>
+
+<span class="sd">            Example:</span>
+<span class="sd">                                             1-2-3 vs 4-5</span>
+<span class="sd">                         1 vs 2-3-4-5                            1-2-3-4 vs 5</span>
+<span class="sd">                      1                1-2 vs 3-4-5           4                5</span>
+<span class="sd">                                     2              3</span>
+
+<span class="sd">                 Imagine that for a given example the probabily returned by each model are the following (the models</span>
+<span class="sd">                 return the probability of the left group of classes):</span>
+
+<span class="sd">                 Pr({1,2,3}) = 0.2</span>
+<span class="sd">                 Pr({1}) = 0.9</span>
+<span class="sd">                 Pr({1,2,3,4}) = 0.7</span>
+<span class="sd">                 Pr({1,2}) = 0.4</span>
+
+<span class="sd">                 with tha values, the probability for each class will be:</span>
+
+<span class="sd">                 Pr({1}) = Pr({1,2,3}) * Pr({1}) = 0.2 * 0.9 = 0.18</span>
+<span class="sd">                 Pr({2}) = Pr({1,2,3}) * (1-Pr({1})) * Pr({1,2}) = 0.2 * 0.1 * 0.4 = 0.008</span>
+<span class="sd">                 Pr({3}) = Pr({1,2,3}) * (1-Pr({1})) * (1-Pr({1,2})) = 0.2 * 0.1 * 0.6 = 0.012</span>
+<span class="sd">                 Pr({4}) = (1-Pr({1,2,3}) * Pr{1,2,3,4}) = 0.8 * 0.7 = 0.56</span>
+<span class="sd">                 Pr({5}) = (1-Pr({1,2,3}) * (1-Pr{1,2,3,4})) = 0.8 * 0.3 = 0.24</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, n_classes) with the class probabilities for each example</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Tree does not exist&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">probs_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_in_subtree</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="k">return</span> <span class="n">probs_samples</span></div>
+
+    <span class="k">def</span> <span class="nf">_generate_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Build the tree for a given dataset X,y. This dataset is used to measure the quantification performance</span>
+<span class="sd">            of each binary classifier.</span>
+
+<span class="sd">            The method first computes the quantification performance of each binary classifier and then recursively</span>
+<span class="sd">            builds the binary tree of models using an auxiliar recursive function</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># obtain the probabilistic predictions of each binary classifier (needed to apply PCC). Recall that these</span>
+        <span class="c1"># models return the probabilities of the classes of the left group</span>
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="c1"># compute the predicted prevalence of the left group (PCC algorithm, it is just the mean)</span>
+        <span class="n">p_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions_left</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># computing the quantification performance of each binary classifier applying the selected</span>
+        <span class="c1"># performance measure</span>
+        <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">n_estimators</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_estimators</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_estimators</span><span class="p">):</span>
+            <span class="c1"># compute the true prevalence of the left group for such estimator</span>
+            <span class="n">y_val_bin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_binarizer_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)[:,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="n">num_left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">y_val_bin</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># left 0, right +1</span>
+            <span class="n">p_true</span> <span class="o">=</span> <span class="n">num_left</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span>
+            <span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">performance_measure</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;Quantification performance: &quot;</span><span class="p">,</span> <span class="n">scores</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="c1"># build the tree using these scores</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__build_recursive_tree</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">scores</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n_estimators</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">__build_recursive_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">last</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Builds recursively the binary tree</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            scores : array, shape(n_estimators,)</span>
+<span class="sd">                Array with the quantification performance score (default, kld) of each binary classifier</span>
+
+<span class="sd">            first :  int,</span>
+<span class="sd">                The index of the first class of the range of classes that belong to that subtree</span>
+
+<span class="sd">            last : int,</span>
+<span class="sd">                The index of the last class of the range of classes that belong to that subtree</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">first</span> <span class="o">&gt;</span> <span class="n">last</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">QTree</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Choose best estimator (lower score) between first and last</span>
+            <span class="n">pos_best</span> <span class="o">=</span> <span class="n">first</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">scores</span><span class="p">[</span><span class="n">first</span><span class="p">:</span><span class="n">last</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># same order scores and estimators</span>
+
+            <span class="n">left_subtree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__build_recursive_tree</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">pos_best</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">right_subtree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__build_recursive_tree</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">pos_best</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">last</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">QTree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos_best</span><span class="p">,</span> <span class="n">left_subtree</span><span class="p">,</span> <span class="n">right_subtree</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__compute_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_in_subtree</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Compute the probability for each class applying the binary trees of models</span>
+
+<span class="sd">            This method is recursive. It follows the binary tree of models, computing the probability of each class.</span>
+<span class="sd">            The parameter probs_samples must be a matrix of ones, shape(n_samples, n_classes). The method uses this</span>
+<span class="sd">            matrix to compute the probabilities by multiplying the probabilities of the corresponding models for</span>
+<span class="sd">            each pair example/class, depending on the structure of the tree</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            node : a tree</span>
+<span class="sd">                Initial this value is equal to the root of the tree</span>
+
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            probs_samples : array, shape(n_examples, n_classes)</span>
+<span class="sd">                The method computes the probabilities in this matrix. Initially must be set to ones. At the end of the</span>
+<span class="sd">                recursion proccess this matrix contains the final probabilities</span>
+
+<span class="sd">            classes_in_subtree: array</span>
+<span class="sd">                Labels of all the classes that have a leaf on the tree whose root is node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="n">current_estimator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">pos_estimator</span><span class="p">]</span>
+            <span class="n">classes_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[:</span><span class="n">node</span><span class="o">.</span><span class="n">pos_estimator</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">classes_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="n">node</span><span class="o">.</span><span class="n">pos_estimator</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">current_estimator</span><span class="p">,</span> <span class="s2">&quot;predict_proba&quot;</span><span class="p">):</span>
+                <span class="n">predictions</span> <span class="o">=</span> <span class="n">current_estimator</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="n">predictions_left</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="n">predictions_right</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Need predict_proba in current_estimator with objects of class&quot;</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes_in_subtree</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># first call</span>
+                <span class="n">classes_left_subtree</span> <span class="o">=</span> <span class="n">classes_left</span>
+                <span class="n">classes_right_subtree</span> <span class="o">=</span> <span class="n">classes_right</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">classes_left_subtree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">classes_in_subtree</span><span class="p">,</span> <span class="n">classes_right</span><span class="p">)</span>
+                <span class="n">classes_right_subtree</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">classes_in_subtree</span><span class="p">,</span> <span class="n">classes_left</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">classes_left_subtree</span><span class="p">:</span>
+                <span class="n">pos_cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+                <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">pos_cl</span><span class="p">]</span> <span class="o">*=</span> <span class="n">predictions_left</span>
+
+            <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">classes_right_subtree</span><span class="p">:</span>
+                <span class="n">pos_cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+                <span class="n">probs_samples</span><span class="p">[:,</span> <span class="n">pos_cl</span><span class="p">]</span> <span class="o">*=</span> <span class="n">predictions_right</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_probabilities</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">left</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_left_subtree</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__compute_probabilities</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">right</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_right_subtree</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="QTree"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.QTree">[docs]</a><span class="k">class</span> <span class="nc">QTree</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Auxiliar class to represent the binary trees needed by FrankAndHallTreeClassifier</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fhqtree: FrankAndHallTreeClassifier object  (default=None)</span>
+
+<span class="sd">        pos_estimator : int, (default=0)</span>
+<span class="sd">            Index of the estimator in the order defined by the Frank and Hall decomposition: 1 vs 2-3-4-5, 1-2 vs 3-4-5</span>
+<span class="sd">            and so on.</span>
+
+<span class="sd">        left: a QTree object (default=None)</span>
+<span class="sd">            Left subTree of this node</span>
+
+
+<span class="sd">        right: a QTree object (default=None)</span>
+<span class="sd">            Right subTree of this node</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fhtree</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos_estimator</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fhtree</span> <span class="o">=</span> <span class="n">fhtree</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_estimator</span> <span class="o">=</span> <span class="n">pos_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+
+<div class="viewcode-block" id="QTree.is_leaf"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.QTree.is_leaf">[docs]</a>    <span class="k">def</span> <span class="nf">is_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Check whether it is a leaf or not &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="ow">is</span> <span class="kc">None</span></div>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Generates a str representation of the object</span>
+<span class="sd">            It is based on a recursive function: __rec_str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># s = self.__rec_str(level)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__rec_str</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">classes_father</span><span class="o">=</span><span class="p">[],</span> <span class="n">classes_visited</span><span class="o">=</span><span class="p">[])</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="k">def</span> <span class="nf">__rec_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">classes_father</span><span class="p">,</span> <span class="n">classes_visited</span><span class="p">):</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="n">level</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classes_father</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">classes_visited</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">classes_father</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># classes 0..pos_class  vs the rest</span>
+            <span class="n">classes_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fhtree</span><span class="o">.</span><span class="n">classes_</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_estimator</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">classes_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fhtree</span><span class="o">.</span><span class="n">classes_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_estimator</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
+
+            <span class="n">s</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classes_left</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;vs&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">classes_right</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+            <span class="n">classes_left_pending</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">classes_left</span><span class="p">,</span> <span class="n">classes_visited</span><span class="p">)</span>
+            <span class="n">classes_right_pending</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">setdiff1d</span><span class="p">(</span><span class="n">classes_right</span><span class="p">,</span> <span class="n">classes_visited</span><span class="p">)</span>
+
+            <span class="n">s_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">__rec_str</span><span class="p">(</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">classes_left_pending</span><span class="p">,</span> <span class="n">classes_visited</span><span class="p">)</span>
+            <span class="n">s_right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">__rec_str</span><span class="p">(</span><span class="n">level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">classes_right_pending</span><span class="p">,</span> <span class="n">classes_visited</span><span class="p">)</span>
+
+            <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">s_left</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">s_right</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+
+<div class="viewcode-block" id="FHLabelBinarizer"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer">[docs]</a><span class="k">class</span> <span class="nc">FHLabelBinarizer</span><span class="p">(</span><span class="n">LabelBinarizer</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Binarize labels in a Frank and Hall decomposition</span>
+
+<span class="sd">        This type of decomposition works as follows. For instance, in a ordinal classification problem with classes</span>
+<span class="sd">        ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:</span>
+<span class="sd">        1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</span>
+
+<span class="sd">        To train all these binary classifiers, one needs to convert the original ordinal labels to binary labels</span>
+<span class="sd">        for each of the binary problems of the Frank and Hall decomposition. FHLabelBinarizer makes this process</span>
+<span class="sd">        easy using the transform method.</span>
+
+<span class="sd">         Parameters</span>
+<span class="sd">         ----------</span>
+<span class="sd">         neg_label : int (default: 0)</span>
+<span class="sd">             Value with which negative labels must be encoded.</span>
+
+<span class="sd">         pos_label : int (default: 1)</span>
+<span class="sd">             Value with which positive labels must be encoded.</span>
+
+<span class="sd">         sparse_output : boolean (default: False)</span>
+<span class="sd">             True if the returned array from transform is desired to be in sparse CSR format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">neg_label</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FHLabelBinarizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">neg_label</span><span class="o">=</span><span class="n">neg_label</span><span class="p">,</span> <span class="n">pos_label</span><span class="o">=</span><span class="n">pos_label</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FHLabelBinarizer.transform"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Transform ordinal labels to the Frank and Hall binary labels</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            y : array, (n_samples,)</span>
+<span class="sd">                Class labels for a set of examples</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            y_bin_fh : array, (n_samples, n_classes)</span>
+<span class="sd">                Each column contains the binary labels for the consecutive binary problems of a Frank and Hall</span>
+<span class="sd">                decomposition from left to right. For instance, in a 4-class problem, each column corresponds to</span>
+<span class="sd">                the following problems:</span>
+
+<span class="sd">                1st column: 1 vs 2-3-4</span>
+<span class="sd">                2nd column: 1-2 vs 3-4</span>
+<span class="sd">                3rd column: 1-2-3 vs 4</span>
+<span class="sd">                4ht column: (not really used)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">y_bin</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">y_bin_fh</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">y_bin</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)):</span>
+            <span class="n">y_bin_fh</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y_bin</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y_bin_fh</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.frank_and_hall</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

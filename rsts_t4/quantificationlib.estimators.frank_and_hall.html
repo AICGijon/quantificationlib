@@ -1,0 +1,931 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.estimators.frank_and_hall module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.estimators.ordinal_ddag module" href="quantificationlib.estimators.ordinal_ddag.html" />
+    <link rel="prev" title="quantificationlib.estimators.ensembles module" href="quantificationlib.estimators.ensembles.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ordinal_ddag.html" title="quantificationlib.estimators.ordinal_ddag module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ensembles.html" title="quantificationlib.estimators.ensembles module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" accesskey="U">quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.frank_and_hall module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.estimators.frank_and_hall">
+<span id="quantificationlib-estimators-frank-and-hall-module"></span><h1>quantificationlib.estimators.frank_and_hall module<a class="headerlink" href="#module-quantificationlib.estimators.frank_and_hall" title="Permalink to this heading">¶</a></h1>
+<p>Estimators based on Frank and Hall decomposition</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FHLabelBinarizer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FHLabelBinarizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">neg_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FHLabelBinarizer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">LabelBinarizer</span></code></p>
+<p>Binarize labels in a Frank and Hall decomposition</p>
+<p>This type of decomposition works as follows. For instance, in a ordinal classification problem with classes
+ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:
+1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</p>
+<p>To train all these binary classifiers, one needs to convert the original ordinal labels to binary labels
+for each of the binary problems of the Frank and Hall decomposition. FHLabelBinarizer makes this process
+easy using the transform method.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>neg_label<span class="classifier">int (default: 0)</span></dt><dd><p>Value with which negative labels must be encoded.</p>
+</dd>
+<dt>pos_label<span class="classifier">int (default: 1)</span></dt><dd><p>Value with which positive labels must be encoded.</p>
+</dd>
+<dt>sparse_output<span class="classifier">boolean (default: False)</span></dt><dd><p>True if the returned array from transform is desired to be in sparse CSR format.</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FHLabelBinarizer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform ordinal labels to the Frank and Hall binary labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>y</strong> (<em>array</em><em>, </em><em>(</em><em>n_samples</em><em>,</em><em>)</em>) – Class labels for a set of examples</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>y_bin_fh</strong> – Each column contains the binary labels for the consecutive binary problems of a Frank and Hall
+decomposition from left to right. For instance, in a 4-class problem, each column corresponds to
+the following problems:</p>
+<p>1st column: 1 vs 2-3-4
+2nd column: 1-2 vs 3-4
+3rd column: 1-2-3 vs 4
+4ht column: (not really used)</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, (n_samples, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrankAndHallClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></p>
+<p>Ordinal Classifier following Frank and Hall binary decomposition</p>
+<p>This type of decomposition works as follows. For instance, in a ordinal classification problem with classes
+ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:
+1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and one of <cite>predict</cite> or <cite>predict_proba</cite>. It is the base estimator
+used to learn the set of binary classifiers</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – The number of jobs to use for the computation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors. See <span class="xref std std-term">Glossary</span>
+for more details.</p></li>
+<li><p><strong>params_fit</strong> (<em>list</em><em> of </em><em>dictionaries with parameters for each binary estimator</em><em>, </em><em>optional</em>) – <p>Example: 5 classes/4 binary estimators:</p>
+<blockquote>
+<div><p>params_fit = [{‘C’:0.0001} , {‘C’:0.000001}, {‘C’:0.000001}, {‘C’:0.01}]</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimator">
+<span class="sig-name descname"><span class="pre">estimator</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base estimator used to build the FH decomposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.n_jobs">
+<span class="sig-name descname"><span class="pre">n_jobs</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.n_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of jobs to use for the computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.params_fit">
+<span class="sig-name descname"><span class="pre">params_fit</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.params_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>It has the parameters for each binary estimator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dictionaries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level. The default value, zero, means silent mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
+estimators_[1] -&gt; 1-2 vs 3-4-5
+…</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes-1,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.label_binarizer_">
+<span class="sig-name descname"><span class="pre">label_binarizer_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.label_binarizer_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object used to transform multiclass labels to binary labels and vice-versa</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FHLabelBinarizer object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Eibe Frank and Mark Hall. 2001. A simple approach to ordinal classification.
+In Proceedings of the European Conference on Machine Learning. Springer, 145156.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba">
+<span class="sig-name descname"><span class="pre">compute_binary_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.compute_binary_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute the class probabilities of the internal binary estimators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>For each sample, this matrix contains the probabily that such sample belongs to left group of classes
+of each estimator of the FH decomposition
+Recall that n_estimators = n_classes-1</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_samples, n_estimators)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition</p>
+<dl class="simple">
+<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
+estimators_[1] -&gt; 1-2 vs 3-4-5
+…</p>
+</dd>
+</dl>
+<p>The left group of each classifier ({1}, {1,2}, …) is the positive class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator is None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class for each testing example</p>
+<p>The method computes the probability of each class (using <cite>predict_proba</cite>) and returns the class with
+highest probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, ) with the predicted class for each example</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class probabilities for each example following the original rule proposed by Frank &amp; Hall</p>
+<blockquote>
+<div><p>If the classes are c_1 to c_k:</p>
+<blockquote>
+<div><p>Pr(y = c_1) = Pr (y &lt;= c_1)
+Pr(y = c_i) = Pr(y &gt; c_i−1)  x (1 − Pr(y &gt; c_i)) ; 1 &lt; i &lt; k
+Pr(y = c_k) = Pr(y &gt; c_k−1)</p>
+<p>Notice that :  :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>sum_{i=1}^{i=k} Pr(c_i)</p>
+</div></blockquote>
+</div></blockquote>
+<p>eq 1`</p>
+<blockquote>
+<div><p>Example with 5 classes</p>
+<blockquote>
+<div><p>We have 4 binary estimators that return two probabilities: the probability of the left group and the
+probability of the right group, denoted as e_i.left and e_i.right respectively, in which i is the
+number of the estimator 1&lt;=i&lt;k</p>
+<p>Estimator 0:    c1  |   c2, c3, c4, c5          e1.left | e1.right
+Estimator 2:    c1, c2  |   c3, c4, c5          e2.left | e2.right
+Estimator 3:    c1, c2, c3  |   c4, c5          e3.left | e3.right
+Estimator 4:    c1, c2, c3  c4  |   c5          e4.left | e4.right</p>
+<p>Pr(y = c_1) = e1.left
+Pr(y = c_2) = e1.right x e2.left
+Pr(y = c_3) = e2.right x e3.left
+Pr(y = c_4) = e3.right x e4.left
+Pr(y = c_5) = e4.right</p>
+</div></blockquote>
+<dl class="simple">
+<dt>X<span class="classifier">(sparse) array-like, shape (n_examples, n_features)</span></dt><dd><p>Data</p>
+</dd>
+</dl>
+<p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
+<dl class="simple">
+<dt>NotFittedError</dt><dd><p>When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrankAndHallMonotoneClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallMonotoneClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier" title="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrankAndHallClassifier</span></code></a></p>
+<p>Ordinal Classifier following Frank and Hall binary decomposition but returning consistent probabilities</p>
+<p>This type of decomposition works as follows. For instance, in a ordinal classification problem with classes
+ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:
+1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</p>
+<p>The difference with FrankAndHallClassifier is that the original method devised by Frank &amp; Hall was intented
+just for crips predictions. The computed probabilities for all classes may be not consistent (their sum is
+not 1 in many cases)</p>
+<p>Following (Destercke, Yang, 2014) this class computes the upper (adjusting from  left to right) and the lower
+(from right to left) cumulative probabilities for each group of classes. These sets of values are
+monotonically increasing (from left to right) and monotonically decreasing (from right to left), respectively.
+The final probability assigned to each group is the average of both values, and the probality of each class
+is computed as:</p>
+<blockquote>
+<div><p>Pr({y_k}) = Pr({y_1,…,y_k}) - Pr({y_1,…,y_k-1})</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and one of <cite>predict</cite> or <cite>predict_proba</cite>. It is the base estimator
+used to learn the set of binary classifiers</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – The number of jobs to use for the computation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors. See <span class="xref std std-term">Glossary</span>
+for more details.</p></li>
+<li><p><strong>params_fit</strong> (<em>list</em><em> of </em><em>dictionaries with parameters for each binary estimator</em><em>, </em><em>optional</em>) – <p>Example: 5 classes/4 binary estimators:</p>
+<blockquote>
+<div><p>params_fit = [{‘C’:0.0001} , {‘C’:0.000001}, {‘C’:0.000001}, {‘C’:0.01}]</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimator">
+<span class="sig-name descname"><span class="pre">estimator</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base estimator used to build the FH decomposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.n_jobs">
+<span class="sig-name descname"><span class="pre">n_jobs</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.n_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of jobs to use for the computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level. The default value, zero, means silent mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.params_fit">
+<span class="sig-name descname"><span class="pre">params_fit</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.params_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>It has the parameters for each binary estimator (not used in this class)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dictionaries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
+estimators_[1] -&gt; 1-2 vs 3-4-5
+…</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes-1,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.label_binarizer_">
+<span class="sig-name descname"><span class="pre">label_binarizer_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.label_binarizer_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object used to transform multiclass labels to binary labels and vice-versa</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FHLabelBinarizer object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.
+Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,
+Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallMonotoneClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition</p>
+<dl class="simple">
+<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
+estimators_[1] -&gt; 1-2 vs 3-4-5
+…</p>
+</dd>
+</dl>
+<p>The left group of each classifier ({1}, {1,2}, …) is the positive class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator is None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallMonotoneClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class for each testing example</p>
+<p>The method computes the probability of each class (using <cite>predict_proba</cite>) and returns the class with
+highest probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, ) with the predicted class for each example</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallMonotoneClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class probabilities for each example following a new rule (different from the original
+one proposed by Frank &amp; Hall)</p>
+<p>To obtain consistent probabilities, we need to ensure that the aggregated consecutive
+probabilities do not decrease.</p>
+<p class="rubric">Example</p>
+<p>Classifier 1 vs 2-3-4   Pr({1}) = 0.3
+Classifier 1-2 vs 3-4   Pr({1,2}) = 0.2
+Classifier 1-2-3 vs 4   Pr({1,2,3}) = 0.6</p>
+<p>This is inconsistent. Following (Destercke and Yang, 2014) the method computes the upper (adjusting from
+left to right) and the lower (from right to left) cumulative probabilities. These sets of values are
+monotonically increasing (from left to right) and monotonically decreasing (from right to left),
+respectively. The average value is assigned to each group and the probability for each class is computed as:</p>
+<blockquote>
+<div><p>Pr({y_k}) = Pr({y_1,…,y_k}) - Pr({y_1,…,y_k-1})</p>
+</div></blockquote>
+<p class="rubric">Example</p>
+<p>{1}   {1-2}  {1-2-3}</p>
+<p>0.3   0.3    0.6    Upper cumulative probabilities (adjusting from left to right)</p>
+<section id="lower-cumulative-probabilities-adjusting-from-right-to-left">
+<h2>0.2   0.2    0.6    Lower cumulative probabilities (adjusting from right to left)<a class="headerlink" href="#lower-cumulative-probabilities-adjusting-from-right-to-left" title="Permalink to this heading">¶</a></h2>
+<p>0.25  0.25   0.6    Averaged probability</p>
+<p>Pr({1}) = 0.25
+Pr({2}) = Pr({1,2}) - Pr({1}) = 0.25 - 0 .25 = 0
+Pr({3}) = Pr({1,2,3}} - Pr({1,2}) = 0.6 - 0.25 = 0.35</p>
+<p>The last class is computed as 1 - the sum of the probabilities for the rest of classes</p>
+<p>Pr({4}) = 1 - Pr({1,2,3}} = 1 - 0.6 = 0.4</p>
+<dl class="field-list simple">
+<dt class="field-odd">param X<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data</p>
+</dd>
+<dt class="field-even">type X<span class="colon">:</span></dt>
+<dd class="field-even"><p>(sparse) array-like, shape (n_examples, n_features)</p>
+</dd>
+<dt class="field-odd">rtype<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
+</dd>
+<dt class="field-even">raises NotFittedError<span class="colon">:</span></dt>
+<dd class="field-even"><p>When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrankAndHallTreeClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">performance_measure=&lt;function</span> <span class="pre">binary_kld&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_fit=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallTreeClassifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier" title="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier"><code class="xref py py-class docutils literal notranslate"><span class="pre">FrankAndHallClassifier</span></code></a></p>
+<p>Ordinal Classifier following Frank and Hall binary decomposition but organizing the binary models in a
+tree to compute the predictions</p>
+<p>This type of decomposition works as follows. For instance, in a ordinal classification problem with classes
+ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary classifiers:
+1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions.</p>
+<p>The difference with FrankAndHallClassifier is that the original method devised by Frank &amp; Hall computes the
+probability of each class applying the binary models from left to right: 1 vs 2-3-4-5, 1-2 vs 3-4-5, and so on.
+This classifier is based on the method proposed by (San Martino, Gao and Sebastiani, 2016). The idea is to
+build a binary tree with the binary models of the Frank and Hall decomposition, selecting at each point of the
+tree the best possible model according to their quantification performance (applying PCC algorithm with each
+binary classifier and using the KLD as performance measure).</p>
+<p class="rubric">Example</p>
+<p>1-2-3 vs 4-5</p>
+<blockquote>
+<div><blockquote>
+<div><p>1 vs 2-3-4-5                            1-2-3-4 vs 5</p>
+</div></blockquote>
+<dl class="simple">
+<dt>1                1-2 vs 3-4-5           4                5</dt><dd><p>2              3</p>
+</dd>
+</dl>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and one of <cite>predict</cite> or <cite>predict_proba</cite>. It is the base estimator
+used to learn the set of binary classifiers</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – The number of jobs to use for the computation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors. See <span class="xref std std-term">Glossary</span>
+for more details.</p></li>
+<li><p><strong>performance_measure</strong> (<em>a binary quantification performance measure</em><em>, </em><em>(</em><em>default=binary_kld</em><em>)</em>) – The binary quantification performance measure used to estimate the goodness of each binary classifier used
+as quantifier</p></li>
+<li><p><strong>params_fit</strong> (<em>list</em><em> of </em><em>dictionaries with parameters for each binary estimator</em><em>, </em><em>optional</em>) – <p>Example: 5 classes/4 binary estimators:</p>
+<blockquote>
+<div><p>params_fit = [{‘C’:0.0001} , {‘C’:0.000001}, {‘C’:0.000001}, {‘C’:0.01}]</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimator">
+<span class="sig-name descname"><span class="pre">estimator</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base estimator used to build the FH decomposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.n_jobs">
+<span class="sig-name descname"><span class="pre">n_jobs</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.n_jobs" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of jobs to use for the computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int or None,</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.performance_measure">
+<span class="sig-name descname"><span class="pre">performance_measure</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.performance_measure" title="Permalink to this definition">¶</a></dt>
+<dd><p>The binary quantification performance measure used to estimate the goodness of each binary classifier used
+as quantifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, or any binary quantification performance measure</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level. The default value, zero, means silent mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.params_fit">
+<span class="sig-name descname"><span class="pre">params_fit</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.params_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>It has the parameters for each binary estimator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of dictionaries</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
+estimators_[1] -&gt; 1-2 vs 3-4-5
+…</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes-1,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.label_binarizer_">
+<span class="sig-name descname"><span class="pre">label_binarizer_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.label_binarizer_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object used to transform multiclass labels to binary labels and vice-versa</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>FHLabelBinarizer object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.tree_">
+<span class="sig-name descname"><span class="pre">tree_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.tree_" title="Permalink to this definition">¶</a></dt>
+<dd><p>A tree with the binary classifiers ordered by their quantification performance (using KLD or other measure)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tree</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
+<p>Giovanni Da San Martino, Wei Gao, and Fabrizio Sebastiani. 2016a. Ordinal text quantification.
+In Proceedings of the International ACM SIGIR Conference on  Research and Development
+in Information Retrieval. 937940.</p>
+<p>Giovanni Da San Martino,Wei Gao, and Fabrizio Sebastiani. 2016b.
+QCRI at SemEval-2016 Task 4: Probabilistic methods for binary and ordinal quantification.
+In Proceedings of the 10th InternationalWorkshop on Semantic Evaluation (SemEval’16).
+Association for Computational Linguistics, A, 5863.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallTreeClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition and builds
+the binary tree to organize such estimators</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator is None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallTreeClassifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class for each testing example</p>
+<p>The method computes the probability of each class (using <cite>predict_proba</cite>) and returns the class with
+highest probability</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, ) with the predicted class for each example</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallTreeClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class probabilities for each example applying the binary tree of models</p>
+<p class="rubric">Example</p>
+<p>1-2-3 vs 4-5</p>
+<blockquote>
+<div><blockquote>
+<div><blockquote>
+<div><p>1 vs 2-3-4-5                            1-2-3-4 vs 5</p>
+</div></blockquote>
+<dl class="simple">
+<dt>1                1-2 vs 3-4-5           4                5</dt><dd><p>2              3</p>
+</dd>
+</dl>
+</div></blockquote>
+<p>Imagine that for a given example the probabily returned by each model are the following (the models
+return the probability of the left group of classes):</p>
+<p>Pr({1,2,3}) = 0.2
+Pr({1}) = 0.9
+Pr({1,2,3,4}) = 0.7
+Pr({1,2}) = 0.4</p>
+<p>with tha values, the probability for each class will be:</p>
+<p>Pr({1}) = Pr({1,2,3}) * Pr({1}) = 0.2 * 0.9 = 0.18
+Pr({2}) = Pr({1,2,3}) * (1-Pr({1})) * Pr({1,2}) = 0.2 * 0.1 * 0.4 = 0.008
+Pr({3}) = Pr({1,2,3}) * (1-Pr({1})) * (1-Pr({1,2})) = 0.2 * 0.1 * 0.6 = 0.012
+Pr({4}) = (1-Pr({1,2,3}) * Pr{1,2,3,4}) = 0.8 * 0.7 = 0.56
+Pr({5}) = (1-Pr({1,2,3}) * (1-Pr{1,2,3,4})) = 0.8 * 0.3 = 0.24</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.QTree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">QTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fhtree</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_estimator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#QTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.QTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Auxiliar class to represent the binary trees needed by FrankAndHallTreeClassifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fhqtree</strong> (<em>FrankAndHallTreeClassifier object</em><em>  (</em><em>default=None</em><em>)</em>) – </p></li>
+<li><p><strong>pos_estimator</strong> (<em>int</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – Index of the estimator in the order defined by the Frank and Hall decomposition: 1 vs 2-3-4-5, 1-2 vs 3-4-5
+and so on.</p></li>
+<li><p><strong>left</strong> (<em>a QTree object</em><em> (</em><em>default=None</em><em>)</em>) – Left subTree of this node</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>right: a QTree object (default=None)</dt><dd><p>Right subTree of this node</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.QTree.is_leaf">
+<span class="sig-name descname"><span class="pre">is_leaf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#QTree.is_leaf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.QTree.is_leaf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether it is a leaf or not</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.estimators.frank_and_hall module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer"><code class="docutils literal notranslate"><span class="pre">FHLabelBinarizer</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform"><code class="docutils literal notranslate"><span class="pre">transform()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier"><code class="docutils literal notranslate"><span class="pre">FrankAndHallClassifier</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimator"><code class="docutils literal notranslate"><span class="pre">estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.n_jobs"><code class="docutils literal notranslate"><span class="pre">n_jobs</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.params_fit"><code class="docutils literal notranslate"><span class="pre">params_fit</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.label_binarizer_"><code class="docutils literal notranslate"><span class="pre">label_binarizer_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba"><code class="docutils literal notranslate"><span class="pre">compute_binary_proba()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier"><code class="docutils literal notranslate"><span class="pre">FrankAndHallMonotoneClassifier</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimator"><code class="docutils literal notranslate"><span class="pre">estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.n_jobs"><code class="docutils literal notranslate"><span class="pre">n_jobs</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.params_fit"><code class="docutils literal notranslate"><span class="pre">params_fit</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.label_binarizer_"><code class="docutils literal notranslate"><span class="pre">label_binarizer_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier"><code class="docutils literal notranslate"><span class="pre">FrankAndHallTreeClassifier</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimator"><code class="docutils literal notranslate"><span class="pre">estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.n_jobs"><code class="docutils literal notranslate"><span class="pre">n_jobs</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.performance_measure"><code class="docutils literal notranslate"><span class="pre">performance_measure</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.params_fit"><code class="docutils literal notranslate"><span class="pre">params_fit</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.label_binarizer_"><code class="docutils literal notranslate"><span class="pre">label_binarizer_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.tree_"><code class="docutils literal notranslate"><span class="pre">tree_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.QTree"><code class="docutils literal notranslate"><span class="pre">QTree</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.QTree.is_leaf"><code class="docutils literal notranslate"><span class="pre">is_leaf()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.ensembles.html"
+                          title="previous chapter">quantificationlib.estimators.ensembles module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.ordinal_ddag.html"
+                          title="next chapter">quantificationlib.estimators.ordinal_ddag module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.estimators.frank_and_hall.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ordinal_ddag.html" title="quantificationlib.estimators.ordinal_ddag module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ensembles.html" title="quantificationlib.estimators.ensembles module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" >quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.frank_and_hall module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

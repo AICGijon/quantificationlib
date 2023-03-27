@@ -1,0 +1,272 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.estimators.ensembles &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.ensembles</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.estimators.ensembles</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Estimators for an Ensemble of Quantifiers</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_X_y</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+
+<div class="viewcode-block" id="EnsembleOfClassifiers"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.ensembles.html#quantificationlib.estimators.ensembles.EnsembleOfClassifiers">[docs]</a><span class="k">class</span> <span class="nc">EnsembleOfClassifiers</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Ensemble of Classifiers</span>
+
+<span class="sd">        This kind of objects train the set of classifiers for an ensemble of quantifiers</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        base_estimator : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is the base estimator</span>
+<span class="sd">            used to learn the set of classifiers</span>
+
+<span class="sd">        n_jobs : int or None, optional (default=None)</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+<span class="sd">            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">            ``-1`` means using all processors. See :term:`Glossary &lt;n_jobs&gt;`</span>
+<span class="sd">            for more details.</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        base_estimator : estimator object</span>
+<span class="sd">            The base estimator used to build ensemble</span>
+
+<span class="sd">        n_jobs : int or None,</span>
+<span class="sd">            The number of jobs to use for the computation.</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        n_estimators_ : int,</span>
+<span class="sd">            Number of estimators</span>
+
+<span class="sd">        estimators_ : ndarray, shape(n_ensembles,)</span>
+<span class="sd">            List of estimators</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Pérez-Gállego, P., Quevedo, J. R., &amp; del Coz, J. J. (2017). Using ensembles for problems with characterizable</span>
+<span class="sd">        changes in data distribution: A case study on quantification. Information Fusion, 34, 87-100.</span>
+
+<span class="sd">        Pérez-Gállego, P., Castano, A., Quevedo, J. R., &amp; del Coz, J. J. (2019). Dynamic ensemble selection</span>
+<span class="sd">        for quantification tasks. Information Fusion, 45, 1-15.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_estimator</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="o">=</span> <span class="n">base_estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="c1"># computed variables</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="EnsembleOfClassifiers.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.ensembles.html#quantificationlib.estimators.ensembles.EnsembleOfClassifiers.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">indexes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the set of estimators for the training set (X, y) using the bags contained in indexes</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            indexes: array-like, shape (n_ensembles, bag_size)</span>
+<span class="sd">                i-th row contains the indexes of the examples in (X, y) that must be used to train i-th estimator</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When base_estimator is None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+
+            <span class="c1">#  estimators_ are not fitted</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;An estimator is needed for </span><span class="si">%s</span><span class="s2"> objects&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span> <span class="o">=</span> <span class="n">indexes</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># fit the estimator for each binary combination of classes, n_estimators = n_classes -1</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+
+            <span class="c1"># In cases where individual estimators are very fast to train, setting n_jobs &gt; 1 can result in slower</span>
+            <span class="c1"># performance due to the overhead of spawning threads.  See joblib issue #112.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">)(</span><span class="n">X</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">n_est</span><span class="p">],</span> <span class="p">:],</span>
+                                                                                             <span class="n">y</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">n_est</span><span class="p">]])</span>
+                                                            <span class="k">for</span> <span class="n">n_est</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="EnsembleOfClassifiers.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.ensembles.html#quantificationlib.estimators.ensembles.EnsembleOfClassifiers.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class for each testing example applying each estimator</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, n_estimators) with the predicted class for each example with each estimator</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1">#  we obtain the predictions using the first estimator. We do this because the number of predictions could be</span>
+        <span class="c1">#  different than len(X)</span>
+        <span class="n">p_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">p_0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">p_0</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">preds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">p_0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">):</span>
+            <span class="n">preds</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span></div>
+
+<div class="viewcode-block" id="EnsembleOfClassifiers.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.ensembles.html#quantificationlib.estimators.ensembles.EnsembleOfClassifiers.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class probabilities for each example `</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            An array, shape(n_examples, n_estimators, n_classes) with the predicted class for each example with each</span>
+<span class="sd">            estimator</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            NotFittedError</span>
+<span class="sd">                When the estimators are not fitted yet</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1">#  we obtain the predictions using the first estimator. We do this because the number of predictions could be</span>
+        <span class="c1">#  different than len(X)</span>
+        <span class="n">p_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">p_0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">p_0</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">preds</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">p_0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_estimators_</span><span class="p">):</span>
+            <span class="n">preds</span><span class="p">[:,</span> <span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.ensembles</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,423 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.decomposition.ordinal &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.decomposition.ordinal</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.decomposition.ordinal</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Generic decomposition quantifier based on Frank and Hall approach</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">BaseQuantifier</span><span class="p">,</span> <span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">WithoutClassifiers</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.estimators.frank_and_hall</span> <span class="kn">import</span> <span class="n">FrankAndHallClassifier</span><span class="p">,</span> <span class="n">FHLabelBinarizer</span>
+
+
+<div class="viewcode-block" id="FrankAndHallQuantifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.decomposition.ordinal.html#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier">[docs]</a><span class="k">class</span> <span class="nc">FrankAndHallQuantifier</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Implements a Frank and Hall Ordinal Quantifier given any base quantifier</span>
+
+<span class="sd">        Trains one quantifier per each model of the Frank and Hall (FH) decocompositon. For instance, in a ordinal</span>
+<span class="sd">        classification problem with classes ranging from 1-star to 5-star, FHQuantifier trains 4 quantifiers:</span>
+<span class="sd">        1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions. The positive class</span>
+<span class="sd">        correspond to the left group of each quantifier ({1}, {1,2}, and so on)</span>
+
+<span class="sd">        The class works both with quantifiers that require classifiers or not. In the former case, the estimator</span>
+<span class="sd">        used for the training distribution and the testing distribution must be a FrankAndHallClassifier</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        quantifier : quantifier object</span>
+<span class="sd">            The base quantifier used to build the FH decomposition. Any quantifier can be used</span>
+
+<span class="sd">        estimator_train : estimator object, optional, (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify</span>
+<span class="sd">            the examples of the training set and to obtain their distribution when the base quantifier is an</span>
+<span class="sd">            instance of the class UsingClassifiers. Notice that some quantifiers of this kind, namely CC and PCC,</span>
+<span class="sd">            do not require an estimator for the training distribution</span>
+
+<span class="sd">        estimator_test : estimator object, optional, (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify</span>
+<span class="sd">            the examples of the testing bag and to obtain their distribution when the base quantifier is an</span>
+<span class="sd">            instance of the class UsingClassifiers</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        For some experiments both estimators could be the same</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        quantifier : quantifier object</span>
+<span class="sd">            The base quantifier used to build the FH decomposition</span>
+
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes-1) (probabilistic)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes-1) (probabilistic)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        needs_predictions_train : bool, (default=True)</span>
+<span class="sd">            True if the base quantifier needs to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool</span>
+<span class="sd">            Not used</span>
+
+<span class="sd">        quantifiers_ : ndarray, shape (n_classes-1, )</span>
+<span class="sd">            List of quantifiers, one for each model of a FH decomposition. The number is equal to n_classes - 1</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_), )</span>
+<span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
+<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying</span>
+<span class="sd">            CV_estimator) than y. In other cases, y_ext_ == y.</span>
+<span class="sd">            y_ext_ must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,</span>
+<span class="sd">            instead of y</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">quantifier</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FrankAndHallQuantifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                                     <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span> <span class="o">=</span> <span class="n">quantifier</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FrankAndHallQuantifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.decomposition.ordinal.html#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits all the quanfifiers of a FH decomposition</span>
+
+<span class="sd">            First, the method fits the estimators (estimator_train and estimator_test) (if needed) using</span>
+<span class="sd">            the `fit` method of its superclass</span>
+
+<span class="sd">            Then, it creates (using `deepcopy`) the set on quantifiers_ (n_classes-1 quantifiers) and fit them</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, optional, shape (n_examples, n_classes-1) (probs)</span>
+<span class="sd">                Predictions of the examples in the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train or estimator_test are not instances of OneVsRestClassifier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">,</span> <span class="n">BaseQuantifier</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class </span><span class="si">%s</span><span class="s2">: quantifier must be an object of a class derived from quantificationlib.baseQuantifier&quot;</span>
+                             <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1">#  binarizing y labels</span>
+        <span class="n">label_binarizer</span> <span class="o">=</span> <span class="n">FHLabelBinarizer</span><span class="p">()</span>
+        <span class="n">label_binarizer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="c1"># column i represents y_bin of estimator i (in FH order, from left to right)</span>
+        <span class="n">y_bin_fh</span> <span class="o">=</span> <span class="n">label_binarizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">,</span> <span class="n">WithoutClassifiers</span><span class="p">):</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: do not have estimators to fit...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_bin_fh</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">,</span> <span class="n">UsingClassifiers</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">FrankAndHallClassifier</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class </span><span class="si">%s</span><span class="s2">: estimator_train must be a FrankAndHallClassifier&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="p">,</span> <span class="n">FrankAndHallClassifier</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Class </span><span class="si">%s</span><span class="s2">: estimator_test must be a FrankAndHallClassifier&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">needs_predictions_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="o">.</span><span class="n">needs_predictions_train</span>
+
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">predictions_train</span><span class="p">)</span>
+
+            <span class="c1"># Recall that n_estimators==n_classes-1 when using a FrankAndHallClassfier</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">)</span>
+                <span class="c1"># copy FrankAndHallClassifier&#39;s estimators</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">estimator_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">estimator_train</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">estimator_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">estimator_test</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="k">if</span> <span class="n">predictions_train</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_bin_fh</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">predictions_train</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">predictions_train</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y_bin_fh</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">preds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="FrankAndHallQuantifier.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.decomposition.ordinal.html#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Aggregates the prevalences of the quantifiers_ to compute the final prediction</span>
+
+<span class="sd">            In this kind of decomposition strategy it is important to ensure that the aggregated consecutive</span>
+<span class="sd">            prevalencences do not decrease:</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
+<span class="sd">                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
+<span class="sd">                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
+
+<span class="sd">            This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from</span>
+<span class="sd">            left to right) and the lower (from right to left) cumulative prevalences. These sets of values are</span>
+<span class="sd">            monotonically increasing (from left to right) and monotonically decreasing (from right to left),</span>
+<span class="sd">            respectively. The average value is assigned to each group and the prevalence for each class is computed as:</span>
+
+<span class="sd">                Prevalence({y_k}) = Prevalence({y_1,...,y_k}) - Prevalence({y_1,...,y_k-1})</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                {1}   {1-2}  {1-2-3}</span>
+
+<span class="sd">                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</span>
+
+<span class="sd">                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)</span>
+<span class="sd">                ----------------</span>
+<span class="sd">                0.25  0.25   0.6    Averaged prevalences</span>
+
+<span class="sd">                Prevalence({1}) = 0.25</span>
+<span class="sd">                Prevalence({2}) = Prevalence({1,2}) - Prevalence({1}) = 0.25 - 0 .25 = 0</span>
+<span class="sd">                Prevalence({3}) = Prevalence({1,2,3}} - Prevalence({1,2}) = 0.6 - 0.25 = 0.35</span>
+
+<span class="sd">                The last class is computed as 1 - the sum of prevalences for the rest of classes</span>
+
+<span class="sd">                Prevalence({4}) = 1 - Prevalence({1,2,3}} = 1 - 0.6 = 0.4</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                Predictions for the testing bag</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+
+<span class="sd">            References</span>
+<span class="sd">            ----------</span>
+<span class="sd">            Destercke, S., &amp; Yang, G. (2014, September). Cautious ordinal classification by binary decomposition.</span>
+<span class="sd">            In Joint European Conference on Machine Learning and Knowledge Discovery in Databases (pp. 323-337).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="c1">#  computing the prevalence of the left group (the positive class) of each quantifier</span>
+        <span class="n">leftgroup_prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># n_estimators==n_classes-1 when using a FrankAndHallClassfier</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">,</span> <span class="n">WithoutClassifiers</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">leftgroup_prevalences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">quantifier</span><span class="p">,</span> <span class="n">UsingClassifiers</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">predictions_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">leftgroup_prevalences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">predictions_test</span><span class="p">[:,</span> <span class="n">i</span><span class="p">],</span> <span class="n">predictions_test</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+                    <span class="n">leftgroup_prevalences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantifiers_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">preds</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">#  the prevalences are corrected (if needed) to ensure that they increase (not strictly) from left to right</span>
+        <span class="n">leftgroup_prevalences</span> <span class="o">=</span> <span class="n">FrankAndHallQuantifier</span><span class="o">.</span><span class="n">check_and_correct_prevalences_asc</span><span class="p">(</span><span class="n">leftgroup_prevalences</span><span class="p">)</span>
+
+        <span class="c1"># we treat the prevalence for each group following FH decomposition from left to right</span>
+        <span class="c1"># &quot;c_i&quot; is largest class of the left group: {c_0,c_1,..,c_i}vs{c_i+1,...,c_k}   {left}vs{right}</span>
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+        <span class="c1"># the prevalence of the first class is the same given for the first quantifier (the left group has only one</span>
+        <span class="c1"># class in this case)</span>
+        <span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">leftgroup_prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">c_i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">p_left</span> <span class="o">=</span> <span class="n">leftgroup_prevalences</span><span class="p">[</span><span class="n">c_i</span><span class="p">]</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">c_i</span><span class="p">])</span>
+            <span class="c1"># we use clip() to solve some precision issues, specially  when a prevalence is close to 0.</span>
+            <span class="c1"># Sometimes p_left - s gives a small negative value</span>
+            <span class="n">prevalences</span><span class="p">[</span><span class="n">c_i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">p_left</span> <span class="o">-</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># the prevalence of the last class is 1 minus the sum of the prevalences for the rest of classes</span>
+        <span class="n">prevalences</span><span class="p">[</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">n_classes</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">prevalences</span></div>
+
+<div class="viewcode-block" id="FrankAndHallQuantifier.check_and_correct_prevalences_asc"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.decomposition.ordinal.html#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.check_and_correct_prevalences_asc">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">check_and_correct_prevalences_asc</span><span class="p">(</span><span class="n">prevalences</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This function checks and corrects the prevalences of a quantifier based on the Frank and Hall decomposition</span>
+<span class="sd">            that are inconsistent. It is used by FrankAndHallQuantifier.</span>
+
+<span class="sd">            To obtain consistent prevalences, we need to ensure that the consecutive probabilities do not decrease.</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
+<span class="sd">                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
+<span class="sd">                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
+
+<span class="sd">            This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from</span>
+<span class="sd">            left to right) and the lower (from right to left) cumulative prevalences. These sets of values are</span>
+<span class="sd">            monotonically increasing (from left to right) and monotonically decreasing (from right to left),</span>
+<span class="sd">            respectively. The average value is assigned to each group</span>
+
+<span class="sd">            Example:</span>
+
+<span class="sd">                {1}   {1-2}  {1-2-3}</span>
+
+<span class="sd">                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</span>
+
+<span class="sd">                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)</span>
+<span class="sd">                ----------------</span>
+<span class="sd">                0.25  0.25   0.6    Averaged prevalences</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            prevalences : array, shape(n_classes-1, )</span>
+<span class="sd">                The prevalences of the binary quantifiers of a FrankAndHallQuantifier for a single dataset</span>
+
+<span class="sd">            Return</span>
+<span class="sd">            ------</span>
+<span class="sd">            prevalences_ok : array, shape(n_classes-1)</span>
+<span class="sd">                The corrected prevalences ensuring that do not decrease (from left to right)</span>
+
+<span class="sd">            References</span>
+<span class="sd">            ----------</span>
+<span class="sd">            Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.</span>
+<span class="sd">            Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,</span>
+<span class="sd">            Sep 2014, Nancy, France. pp.323 - 337, 2014,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ascending</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">prevalences</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;=</span> <span class="n">prevalences</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">ascending</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">prevalences</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span>
+        <span class="c1"># left to right corrections</span>
+        <span class="n">prevs1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">prevs1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prevs1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">prevs1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">prevs1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># right to left correction</span>
+        <span class="n">prevs2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">prevs2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prevs2</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>
+                <span class="n">prevs2</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">prevs2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="c1"># returning the average of both corrections</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">prevs1</span> <span class="o">+</span> <span class="n">prevs2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.decomposition.ordinal</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.metrics package &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.metrics.binary module" href="quantificationlib.metrics.binary.html" />
+    <link rel="prev" title="quantificationlib.estimators.weighted_knn module" href="quantificationlib.estimators.weighted_knn.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.binary.html" title="quantificationlib.metrics.binary module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.weighted_knn.html" title="quantificationlib.estimators.weighted_knn module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.metrics">
+<span id="quantificationlib-metrics-package"></span><h1>quantificationlib.metrics package<a class="headerlink" href="#module-quantificationlib.metrics" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.metrics.binary.html">quantificationlib.metrics.binary module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.absolute_error"><code class="docutils literal notranslate"><span class="pre">absolute_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.bias"><code class="docutils literal notranslate"><span class="pre">bias()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.binary_kld"><code class="docutils literal notranslate"><span class="pre">binary_kld()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.normalized_absolute_score"><code class="docutils literal notranslate"><span class="pre">normalized_absolute_score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.normalized_squared_score"><code class="docutils literal notranslate"><span class="pre">normalized_squared_score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.relative_absolute_error"><code class="docutils literal notranslate"><span class="pre">relative_absolute_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.squared_error"><code class="docutils literal notranslate"><span class="pre">squared_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.symmetric_absolute_percentage_error"><code class="docutils literal notranslate"><span class="pre">symmetric_absolute_percentage_error()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.metrics.multiclass.html">quantificationlib.metrics.multiclass module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis"><code class="docutils literal notranslate"><span class="pre">bray_curtis()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi"><code class="docutils literal notranslate"><span class="pre">brier_multi()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.check_prevalences"><code class="docutils literal notranslate"><span class="pre">check_prevalences()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.geometric_mean"><code class="docutils literal notranslate"><span class="pre">geometric_mean()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.hd"><code class="docutils literal notranslate"><span class="pre">hd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon"><code class="docutils literal notranslate"><span class="pre">jensenshannon()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.kld"><code class="docutils literal notranslate"><span class="pre">kld()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l1"><code class="docutils literal notranslate"><span class="pre">l1()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l2"><code class="docutils literal notranslate"><span class="pre">l2()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_absolute_error"><code class="docutils literal notranslate"><span class="pre">mean_absolute_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_squared_error"><code class="docutils literal notranslate"><span class="pre">mean_squared_error()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric"><code class="docutils literal notranslate"><span class="pre">probsymmetric()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe"><code class="docutils literal notranslate"><span class="pre">topsoe()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quantificationlib.metrics.ordinal.html">quantificationlib.metrics.ordinal module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd"><code class="docutils literal notranslate"><span class="pre">emd()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_distances"><code class="docutils literal notranslate"><span class="pre">emd_distances()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score"><code class="docutils literal notranslate"><span class="pre">emd_score()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.metrics package</a></li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.weighted_knn.html"
+                          title="previous chapter">quantificationlib.estimators.weighted_knn module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.binary.html"
+                          title="next chapter">quantificationlib.metrics.binary module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.metrics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.binary.html" title="quantificationlib.metrics.binary module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.weighted_knn.html" title="quantificationlib.estimators.weighted_knn module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

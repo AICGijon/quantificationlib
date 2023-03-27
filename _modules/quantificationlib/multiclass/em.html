@@ -1,0 +1,308 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.multiclass.em &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.em</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.multiclass.em</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">UsingClassifiers</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.metrics.multiclass</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+
+
+<div class="viewcode-block" id="EM"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.em.html#quantificationlib.multiclass.em.EM">[docs]</a><span class="k">class</span> <span class="nc">EM</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; EM method</span>
+
+<span class="sd">        The main idea of this method is to estimate the prevalences applying EM algorithm.</span>
+
+<span class="sd">        This class (as every other class based on using a classifier) works in two different ways:</span>
+
+<span class="sd">        1) Two estimators are used to classify training examples and testing examples in order to</span>
+<span class="sd">           compute the distribution of both sets. Estimators can be already trained</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the fit/predict methods. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments</span>
+
+<span class="sd">        The goal in both cases is to guarantee that all methods based on classifier are using **exactly**</span>
+<span class="sd">        the same predictions when you compare this kind of quantifiers. In the first case, estimators are only trained</span>
+<span class="sd">        once and can be shared for several quantifiers of this kind</span>
+
+<span class="sd">        Theoretically, it also works for multiclass quantification.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            training set and to compute the distribution of each class individually</span>
+
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            testing set and to compute the distribution of the whole testing set</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        epsilon: float, (default=1e-04)</span>
+<span class="sd">            EM algorithm (its loop) stops when the difference between the prevalences of two</span>
+<span class="sd">            consecutive iterations is lower than epsilon</span>
+
+<span class="sd">        max_iter: int (default=1000)</span>
+<span class="sd">            The maximum number of iterations for the loop of the EM algorithm</span>
+
+<span class="sd">        For some experiments both estimator_train and estimator_test could be the same</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        needs_predictions_train : bool, True</span>
+<span class="sd">            It is True because SORD quantifiers need to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool, True</span>
+<span class="sd">            This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_, 1)</span>
+<span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
+<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
+<span class="sd">            than y. In other cases, y_ext_ == y.</span>
+<span class="sd">            y_ext_ i used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
+<span class="sd">            instead of y</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        epsilon_: float</span>
+<span class="sd">            EM algorithm (its loop) stops when the mean absolute error between the prevalences of two</span>
+<span class="sd">            consecutive iterations is lower than epsilon</span>
+
+<span class="sd">        max_iter_: int</span>
+<span class="sd">            The maximum number of iterations for the loop of the EM algorithm</span>
+
+<span class="sd">        prevalences_train_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Prevalence of each class in the training dataset</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test</span>
+<span class="sd">        must be not None. If both are None a ValueError exception will be raised. If both are not None,</span>
+<span class="sd">        predictions_train/predictions_test are used</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Marco Saerens, Patrice Latinne, Christine Decaestecker: Adjusting the outputs of a classifier to new a priori</span>
+<span class="sd">        probabilities: a simple procedure. Neural computation, 14(1) (2002), 21-41.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EM</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                 <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_</span> <span class="o">=</span> <span class="n">epsilon</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iter_</span> <span class="o">=</span> <span class="n">max_iter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_train_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="EM.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.em.html#quantificationlib.multiclass.em.EM.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
+<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            performed by the `fit` method of its superclass.</span>
+
+<span class="sd">            After that, the method just computes the prevalences in the training set</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, shape (n_examples, n_classes)</span>
+<span class="sd">                Predictions of the examples in the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train and predictions_train are at the same time None or not None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">predictions_train</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+            <span class="n">freq</span><span class="p">[</span><span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_train_</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="EM.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.em.html#quantificationlib.multiclass.em.EM.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
+<span class="sd">            `super().predict()` method.</span>
+
+<span class="sd">            After that, the method applies EM algorithm. In the E step the new posterior are computed based on the</span>
+<span class="sd">            estimated prevalences</span>
+
+<span class="sd">                    P_tst(y|x) = P_tst(y)/P_tr(y) P_tr(y|x)</span>
+
+<span class="sd">            and are normalized to sum 1</span>
+<span class="sd">            Then, in the M step new prevalences are computed as the mean of the posteriors obtained in the E step</span>
+
+<span class="sd">            The loop stops when the max number of iterations is reached or when the difference between the</span>
+<span class="sd">            prevalences of two consecutive iterations is lower than epsilon</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
+
+<span class="sd">                If estimator_test is None then predictions_test can not be None.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict_proba`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are at the same time None or not None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="n">iterations</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prevalences_train_</span><span class="p">)</span>
+        <span class="n">prevalences_prev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_classes</span><span class="p">)</span>
+
+        <span class="k">while</span> <span class="n">iterations</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter_</span> <span class="ow">and</span> <span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="n">prevalences_prev</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_</span>
+                                               <span class="ow">or</span> <span class="n">iterations</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">):</span>
+
+            <span class="n">nonorm_posteriors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_train_</span><span class="p">))</span>
+
+            <span class="n">posteriors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">nonorm_posteriors</span><span class="p">,</span> <span class="n">nonorm_posteriors</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+            <span class="n">prevalences_prev</span> <span class="o">=</span> <span class="n">prevalences</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">posteriors</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+            <span class="n">iterations</span> <span class="o">=</span> <span class="n">iterations</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">iterations</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_iter_</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done but it might have not converged, max_iter reached&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.em</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,442 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.base &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.base</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.base</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Base classes for all quantifiers</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABCMeta</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span>
+
+
+<div class="viewcode-block" id="BaseQuantifier"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.BaseQuantifier">[docs]</a><span class="k">class</span> <span class="nc">BaseQuantifier</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">,</span> <span class="n">BaseEstimator</span><span class="p">)):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for binary, multiclass and ordinal quantifiers</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="WithoutClassifiers"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.WithoutClassifiers">[docs]</a><span class="k">class</span> <span class="nc">WithoutClassifiers</span><span class="p">(</span><span class="n">BaseQuantifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for quantifiers that do not use any classifier</span>
+
+<span class="sd">        Examples of this type of quantifiers are HDX and EDX, for instance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">         verbose : int, optional, (default=0)</span>
+<span class="sd">             The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">         Attributes</span>
+<span class="sd">         ----------</span>
+<span class="sd">         verbose : int</span>
+<span class="sd">             The verbosity level</span>
+
+<span class="sd">         classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">             Class labels</span>
+<span class="sd">     &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># init attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="c1"># computed attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="WithoutClassifiers.fit"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.WithoutClassifiers.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just checks X and Y and stores the classes of the datasets</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="UsingClassifiers"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.UsingClassifiers">[docs]</a><span class="k">class</span> <span class="nc">UsingClassifiers</span><span class="p">(</span><span class="n">BaseQuantifier</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for quantifiers based on the use of classifiers</span>
+
+<span class="sd">        Classes derived from this abstract class work in two different ways:</span>
+
+<span class="sd">        1) Two estimators are used to classify the examples of the training set and the testing set in order to</span>
+<span class="sd">           compute the distributions of both sets. Estimators can be already trained.</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments.</span>
+
+<span class="sd">        The idea in both cases is to guarantee that all methods based on classifiers are using **exactly**</span>
+<span class="sd">        the same predictions when you compare this kind of quantifiers. In the first case, estimators are only</span>
+<span class="sd">        trained once and can be shared for several quantifiers of this kind.</span>
+
+<span class="sd">        This class is responsible for fitting the estimators (when needed) and for computing the predictions for the</span>
+<span class="sd">        training set and the testing set.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator object, optional, (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify</span>
+<span class="sd">            the examples of the training set and to obtain their distribution</span>
+
+<span class="sd">        estimator_test : estimator object, optional, (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify</span>
+<span class="sd">            the examples of the testing bag and to obtain their distribution</span>
+
+<span class="sd">        needs_predictions_train : bool, (default=True)</span>
+<span class="sd">            True if the quantifier needs to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool, optional, (default=True)</span>
+<span class="sd">            Whether the estimators return probabilistic predictions or not. This depends on the specific quantifier,</span>
+<span class="sd">            some need crisp predictions (e.g. CC) and other methods require probabilistic predictions (PAC, HDy, ...)</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        For some experiments both estimators could be the same</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        needs_predictions_train : bool</span>
+<span class="sd">            True if the quantifier needs to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool</span>
+<span class="sd">            Whether the estimators return probabilistic predictions or not</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes) (probabilistic)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes) (probabilistic)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_), )</span>
+<span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
+<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying</span>
+<span class="sd">            CV_estimator) than y. In other cases, y_ext_ == y.</span>
+<span class="sd">            y_ext_ must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,</span>
+<span class="sd">            instead of y</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_train_/predictions_train and estimator_test_/predictions_test</span>
+<span class="sd">        must be not None. If both are None a ValueError exception will be raised. If both are not None,</span>
+<span class="sd">        predictions_train/predictions_test are used</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># init attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span> <span class="o">=</span> <span class="n">estimator_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span> <span class="o">=</span> <span class="n">estimator_test</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">needs_predictions_train</span> <span class="o">=</span> <span class="n">needs_predictions_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">probabilistic_predictions</span> <span class="o">=</span> <span class="n">probabilistic_predictions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="c1"># computed attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="UsingClassifiers.fit"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.UsingClassifiers.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the estimators (estimator_train and estimator_test) and computes the predictions for the training</span>
+<span class="sd">            set (predictions_train_ attribute)</span>
+
+<span class="sd">            First, the method checks that estimator_train and predictions_train are not both None</span>
+
+<span class="sd">            Then, it fits both estimators if needed. It checks whether the estimators are already trained or not</span>
+<span class="sd">            by calling the `predict` method.</span>
+
+<span class="sd">            The method finally computes predictions_train_ (if needed, attribute needs_predictions_train) using</span>
+<span class="sd">            predictions_train or estimator_train. If predictions_train is not None, predictions_train_ is copied from</span>
+<span class="sd">            predictions_train (and converted to crisp values, using `__probs2crisps` method, when</span>
+<span class="sd">            probabilistic_predictions is False). If predictions_train is None, predictions_train_ is computed using</span>
+<span class="sd">            the `predict`/`predict_proba` method of estimator_train, depending again on the value of</span>
+<span class="sd">            probabilistic_predictions attribute.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, optional, shape(n_examples, 1) crisp or shape (n_examples, n_classes) (probs)</span>
+<span class="sd">                Predictions of the examples in the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train and predictions_train are both None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs_predictions_train</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">predictions_train</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;estimator_train or predictions_train must be not None &quot;</span>
+                             <span class="s2">&quot;with objects of class </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="c1"># Fit estimators if they are not already fitted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Fitting estimator for training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="c1"># we need to fit the estimator for the training distribution</span>
+            <span class="c1"># we check if the estimator is trained or not</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;it was already fitted&#39;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fitted&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Fitting estimator for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+            <span class="c1"># we need to fit the estimator for the testing distribution</span>
+            <span class="c1"># we check if the estimator is trained or not</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;it was already fitted&#39;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">NotFittedError</span><span class="p">:</span>
+
+                <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">check_X_y</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;fitted&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Compute predictions_train_</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing predictions for training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">needs_predictions_train</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">predictions_train</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilistic_predictions</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span> <span class="o">=</span> <span class="n">predictions_train</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span> <span class="o">=</span> <span class="n">UsingClassifiers</span><span class="o">.</span><span class="n">__probs2crisps</span><span class="p">(</span><span class="n">predictions_train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilistic_predictions</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_train</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+            <span class="c1"># Compute y_ext_</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">)</span> <span class="o">//</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="UsingClassifiers.predict"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.UsingClassifiers.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes the predictions for the testing set (predictions_test_ attribute)</span>
+
+<span class="sd">            First, the method checks if at least one between estimator_test and prediction_test is not None,</span>
+<span class="sd">            otherwise a ValueError exception is raised.</span>
+
+<span class="sd">            Then, it computes predictions_test_. If predictions_test is not None, predictions_test_ is copied from</span>
+<span class="sd">            predictions_test (and converted to crisp values, using `__probs2crisp` method when</span>
+<span class="sd">            probabilistic_predictions attribute is False). If predictions_test is None, predictions_test_ is computed</span>
+<span class="sd">            calling the `predict`/`predict_proba method (depending on the value of the attribute</span>
+<span class="sd">            probabilistic_predictions) of estimator_test.</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                Predictions for the testing bag</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">predictions_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;estimator_test or predictions_test must be not None &quot;</span>
+                             <span class="s2">&quot;to compute a prediction with objects of class </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing predictions for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1"># At least one between estimator_test and predictions_test is not None</span>
+        <span class="k">if</span> <span class="n">predictions_test</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilistic_predictions</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span> <span class="o">=</span> <span class="n">predictions_test</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span> <span class="o">=</span> <span class="n">UsingClassifiers</span><span class="o">.</span><span class="n">__probs2crisps</span><span class="p">(</span><span class="n">predictions_test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">probabilistic_predictions</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimator_test</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">__probs2crisps</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Convert probability predictions to crisp predictions</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            preds : ndarray, shape (n_examples, 1) or (n_examples,) for binary problems, (n_examples, n_classes) for</span>
+<span class="sd">                    multiclass</span>
+<span class="sd">                The matrix with the probability predictions</span>
+
+<span class="sd">            labels : ndarray, shape (n_classes, )</span>
+<span class="sd">                Class labels</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">preds</span>
+        <span class="k">if</span> <span class="n">preds</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">preds</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1">#  binary problem</span>
+            <span class="k">if</span> <span class="n">preds</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">preds_mod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">preds_mod</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">preds</span><span class="o">.</span><span class="n">squeeze</span><span class="p">())</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preds_mod</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">):</span>
+                <span class="c1"># it contains probs</span>
+                <span class="n">preds_mod</span><span class="p">[</span><span class="n">preds_mod</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                <span class="n">preds_mod</span><span class="p">[</span><span class="n">preds_mod</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">return</span> <span class="n">preds_mod</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">preds_mod</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># multiclass problem</span>
+            <span class="k">return</span> <span class="n">labels</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">preds</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.base</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

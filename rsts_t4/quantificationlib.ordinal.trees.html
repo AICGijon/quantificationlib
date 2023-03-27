@@ -1,0 +1,157 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.ordinal.trees module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.bag_generator module" href="quantificationlib.bag_generator.html" />
+    <link rel="prev" title="quantificationlib.ordinal.pdf module" href="quantificationlib.ordinal.pdf.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.bag_generator.html" title="quantificationlib.bag_generator module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.ordinal.pdf.html" title="quantificationlib.ordinal.pdf module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.ordinal.html" accesskey="U">quantificationlib.ordinal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.ordinal.trees module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.ordinal.trees">
+<span id="quantificationlib-ordinal-trees-module"></span><h1>quantificationlib.ordinal.trees module<a class="headerlink" href="#module-quantificationlib.ordinal.trees" title="Permalink to this heading">¶</a></h1>
+<p>Ordinal quantification trees</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.ordinal.trees.OrdinalQuantificationTree">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">OrdinalQuantificationTree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ordinal/trees.html#OrdinalQuantificationTree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ordinal.trees.OrdinalQuantificationTree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.PCC" title="quantificationlib.baselines.cc.PCC"><code class="xref py py-class docutils literal notranslate"><span class="pre">PCC</span></code></a></p>
+<p>Ordinal Quantification Trees proposed by (Martino, Gao and Sebastiani, 2016)</p>
+<p>This class is just a wrapper. It is a PCC method in which the estimator for the test distribution is a
+FrankAndHallTreeClassifier. Notice that the estimator object for the OrdinalQuantificationTree must be
+the binary base estimator used by the FrankAndHallTreeClassifier</p>
+<p>Instead of using this class, our recommedation is to employ directly a PCC object to improve the efficiency
+because the FrankAndHallTreeClassifier estimator can be shared with other quantifiers and trained just once.</p>
+<p class="rubric">References</p>
+<p>Giovanni Da San Martino, Wei Gao, and Fabrizio Sebastiani. 2016a. Ordinal text quantification.
+In Proceedings of the International ACM SIGIR Conference on  Research and Development
+in Information Retrieval. 937940.</p>
+<p>Giovanni Da San Martino,Wei Gao, and Fabrizio Sebastiani. 2016b.
+QCRI at SemEval-2016 Task 4: Probabilistic methods for binary and ordinal quantification.
+In Proceedings of the 10th InternationalWorkshop on Semantic Evaluation (SemEval’16).
+Association for Computational Linguistics, A, 5863.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.ordinal.trees module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.ordinal.trees.OrdinalQuantificationTree"><code class="docutils literal notranslate"><span class="pre">OrdinalQuantificationTree</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.ordinal.pdf.html"
+                          title="previous chapter">quantificationlib.ordinal.pdf module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.bag_generator.html"
+                          title="next chapter">quantificationlib.bag_generator module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.ordinal.trees.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.bag_generator.html" title="quantificationlib.bag_generator module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.ordinal.pdf.html" title="quantificationlib.ordinal.pdf module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.ordinal.html" >quantificationlib.ordinal package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.ordinal.trees module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

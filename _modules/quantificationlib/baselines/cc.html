@@ -1,0 +1,361 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.baselines.cc &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.baselines.cc</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.baselines.cc</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Multiclass versions for CC and PCC quantifiers</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">UsingClassifiers</span>
+
+
+<div class="viewcode-block" id="CC"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.CC">[docs]</a><span class="k">class</span> <span class="nc">CC</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass Classify And Count method</span>
+
+<span class="sd">        prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</span>
+
+<span class="sd">        This class works in two different ways:</span>
+
+<span class="sd">        1) An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the predict method. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict` methods</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : None. (Not used)</span>
+
+<span class="sd">        estimator_test : estimator object</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        needs_predictions_train : bool, False</span>
+<span class="sd">            It is False because CC quantifiers do not need to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool, False</span>
+<span class="sd">             This means that predictions_test_ contains crisp predictions</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, )</span>
+<span class="sd">            Crisp predictions of the examples in the testing bag</span>
+
+<span class="sd">        predictions_train_ : None. (Not used)</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(n_examples, )</span>
+<span class="sd">            True labels of the training set</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_test and predictions_test must be not None. If both are None a</span>
+<span class="sd">        ValueError exception will be raised. If both are not None, predictions_test is used.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        George Forman. 2005. Counting positives accurately despite inaccurate classification. In Proceedings of</span>
+<span class="sd">        the European Conference on Machine Learning (ECML’05). 564–575.</span>
+
+<span class="sd">        George Forman. 2008. Quantifying counts and costs via classification. Data Mining Knowledge Discovery 17,</span>
+<span class="sd">        2 (2008), 164–206.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">CC</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                 <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CC.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.CC.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fit the estimator for the testing bags when needed. The method checks whether the estimator is trained or</span>
+<span class="sd">            not calling the predict method</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : None, not used</span>
+<span class="sd">                Predictions of the examples in the training set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CC.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.CC.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            The prevalence for each class is the proportion of examples predicted as belonging to that class</span>
+
+<span class="sd">            prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, ) or (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They can be crisp values or probabilities. In the latter case, they are converted to crisp values</span>
+<span class="sd">                using `__probs2crisps` method</span>
+
+<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : An ndarray, shape(n_classes, ) with the prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+            <span class="n">freq</span><span class="p">[</span><span class="n">n_cls</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="PCC"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.PCC">[docs]</a><span class="k">class</span> <span class="nc">PCC</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass Probabilistic Classify And Count method.</span>
+
+<span class="sd">        prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</span>
+
+<span class="sd">        This class works in two different ways:</span>
+
+<span class="sd">        1) An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the predict method. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict` methods. It is used to classify the testing examples</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes)</span>
+<span class="sd">            Probabilistic predictions of the examples in the testing bag</span>
+
+<span class="sd">        estimator_train : None. (Not used)</span>
+
+<span class="sd">        predictions_train_ : None. (Not used)</span>
+
+<span class="sd">        needs_predictions_train : bool, False</span>
+<span class="sd">            It is False because PCC quantifiers do not need to estimate the training distribution</span>
+
+<span class="sd">        probabilistic_predictions : bool, True</span>
+<span class="sd">             This means that predictions_test_ contains probabilistic predictions</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(n_examples, )</span>
+<span class="sd">            True labels of the training set</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_test and predictions_test must be not None. If both are None a</span>
+<span class="sd">        ValueError exception will be raised. If both are not None, predictions_test is used.</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Antonio Bella, Cèsar Ferri, José Hernández-Orallo, and María José Ramírez-Quintana. 2010. Quantification</span>
+<span class="sd">        via probability estimators. In Proceedings of the IEEE International Conference on Data Mining (ICDM’10).</span>
+<span class="sd">        IEEE, 737–742.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PCC</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                  <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PCC.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.PCC.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fit the estimator for the testing bags when needed. The method checks whether the estimator is trained or</span>
+<span class="sd">            not calling the predict method</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : (sparse) array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : Not used</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PCC.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.PCC.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            The prevalence for each class is the average probability for such class</span>
+
+<span class="sd">            prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a predict_proba method)</span>
+
+<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : An ndarray, shape(n_classes, ) with the prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.baselines.cc</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

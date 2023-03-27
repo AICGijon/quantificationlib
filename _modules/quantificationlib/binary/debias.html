@@ -1,0 +1,288 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.binary.debias &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.binary.debias</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.binary.debias</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">De-Bias quantifier (just for binary quantification)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">UsingClassifiers</span>
+
+
+<div class="viewcode-block" id="DeBias"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.debias.html#quantificationlib.binary.debias.DeBias">[docs]</a><span class="k">class</span> <span class="nc">DeBias</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Binary quantifier based on De-Bias estimate proposed by Friedman</span>
+
+<span class="sd">        prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</span>
+
+<span class="sd">        where</span>
+
+<span class="sd">        Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</span>
+
+<span class="sd">        This class works in two different ways:</span>
+
+<span class="sd">        1) An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the predict method. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            training set and to compute the confusion matrix</span>
+
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            testing set and to obtain the confusion matrix of the testing set</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        For some experiments both estimators could be the same</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set.</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes) (probabilistic estimator)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes) (probabilistic estimator)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        probabilistic_predictions : bool, True</span>
+<span class="sd">             This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+
+<span class="sd">        needs_predictions_train : bool, True</span>
+<span class="sd">            It is True because DeBias quantifiers need to estimate the training distribution</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(n_examples, )</span>
+<span class="sd">            True labels of the training set</span>
+
+<span class="sd">        train_prevs_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Prevalence of each class in the training set</span>
+
+<span class="sd">        Vt_ : float</span>
+<span class="sd">           The value of equation</span>
+<span class="sd">                Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])</span>
+<span class="sd">           applied over the training examples D</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test</span>
+<span class="sd">        must be not None. If both are None a ValueError exception will be raised. If both are not None,</span>
+<span class="sd">        predictions_train/predictions_test are used</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Jerome Friedman. Class counts in future unlabeled samples. Presentation at MIT CSAIL Big Data Event, 2014.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DeBias</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span>
+                                     <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># priors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Vt value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Vt_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DeBias.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.debias.html#quantificationlib.binary.debias.DeBias.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
+<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            performed by the `fit method of its superclass.</span>
+
+<span class="sd">            Finally the method computes the value of Vt</span>
+
+<span class="sd">            Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, shape (n_examples, n_classes)</span>
+<span class="sd">                Predictions of the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train and predictions_train are both None</span>
+<span class="sd">            AttributeError</span>
+<span class="sd">                When the number of classes &gt; 2</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;DB is a binary method, multiclass quantification is not supported&quot;</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">predictions_train</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating Vt for training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="n">At</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Vt_</span> <span class="o">=</span> <span class="n">At</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DeBias.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.debias.html#quantificationlib.binary.debias.DeBias.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            The prevalence for the positive class is</span>
+
+<span class="sd">            prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : (sparse) array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a predict_proba method)</span>
+
+<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : An ndarray, shape(n_classes, ) with the prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_prevs_</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">Vt_</span>
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">])</span>
+
+        <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.binary.debias</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

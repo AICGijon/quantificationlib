@@ -1,0 +1,185 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.metrics.ordinal module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.multiclass package" href="quantificationlib.multiclass.html" />
+    <link rel="prev" title="quantificationlib.metrics.multiclass module" href="quantificationlib.metrics.multiclass.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.html" title="quantificationlib.multiclass package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.multiclass.html" title="quantificationlib.metrics.multiclass module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.metrics.html" accesskey="U">quantificationlib.metrics package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.ordinal module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.metrics.ordinal">
+<span id="quantificationlib-metrics-ordinal-module"></span><h1>quantificationlib.metrics.ordinal module<a class="headerlink" href="#module-quantificationlib.metrics.ordinal" title="Permalink to this heading">¶</a></h1>
+<p>Score functions and loss functions for ordinal quantification problems</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.ordinal.emd">
+<span class="sig-name descname"><span class="pre">emd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/ordinal.html#emd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.ordinal.emd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the EMD distances between two sets of prevalences</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p_true</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>1</em><em>)</em>) – </p></li>
+<li><p><strong>p_pred</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>1</em><em>)</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>emd</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float, the EMD distance between p_true and p_pred</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.ordinal.emd_distances">
+<span class="sig-name descname"><span class="pre">emd_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/ordinal.html#emd_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.ordinal.emd_distances" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the EMD distances between the rows of A and B</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>A</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_samples_1</em><em>, </em><em>n_features</em><em>)</em>) – </p></li>
+<li><p><strong>B</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_samples_2</em><em>, </em><em>n_features</em><em>)</em>) – </p></li>
+<li><p><strong>columns</strong> (<em>A and B should have the same number of</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>distances</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, shape (n_samples_1, n_samples_2)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="quantificationlib.metrics.ordinal.emd_score">
+<span class="sig-name descname"><span class="pre">emd_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/ordinal.html#emd_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.ordinal.emd_score" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.metrics.ordinal module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.metrics.ordinal.emd"><code class="docutils literal notranslate"><span class="pre">emd()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.ordinal.emd_distances"><code class="docutils literal notranslate"><span class="pre">emd_distances()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.metrics.ordinal.emd_score"><code class="docutils literal notranslate"><span class="pre">emd_score()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.multiclass.html"
+                          title="previous chapter">quantificationlib.metrics.multiclass module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.multiclass.html"
+                          title="next chapter">quantificationlib.multiclass package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.metrics.ordinal.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.multiclass.html" title="quantificationlib.multiclass package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.multiclass.html" title="quantificationlib.metrics.multiclass module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.metrics.html" >quantificationlib.metrics package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.ordinal module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

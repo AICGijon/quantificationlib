@@ -1,0 +1,482 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.metrics.multiclass &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.multiclass</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.metrics.multiclass</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Score functions and loss functions for multiclass quantification problems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils.validation</span> <span class="kn">import</span> <span class="n">check_array</span><span class="p">,</span> <span class="n">check_consistent_length</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
+
+
+<div class="viewcode-block" id="check_prevalences"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.check_prevalences">[docs]</a><span class="k">def</span> <span class="nf">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Check that p_true and p_pred are valid and consistent</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        p_true : array-like of shape = (n_classes, 1)</span>
+<span class="sd">            The converted and validated p_true array</span>
+
+<span class="sd">        p_pred : array-like of shape = (n_classes, 1)</span>
+<span class="sd">            The converted and validated p_pred array</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">check_consistent_length</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">p_true</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_array</span><span class="p">(</span><span class="n">p_pred</span><span class="p">,</span> <span class="n">ensure_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">p_true</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">p_true</span> <span class="o">=</span> <span class="n">p_true</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">p_pred</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">p_pred</span> <span class="o">=</span> <span class="n">p_pred</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">p_true</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">p_pred</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;p_true and p_pred have different length&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span></div>
+
+
+<div class="viewcode-block" id="kld"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.kld">[docs]</a><span class="k">def</span> <span class="nf">kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Kullback - Leiber divergence (KLD)</span>
+
+<span class="sd">            :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`</span>
+
+<span class="sd">        being l the number of classes.</span>
+
+<span class="sd">        Also known as discrimination information, relative entropy or normalized cross-entropy</span>
+<span class="sd">        (see [Esuli and Sebastiani 2010; Forman 2008]).</span>
+<span class="sd">        KLD is a special case of the family of f-divergences</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        eps : float,</span>
+<span class="sd">            To prevent division by 0 and Inf/NaN quant_results</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        KLD : float</span>
+<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} p_j \cdot \log{p_j / \hat{p}_j}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="mean_absolute_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_absolute_error">[docs]</a><span class="k">def</span> <span class="nf">mean_absolute_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Mean absolute error</span>
+
+<span class="sd">            :math:`mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+
+<span class="sd">        being l the number of classes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MAE : float</span>
+<span class="sd">            It is equal to :math:`1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="l1"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l1">[docs]</a><span class="k">def</span> <span class="nf">l1</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; L1 loss function</span>
+
+<span class="sd">            :math:`l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+
+<span class="sd">        being l the number of classes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        l1 : float</span>
+<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="mean_squared_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_squared_error">[docs]</a><span class="k">def</span> <span class="nf">mean_squared_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Mean squared error</span>
+
+<span class="sd">            :math:`mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`</span>
+
+<span class="sd">        being l the number of classes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        MSE : float</span>
+<span class="sd">            It is equal to :math:`1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="l2"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l2">[docs]</a><span class="k">def</span> <span class="nf">l2</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; L2 loss function</span>
+
+<span class="sd">            :math:`l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`</span>
+
+<span class="sd">        being l the number of classes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        l2 : float</span>
+<span class="sd">            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="hd"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.hd">[docs]</a><span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Hellinger distance (HD)</span>
+
+<span class="sd">            :math:`hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`</span>
+
+<span class="sd">        being l the number of classes</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape = (n_classes)</span>
+<span class="sd">            True prevalences</span>
+
+<span class="sd">        p_pred : array_like, shape = (n_classes)</span>
+<span class="sd">            Predicted prevalences</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        HD : float</span>
+<span class="sd">            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_pred</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="bray_curtis"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis">[docs]</a><span class="k">def</span> <span class="nf">bray_curtis</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bray-Curtis dissimilarity.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape=(n_classes)</span>
+<span class="sd">            True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        p_pred : array_like, shape=(n_classes)</span>
+<span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">p_pred</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="topsoe"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a><span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span> <span class="o">+</span>
+                  <span class="n">p_pred</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="jensenshannon"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon">[docs]</a><span class="k">def</span> <span class="nf">jensenshannon</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Jensen-Shannon divergence (a=1/2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">+</span><span class="n">p_pred</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">-</span>
+                  <span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="probsymmetric"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a><span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span><span class="o">-</span><span class="n">p_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span><span class="o">+</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="brier_multi"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a><span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Brier score (classification) for multiclass problems</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">probs</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="geometric_mean"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.geometric_mean">[docs]</a><span class="k">def</span> <span class="nf">geometric_mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the geometric mean.</span>
+
+<span class="sd">    In quantification, the geometric mean is useful to training a classifier for imbalanced problems (a quite common</span>
+<span class="sd">    issue). The geometric mean tries to maximize the accuracy for all classes, their accuracies must be balanced to</span>
+<span class="sd">    obtain a good score for  geometric mean. It is computed as the root of the product of classes sensitivity.</span>
+
+<span class="sd">    The optimal value is 1 and the worst is 0 (this occurs when the accuracy for one class is 0). To dealt with</span>
+<span class="sd">    worst-case for highly multiclass problems, the sensitivity of unrecognized classes can be corrected to a given</span>
+<span class="sd">    value (instead of zero), see correction parameter.</span>
+
+<span class="sd">    The implementation given here is a simplification of the one provide in imbalanced library.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    y_true : ndarray, shape (n_examples,)</span>
+<span class="sd">        True class for each example</span>
+
+<span class="sd">    y_pred : array, shape (n_examples,)</span>
+<span class="sd">        Predicted class returned by a classifier</span>
+
+<span class="sd">    correction : float, default=0.0</span>
+<span class="sd">        Substitutes sensitivity of unrecognized classes from zero to this value.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    g_mean : float</span>
+<span class="sd">        Returns the geometric mean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">n_labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+
+    <span class="n">le</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span>
+    <span class="n">le</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">sorted_labels</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">classes_</span>
+
+    <span class="n">tp</span> <span class="o">=</span> <span class="n">y_true</span> <span class="o">==</span> <span class="n">y_pred</span>
+    <span class="n">tp_bins</span> <span class="o">=</span> <span class="n">y_true</span><span class="p">[</span><span class="n">tp</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tp_bins</span><span class="p">):</span>
+        <span class="n">tp_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">tp_bins</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">true_sum</span> <span class="o">=</span> <span class="n">tp_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">y_true</span><span class="p">):</span>
+        <span class="n">true_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">sorted_labels</span><span class="p">,</span> <span class="n">labels</span><span class="p">[:</span><span class="n">n_labels</span><span class="p">])</span>
+    <span class="n">tp_sum</span> <span class="o">=</span> <span class="n">tp_sum</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+    <span class="n">true_sum</span> <span class="o">=</span> <span class="n">true_sum</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">true_sum</span> <span class="o">==</span> <span class="mf">0.0</span>
+    <span class="n">true_sum</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># avoid infs/nans</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">tp_sum</span> <span class="o">/</span> <span class="n">true_sum</span>
+    <span class="n">recall</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">recall</span><span class="p">[</span><span class="n">recall</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">correction</span>
+
+    <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
+        <span class="n">g_mean</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gmean</span><span class="p">(</span><span class="n">recall</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g_mean</span></div>
+
+
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def relative_absolute_error(p_true, p_pred, eps=1e-12):</span>
+<span class="c1">#     &quot;&quot;&quot;The relation between the absolute error and the true prevalence.</span>
+<span class="c1">#</span>
+<span class="c1">#         Parameters</span>
+<span class="c1">#         ----------</span>
+<span class="c1">#         p_true : array_like, shape=(n_classes)</span>
+<span class="c1">#             True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#</span>
+<span class="c1">#         p_pred : array_like, shape=(n_classes)</span>
+<span class="c1">#             Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#</span>
+<span class="c1">#         eps: to prevent division by 0</span>
+<span class="c1">#</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#     if np.any(p_true == 0):</span>
+<span class="c1">#         return np.mean((np.abs(p_pred - p_true) + eps) / (p_true + eps))</span>
+<span class="c1">#     return np.mean(np.abs(p_pred - p_true) / p_true)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def symmetric_absolute_percentage_error(p_true, p_pred):</span>
+<span class="c1">#     &quot;&quot;&quot;SAPE. A symmetric version of RAE.</span>
+<span class="c1">#</span>
+<span class="c1">#         Parameters</span>
+<span class="c1">#         ----------</span>
+<span class="c1">#         p_true : array_like, shape=(n_classes)</span>
+<span class="c1">#             True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#</span>
+<span class="c1">#         p_pred : array_like, shape=(n_classes)</span>
+<span class="c1">#             Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#     if np.any((p_pred + p_true) == 0):</span>
+<span class="c1">#         raise NotImplementedError</span>
+<span class="c1">#     return np.abs(p_pred - p_true) / (p_pred + p_true)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def normalized_absolute_error(p_true, p_pred):</span>
+<span class="c1">#     &quot;&quot;&quot;A loss function, ranging from 0 (best) and 1 (worst)</span>
+<span class="c1">#</span>
+<span class="c1">#         Parameters</span>
+<span class="c1">#         ----------</span>
+<span class="c1">#         p_true : array_like, shape=(n_classes)</span>
+<span class="c1">#             True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#</span>
+<span class="c1">#         p_pred : array_like, shape=(n_classes)</span>
+<span class="c1">#             Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#     return np.sum(np.abs(p_pred - p_true)) / (2 * (1 - np.min(p_true)))</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># def normalized_relative_absolute_error(p_true, p_pred):</span>
+<span class="c1">#     &quot;&quot;&quot;NRAE.</span>
+<span class="c1">#</span>
+<span class="c1">#         Parameters</span>
+<span class="c1">#         ----------</span>
+<span class="c1">#         p_true : array_like, shape=(n_classes)</span>
+<span class="c1">#             True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#</span>
+<span class="c1">#         p_pred : array_like, shape=(n_classes)</span>
+<span class="c1">#             Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="c1">#         &quot;&quot;&quot;</span>
+<span class="c1">#     l = p_true.shape[0]</span>
+<span class="c1">#     return relative_absolute_error(p_true, p_pred) / (l - 1 + (1 - np.min(p_true)) / np.min(p_true))</span>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.metrics.multiclass</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

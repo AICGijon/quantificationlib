@@ -1,0 +1,832 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.multiclass.df &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.df</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.multiclass.df</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Multiclass versions for quantifiers based on representing the distributions using CDFs/PDFs</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.utils</span> <span class="kn">import</span> <span class="n">check_X_y</span><span class="p">,</span> <span class="n">check_array</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">WithoutClassifiers</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.search</span> <span class="kn">import</span> <span class="n">global_search</span><span class="p">,</span> <span class="n">mixture_of_pdfs</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.optimization</span> <span class="kn">import</span> <span class="n">solve_hd</span><span class="p">,</span> <span class="n">compute_l2_param_train</span><span class="p">,</span> <span class="n">solve_l1</span><span class="p">,</span> <span class="n">solve_l2</span>
+
+
+<div class="viewcode-block" id="DFy"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFy">[docs]</a><span class="k">class</span> <span class="nc">DFy</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generic Multiclass DFy method</span>
+
+<span class="sd">        The idea is to represent the mixture of the training distribution and the testing distribution</span>
+<span class="sd">        (using CDFs/PDFs) of the predictions given by a classifier (y). The difference between both is minimized</span>
+<span class="sd">        using a distance/loss function. Originally, (González-Castro et al. 2013) propose the combination of PDF and</span>
+<span class="sd">        Hellinger Distance, but also CDF and any other distance/loss function could be used, like L1 or L2. In fact,</span>
+<span class="sd">        Forman (2005) propose to use CDF&#39;s an a measure equivalent to L1.</span>
+
+<span class="sd">        The class has two parameters to select:</span>
+
+<span class="sd">        - the method used to represent the distributions (CDFs or PDFs)</span>
+<span class="sd">        - the distance used.</span>
+
+<span class="sd">        This class (as every other class based on distribution matching using classifiers) works in two different ways:</span>
+
+<span class="sd">        1) Two estimators are used to classify training examples and testing examples in order to</span>
+<span class="sd">           compute the distribution of both sets. Estimators can be already trained</span>
+
+<span class="sd">        2) You can directly provide the predictions for the examples in the fit/predict methods. This is useful</span>
+<span class="sd">           for synthetic/artificial experiments</span>
+
+<span class="sd">        The goal in both cases is to guarantee that all methods based on distribution matching are using **exactly**</span>
+<span class="sd">        the same predictions when you compare this kind of quantifiers (and others that also employ an underlying</span>
+<span class="sd">        classifier, for instance, CC/PCC and AC/PAC). In the first case, estimators are only trained once and can</span>
+<span class="sd">        be shared for several quantifiers of this kind</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        estimator_train : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            training set and to compute the distribution of each class individually</span>
+
+<span class="sd">        estimator_test : estimator object (default=None)</span>
+<span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
+<span class="sd">            testing set and to compute the distribution of the whole testing set</span>
+
+<span class="sd">        distribution_function : str, (default=&#39;PDF&#39;)</span>
+<span class="sd">            Type of distribution function used. Two types are supported &#39;CDF&#39; and &#39;PDF&#39;</span>
+
+<span class="sd">        n_bins : int  (default=8)</span>
+<span class="sd">            Number of bins to compute the CDFs/PDFs</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;norm&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                          where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                          and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                          the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">        distance : str, representing the distance function (default=&#39;HD&#39;)</span>
+<span class="sd">            It is the name of the distance used to compute the difference between the mixture of the training</span>
+<span class="sd">            distribution and the testing distribution</span>
+
+<span class="sd">        tol : float, (default=1e-05)</span>
+<span class="sd">            The precision of the solution when search is used to compute the prevalence</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        For some experiments both estimator_train and estimator_test could be the same</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        estimator_train : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the training set</span>
+
+<span class="sd">        estimator_test : estimator</span>
+<span class="sd">            Estimator used to classify the examples of the testing bag</span>
+
+<span class="sd">        predictions_train_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the training set</span>
+
+<span class="sd">        predictions_test_ : ndarray, shape (n_examples, n_classes) (probabilities)</span>
+<span class="sd">            Predictions of the examples in the testing bag</span>
+
+<span class="sd">        needs_predictions_train : bool, True</span>
+<span class="sd">            It is True because PDFy quantifiers need to estimate the training distribution</span>
+<span class="sd">            </span>
+<span class="sd">        probabilistic_predictions : bool, True</span>
+<span class="sd">             This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+
+<span class="sd">        bin_strategy : str</span>
+<span class="sd">            Method to compute the boundaries of the bins</span>
+
+<span class="sd">        distance : str or a distance function</span>
+<span class="sd">            A string with the name of the distance function (&#39;HD&#39;/&#39;L1&#39;/&#39;L2&#39;) or a distance function</span>
+
+<span class="sd">        bincuts_ : ndarray, shape(n_features, b+1)</span>
+<span class="sd">            Bin cuts for each input feature</span>
+
+<span class="sd">        tol : float</span>
+<span class="sd">            The precision of the solution when search is used to compute the solution</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_, 1)</span>
+<span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
+<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
+<span class="sd">            than y. In other cases, y_ext_ == y.</span>
+<span class="sd">            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y</span>
+
+<span class="sd">        distribution_function : str</span>
+<span class="sd">            Type of distribution function used. Two types are supported &#39;CDF&#39; and &#39;PDF&#39;</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            The number of bins to compute the CDFs/PDFs</span>
+
+<span class="sd">        train_distrib_ : ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * n_classes_, n_classes) multiclass</span>
+<span class="sd">            The CDF/PDF for each class in the training set</span>
+
+<span class="sd">        test_distrib_ : ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * n_classes_, 1) multiclass q</span>
+<span class="sd">            The CDF/PDF for the testing bag</span>
+
+<span class="sd">        G_, C_, b_: variables of different kind for defining the optimization problem</span>
+<span class="sd">            These variables are precomputed in the `fit` method and are used for solving the optimization problem</span>
+<span class="sd">            using `quadprog.solve_qp`. See `compute_l2_param_train` function</span>
+
+<span class="sd">        problem_ : a cvxpy Problem object</span>
+<span class="sd">            This attribute is set to None in the fit() method. With such model, the first time a testing bag is</span>
+<span class="sd">            predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the</span>
+<span class="sd">            case of &#39;L1&#39; and &#39;HD&#39;). For the rest testing bags, this object is passed to allow a warm start. The</span>
+<span class="sd">            solving process is faster.</span>
+
+<span class="sd">        mixtures_ : ndarray, shape (101, n_quantiles)</span>
+<span class="sd">            Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction</span>
+<span class="sd">            for a collection of testing bags</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test</span>
+<span class="sd">        must be not None. If both are None a ValueError exception will be raised. If both are not None,</span>
+<span class="sd">        predictions_train/predictions_test are used</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based</span>
+<span class="sd">        on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</span>
+
+<span class="sd">        George Forman: Counting positives accurately despite inaccurate classification. In: Proceedings of the 16th</span>
+<span class="sd">        European conference on machine learning (ECML&#39;05), Porto, (2005) pp 564–575</span>
+
+<span class="sd">        Aykut Firat. 2016. Unified Framework for Quantification. arXiv preprint arXiv:1606.00868 (2016).</span>
+
+<span class="sd">        Dirk Tasche: Confidence intervals for class prevalences under prior probability shift. Machine Learning</span>
+<span class="sd">        and Knowledge Extraction, 1(3), (2019) 805-831.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">distribution_function</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                 <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;HD&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DFy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                  <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">=</span> <span class="n">distribution_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span> <span class="o">=</span> <span class="n">bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="c1">#  variables to compute the histograms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># variables to represent the distributions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># variables for solving the optimization problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DFy.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFy.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
+<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            performed by the `fit` method of its superclass.</span>
+<span class="sd">            After that, the method computes the pdfs for all the classes in the training set</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+
+<span class="sd">            predictions_train : ndarray, shape (n_examples, n_classes)</span>
+<span class="sd">                Predictions of the examples in the training set</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_train and predictions_train are both None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="n">predictions_train</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># number of groups of probabilities used to represent the distribution</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="n">n_classes</span>
+
+        <span class="c1"># compute bincuts according to bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_descriptors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">descr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_descriptors</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">descr</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">compute_bincuts</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">[:,</span> <span class="n">descr</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
+                                                      <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                                      <span class="n">att_range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1"># compute pdf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">*</span> <span class="n">n_descriptors</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">descr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_descriptors</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[</span><span class="n">descr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">descr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> \
+                   <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_train_</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">descr</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">descr</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y_ext_</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">))</span>
+
+        <span class="c1"># compute cdf if necessary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">==</span> <span class="s1">&#39;CDF&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L2&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_</span> <span class="o">=</span> <span class="n">compute_l2_param_train</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DFy.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFy.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
+<span class="sd">            `super().predict()` method.</span>
+
+<span class="sd">            After that, the method computes the PDF for the testing bag.</span>
+
+<span class="sd">            Finally, the prevalences are computed using the corresponding function according to the value of</span>
+<span class="sd">            distance attribute</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
+
+<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
+<span class="sd">                method of estimator_test (it must be an actual estimator)</span>
+
+<span class="sd">            Raises</span>
+<span class="sd">            ------</span>
+<span class="sd">            ValueError</span>
+<span class="sd">                When estimator_test and predictions_test are both None</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="n">predictions_test</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">n_descriptors</span> <span class="o">=</span> <span class="n">n_classes</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">*</span> <span class="n">n_descriptors</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># compute pdf</span>
+        <span class="k">for</span> <span class="n">descr</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_descriptors</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">[</span><span class="n">descr</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">descr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">[:,</span> <span class="n">descr</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">descr</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">predictions_test_</span><span class="p">)</span>
+
+        <span class="c1">#  compute cdf if necessary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">==</span> <span class="s1">&#39;CDF&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing prevalences...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;HD&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                                  <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L2&#39;</span><span class="p">:</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                   <span class="n">G</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">b_</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L1&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                                  <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">global_search</span><span class="p">(</span><span class="n">distance_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">,</span> <span class="n">mixture_func</span><span class="o">=</span><span class="n">mixture_of_pdfs</span><span class="p">,</span>
+                                                        <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span>
+                                                        <span class="n">mixtures</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span><span class="p">,</span> <span class="n">return_mixtures</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                        <span class="n">pos_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                        <span class="n">neg_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+
+
+<div class="viewcode-block" id="HDy"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.HDy">[docs]</a><span class="k">class</span> <span class="nc">HDy</span><span class="p">(</span><span class="n">DFy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass HDy method</span>
+
+<span class="sd">        This class is just a wrapper. It just uses all the inherited methods of its superclass (DFy)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based</span>
+<span class="sd">        on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HDy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                  <span class="n">distribution_function</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                  <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;HD&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MMy"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.MMy">[docs]</a><span class="k">class</span> <span class="nc">MMy</span><span class="p">(</span><span class="n">DFy</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass MM method</span>
+
+<span class="sd">        This class is just a wrapper. It just uses all the inherited methods of its superclass (DFy)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        George Forman: Counting positives accurately despite inaccurate classification. In: Proceedings of the 16th</span>
+<span class="sd">        European conference on machine learning (ECML&#39;05), Porto, (2005) pp 564–575</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator_train</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span>
+                 <span class="n">tol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MMy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
+                                  <span class="n">distribution_function</span><span class="o">=</span><span class="s1">&#39;CDF&#39;</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                  <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;L1&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DFX"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFX">[docs]</a><span class="k">class</span> <span class="nc">DFX</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Generic Multiclass DFX method</span>
+
+<span class="sd">        The idea is to represent the mixture of the training distribution and the testing distribution</span>
+<span class="sd">        (using CDFs/PDFs) of the features of the input space (X). The difference between both are minimized using a</span>
+<span class="sd">        distante/loss function. Originally, (González et al. 2013) propose the combination of PDF and</span>
+<span class="sd">        Hellinger Distance, but also CDF and any other distance/loss function could be used, like L1 or L2.</span>
+
+<span class="sd">        The class has two parameters to select:</span>
+
+<span class="sd">        - the method used to represent the distributions (CDFs or PDFs)</span>
+<span class="sd">        - the distance used.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        distribution_function : str, (default=&#39;PDF&#39;)</span>
+<span class="sd">            Type of distribution function used. Two types are supported &#39;CDF&#39; and &#39;PDF&#39;</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            Number of bins to compute the PDFs</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;norm&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                          where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                          and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                          the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">        distance : str, representing the distance function (default=&#39;HD&#39;)</span>
+<span class="sd">            It is the name of the distance used to compute the difference between the mixture of the training</span>
+<span class="sd">            distribution and the testing distribution</span>
+
+<span class="sd">        tol : float, (default=1e-05)</span>
+<span class="sd">            The precision of the solution when search is used to compute the prevalence</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        distribution_function : str</span>
+<span class="sd">            Type of distribution function used. Two types are supported &#39;CDF&#39; and &#39;PDF&#39;</span>
+
+<span class="sd">        n_bins : int</span>
+<span class="sd">            The number of bins to compute the PDFs</span>
+
+<span class="sd">        bin_strategy : str</span>
+<span class="sd">            Method to compute the boundaries of the bins</span>
+
+<span class="sd">        distance : str or a distance function</span>
+<span class="sd">            A string with the name of the distance function (&#39;HD&#39;/&#39;L1&#39;/&#39;L2&#39;) or a distance function</span>
+
+<span class="sd">        tol : float</span>
+<span class="sd">            The precision of the solution when search is used to compute the solution</span>
+
+<span class="sd">        bincuts_ : ndarray, shape(n_features, b+1)</span>
+<span class="sd">            Bin cuts for each input feature</span>
+
+<span class="sd">        train_distrib_ : ndarray, shape (n_bins * n_features, n_classes)</span>
+<span class="sd">            The PDF for each class in the training set</span>
+
+<span class="sd">        test_distrib_ : ndarray, shape (n_bins * n_features, 1) multiclass</span>
+<span class="sd">            The PDF for the testing bag</span>
+
+<span class="sd">        problem_ : a cvxpy Problem object</span>
+<span class="sd">            This attribute is set to None in the fit() method. With such model, the first time a testing bag is</span>
+<span class="sd">            predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the</span>
+<span class="sd">            case of &#39;L1&#39; and &#39;HD&#39;). For the rest testing bags, this object is passed to allow a warm start. The</span>
+<span class="sd">            solving process is faster.</span>
+
+<span class="sd">        mixtures_ : ndarray, shape (101, n_quantiles)</span>
+<span class="sd">            Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction</span>
+<span class="sd">            for a collection of testing bags</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based</span>
+<span class="sd">        on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</span>
+
+<span class="sd">        Aykut Firat. 2016. Unified Framework for Quantification. arXiv preprint arXiv:1606.00868 (2016).</span>
+
+<span class="sd">        Dirk Tasche: Confidence intervals for class prevalences under prior probability shift. Machine Learning</span>
+<span class="sd">        and Knowledge Extraction, 1(3), (2019) 805-831.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distribution_function</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;HD&#39;</span><span class="p">,</span>
+                 <span class="n">tol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DFX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1"># attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">=</span> <span class="n">distribution_function</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">=</span> <span class="n">n_bins</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span> <span class="o">=</span> <span class="n">bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">=</span> <span class="n">distance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tol</span> <span class="o">=</span> <span class="n">tol</span>
+        <span class="c1">#  variables to compute the histograms</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#  variables to represent the distributions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1">#  variables for solving the optimization problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">G_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="DFX.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFX.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just computes the PDFs for all the classes in the training set. The values are stored in</span>
+<span class="sd">            train_dist_</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="c1"># compute bincuts according to bin_strategy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">compute_bincuts</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">X</span><span class="p">[:,</span> <span class="n">att</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">,</span>
+                                                    <span class="n">n_bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bin_strategy</span><span class="p">)</span>
+
+        <span class="c1"># compute pdf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">*</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_classes</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+            <span class="c1"># compute pdf</span>
+            <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> \
+                                                          <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">,</span> <span class="n">att</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">)</span>
+            <span class="c1"># compute cdf if necessary</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">==</span> <span class="s1">&#39;CDF&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_cls</span><span class="p">]</span> <span class="o">=</span> \
+                        <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">n_cls</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L2&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">b_</span> <span class="o">=</span> <span class="n">compute_l2_param_train</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="DFX.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.DFX.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            First, the method computes the PDF for the testing bag.</span>
+
+<span class="sd">            After that, the prevalences are computed using the corresponding function according to the value of</span>
+<span class="sd">            distance attribute</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences: ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">check_array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">accept_sparse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span> <span class="o">*</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="c1"># compute pdf</span>
+        <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> \
+                                                                <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[:,</span> <span class="n">att</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># compute cdf if necessary</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distribution_function</span> <span class="o">==</span> <span class="s1">&#39;CDF&#39;</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">att</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">[</span><span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;HD&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                                  <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L2&#39;</span><span class="p">:</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                   <span class="n">G</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">G_</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">C_</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">b_</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;L1&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span>
+                                                  <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">global_search</span><span class="p">(</span><span class="n">distance_func</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">,</span> <span class="n">mixture_func</span><span class="o">=</span><span class="n">mixture_of_pdfs</span><span class="p">,</span>
+                                                        <span class="n">test_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_distrib_</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tol</span><span class="p">,</span>
+                                                        <span class="n">mixtures</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mixtures_</span><span class="p">,</span> <span class="n">return_mixtures</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                        <span class="n">pos_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                                                        <span class="n">neg_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">train_distrib_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+
+
+<div class="viewcode-block" id="HDX"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.HDX">[docs]</a><span class="k">class</span> <span class="nc">HDX</span><span class="p">(</span><span class="n">DFX</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass HDX method</span>
+
+<span class="sd">        This class is a wrapper. It just uses all the inherited methods of its superclass (DFX)</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based on</span>
+<span class="sd">        the Hellinger Distance. Information Sciences 218 (2013), 146–164.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-05</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HDX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">distribution_function</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
+                                  <span class="n">distance</span><span class="o">=</span><span class="s1">&#39;HD&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">)</span></div>
+
+
+<span class="c1">############</span>
+<span class="c1"># Function to compute histograms</span>
+<span class="c1">############</span>
+<div class="viewcode-block" id="compute_bincuts"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.df.html#quantificationlib.multiclass.df.compute_bincuts">[docs]</a><span class="k">def</span> <span class="nf">compute_bincuts</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="s1">&#39;equal_width&#39;</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute the bincuts for calculate a histrogram with the values in X. These bincuts depends on</span>
+<span class="sd">        the bincut strategy</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        x : array-like, shape (n_examples, )</span>
+<span class="sd">            Input feature</span>
+
+<span class="sd">        y : array-like, shape (n_examples, ), (default=None)</span>
+<span class="sd">            True classes. It is needed when bin_strategy is &#39;binormal&#39;. In other cases, it is ignored</span>
+
+<span class="sd">        classes : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        n_bins : int, (default=8)</span>
+<span class="sd">            Number of bins</span>
+
+<span class="sd">        bin_strategy : str (default=&#39;equal_width&#39;)</span>
+<span class="sd">            Method to compute the boundaries of the bins:</span>
+<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
+
+<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+
+<span class="sd">                          where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
+<span class="sd">                          and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                          the training examples of each class.</span>
+
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+
+<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+
+
+<span class="sd">        att_range: array-like, (2,1)</span>
+<span class="sd">            Min and Max possible values of the input feature x. These values might not coincide with the actual Min and</span>
+<span class="sd">            Max values of vector x. For instance, in the case of x represents a set of probabilistic predictions, these</span>
+<span class="sd">            values will be 0 and 1</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bincuts: float, shape (n_bins +1 , )</span>
+<span class="sd">            Bin cuts for input feature x</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">bin_strategy</span> <span class="o">==</span> <span class="s1">&#39;equal_width&#39;</span><span class="p">:</span>
+        <span class="n">bincuts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">att_range</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">att_range</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+        <span class="n">bincuts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">bincuts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">bincuts</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram_bin_edges</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="n">att_range</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">bin_strategy</span> <span class="o">==</span> <span class="s1">&#39;equal_count&#39;</span><span class="p">:</span>
+        <span class="n">sorted_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bincuts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">bincuts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">bincuts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_bins</span><span class="p">):</span>
+            <span class="n">cutpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="n">n_bins</span><span class="p">))</span>
+            <span class="n">bincuts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">sorted_values</span><span class="p">[</span><span class="n">cutpoint</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">sorted_values</span><span class="p">[</span><span class="n">cutpoint</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">elif</span> <span class="n">bin_strategy</span> <span class="o">==</span> <span class="s1">&#39;binormal&#39;</span><span class="p">:</span>
+        <span class="c1"># only for binary quantification</span>
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">classes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;binormal method can only be used for binary quantification&#39;</span><span class="p">)</span>
+
+        <span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+            <span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">])</span>
+            <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">])</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">/</span> <span class="n">n_classes</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">std</span> <span class="o">/</span> <span class="n">n_classes</span>
+        <span class="k">if</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bincuts</span> <span class="o">=</span> <span class="p">[</span><span class="n">std</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">n_bins</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bincuts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram_bin_edges</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">bin_strategy</span> <span class="o">==</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],))</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
+            <span class="n">weights</span><span class="p">[</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">)</span>
+
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">std</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">average</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="n">weights</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">std</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">bincuts</span> <span class="o">=</span> <span class="p">[</span><span class="n">std</span> <span class="o">*</span> <span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">n_bins</span><span class="p">)</span> <span class="o">+</span> <span class="n">mu</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_bins</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bincuts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram_bin_edges</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown bin strategy (possible values: &#39;&#39;equal_width&#39;&#39;, &#39;&#39;binormal&#39;&#39;, &#39;&#39;normal&#39;&#39;&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">bincuts</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.df</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

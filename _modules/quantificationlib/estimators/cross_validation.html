@@ -1,0 +1,389 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.estimators.cross_validation &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.cross_validation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.estimators.cross_validation</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Estimator object based on Cross Validation</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">,</span> <span class="n">is_classifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">LabelEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+<span class="kn">from</span> <span class="nn">sklearn.exceptions</span> <span class="kn">import</span> <span class="n">NotFittedError</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection._split</span> <span class="kn">import</span> <span class="n">check_cv</span>
+
+
+<div class="viewcode-block" id="CV_estimator"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator">[docs]</a><span class="k">class</span> <span class="nc">CV_estimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Cross Validation Estimator</span>
+
+<span class="sd">        The idea is to have an estimator in which the model is formed by the models of a CV. This object is needed</span>
+<span class="sd">        to estimate the distribution of the training set and testing sets. It has a `fit` method, that trains</span>
+<span class="sd">        the models of the CV, and the typical methods `predict` y `predict_proba` to compute the predictions using</span>
+<span class="sd">        such models. This implies that this object can be used by any distribution matching method that requires an</span>
+<span class="sd">        estimator to represent the distributions</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Mainly the same that `cross_validate` method in sklearn:</span>
+
+<span class="sd">        estimator : estimator object implementing &#39;fit&#39;</span>
+<span class="sd">            The object to use to fit the data.</span>
+
+<span class="sd">        groups : array-like, with shape (n_samples,), optional</span>
+<span class="sd">            Group labels for the samples used while splitting the dataset into train/test set.</span>
+
+<span class="sd">        cv : int, cross-validation generator or an iterable, optional</span>
+<span class="sd">            Determines the cross-validation splitting strategy. Possible inputs for cv are:</span>
+
+<span class="sd">            - None, to use the default 3-fold cross validation,</span>
+<span class="sd">            - integer, to specify the number of folds in a `(Stratified)KFold`,</span>
+<span class="sd">            - :term:`CV splitter`,</span>
+<span class="sd">            - An iterable yielding (train, test) splits as arrays of indices.</span>
+
+<span class="sd">            For integer/None inputs, if the estimator is a classifier and ``y`` is either binary or multiclass,</span>
+<span class="sd">            :class:`StratifiedKFold` is used. In all other cases, :class:`KFold` is used.</span>
+
+<span class="sd">        n_jobs : int or None, optional (default=None)</span>
+<span class="sd">            The number of CPUs to use to do the computation.</span>
+<span class="sd">            ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.</span>
+<span class="sd">            ``-1`` means using all processors.</span>
+
+<span class="sd">        fit_params : dict, optional</span>
+<span class="sd">            Parameters to pass to the fit method of the estimator.</span>
+
+<span class="sd">        pre_dispatch : int, or string, optional</span>
+<span class="sd">            Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be</span>
+<span class="sd">            useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process.</span>
+<span class="sd">            This parameter can be:</span>
+<span class="sd">            - None, in which case all the jobs are immediately</span>
+<span class="sd">              created and spawned. Use this for lightweight and</span>
+<span class="sd">              fast-running jobs, to avoid delays due to on-demand</span>
+<span class="sd">              spawning of the jobs</span>
+<span class="sd">            - An int, giving the exact number of total jobs that are</span>
+<span class="sd">              spawned</span>
+<span class="sd">            - A string, giving an expression as a function of n_jobs,</span>
+<span class="sd">              as in &#39;2*n_jobs&#39;</span>
+
+<span class="sd">        averaged_predictions : bool, optional (default=True)</span>
+<span class="sd">            If True, `predict`and `predict_proba` methods average the predictions given by estimators_ for</span>
+<span class="sd">            each example</span>
+
+<span class="sd">        voting : str, {&#39;hard&#39;, &#39;soft&#39;} (default=&#39;hard&#39;)</span>
+<span class="sd">            Only used when averaged_predictions is True.</span>
+<span class="sd">            If &#39;hard&#39;, `predict`and `predict_proba` methods apply majority rule voting.</span>
+<span class="sd">            If &#39;soft&#39;, predict the class label based on the argmax of the sums of the predicted probabilities,</span>
+<span class="sd">            which is recommended for an ensemble of well-calibrated classifiers.</span>
+
+<span class="sd">        verbose : integer, optional (default=0)</span>
+<span class="sd">            The verbosity level.</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        In addition to the parameters needed to call `cross_validate`` the class has this important attributes:</span>
+
+<span class="sd">        estimator : An estimator object</span>
+<span class="sd">            The estimator to fit each model of the CV</span>
+
+<span class="sd">        estimators_ : list of trained estimators</span>
+<span class="sd">            The list of estimators trained by `fit`method.</span>
+<span class="sd">            The number of estimators is equal to the number of folds times number of repetitions</span>
+
+<span class="sd">        averaged_predictions : bool</span>
+<span class="sd">            Determines whether the predictions for each example given by estimators_ are averaged or not</span>
+
+<span class="sd">        voting : str, {&#39;hard&#39;, &#39;soft&#39;} (default=&#39;hard&#39;)</span>
+<span class="sd">            How predictions are aggregated:</span>
+<span class="sd">                - &#39;hard&#39;, applying majority rule voting</span>
+<span class="sd">                - &#39;soft&#39;, based on the argmax of the sums of the predicted probabilities</span>
+
+<span class="sd">        le_ : a LabelEncoder fitted object</span>
+<span class="sd">            Used to compute the class labels</span>
+
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">            Class labels</span>
+
+<span class="sd">        X_train_ : array-like, shape (n_examples, n_features)</span>
+<span class="sd">            Data. It is needed to obtain the predictions over the own training set</span>
+
+<span class="sd">        y_train_ : array-like, shape (n_examples, )</span>
+<span class="sd">            True classes. It is needed to obtain the predictions over the own training set</span>
+
+<span class="sd">        verbose : integer</span>
+<span class="sd">            The verbosity level.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">estimator</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="s1">&#39;2*n_jobs&#39;</span><span class="p">,</span>
+                 <span class="n">averaged_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">voting</span><span class="o">=</span><span class="s1">&#39;hard&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimator</span> <span class="o">=</span> <span class="n">estimator</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groups</span> <span class="o">=</span> <span class="n">groups</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv</span> <span class="o">=</span> <span class="n">cv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span> <span class="o">=</span> <span class="n">n_jobs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span> <span class="o">=</span> <span class="n">fit_params</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_dispatch</span> <span class="o">=</span> <span class="n">pre_dispatch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">averaged_predictions</span> <span class="o">=</span> <span class="n">averaged_predictions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voting</span> <span class="o">=</span> <span class="n">voting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">le_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="CV_estimator.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Fit the models</span>
+<span class="sd">            It calls `cross_validate` to fit the models and save them in estimators_ attribute.</span>
+<span class="sd">            It also stores some attributes needed by `predict` and `predict_proba`, namely, le_, classes_ X_train</span>
+<span class="sd">            and y_train_</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span> <span class="o">=</span> <span class="n">X</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">le_</span> <span class="o">=</span> <span class="n">LabelEncoder</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="c1"># check cv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv</span> <span class="o">=</span> <span class="n">check_cv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">classifier</span><span class="o">=</span><span class="n">is_classifier</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">))</span>
+        <span class="c1"># train CV and save the estimators for each fold</span>
+        <span class="n">cvresults</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span>
+                                   <span class="n">groups</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_jobs</span><span class="p">,</span>
+                                   <span class="n">verbose</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">,</span> <span class="n">fit_params</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_params</span><span class="p">,</span> <span class="n">pre_dispatch</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">pre_dispatch</span><span class="p">,</span>
+                                   <span class="n">return_estimator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span> <span class="o">=</span> <span class="n">cvresults</span><span class="p">[</span><span class="s1">&#39;estimator&#39;</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="CV_estimator.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the crisp predictions given by a CV estimator</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Test ata</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and</span>
+<span class="sd">                    the value of averaged_predictions attribute</span>
+
+<span class="sd">                 Training set:</span>
+<span class="sd">                     - averaged_predictions == True,  shape(n_examples, )</span>
+<span class="sd">                     - averaged_predictions == False, shape(n_examples * n_reps, )</span>
+<span class="sd">                 Testing set:</span>
+<span class="sd">                     - averaged_predictions == True,  shape(n_examples, )</span>
+<span class="sd">                     - averaged_predictions == False, shape(n_examples * n_reps * n_folds, )</span>
+
+<span class="sd">                 Crisp predictions for the examples in X</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s1">&#39;CV_estimator not fitted&#39;</span><span class="p">)</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">averaged_predictions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">voting</span> <span class="o">==</span> <span class="s1">&#39;soft&#39;</span><span class="p">:</span>
+                <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># hard</span>
+                <span class="c1">#  for each example (axis=2), compute the class with the largest probability</span>
+                <span class="n">aux</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">preds</span><span class="p">)</span>
+                <span class="c1"># compute the number of votes for each class</span>
+                <span class="n">aux2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">minlength</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">arr</span><span class="o">=</span><span class="n">aux</span><span class="p">)</span>
+                <span class="c1"># compute the class with more votes</span>
+                <span class="n">aux3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">aux2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="c1"># transforming label position to class label</span>
+                <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">aux3</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># not averaging, so each pred is treated independently</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span>
+            <span class="c1"># computing the class with largest probability</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="c1"># transforming label position to class label</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preds</span></div>
+
+<div class="viewcode-block" id="CV_estimator.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns probabilistic predictions given by a CV estimator</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Test ata</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and</span>
+<span class="sd">                    the value of averaged_predictions attribute</span>
+
+<span class="sd">                Probabilistic predictions for the examples in X.</span>
+<span class="sd">                Shape:</span>
+<span class="sd">                    Training set:</span>
+<span class="sd">                        - averaged_predictions == True,  shape(n_examples, n_classes)</span>
+<span class="sd">                        - averaged_predictions == False, shape(n_examples * n_reps, n_classes)</span>
+<span class="sd">                    Testing set:</span>
+<span class="sd">                        - averaged_predictions == True,  shape(n_examples, n_classes)</span>
+<span class="sd">                        - averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s1">&#39;CV_estimator not fitted&#39;</span><span class="p">)</span>
+
+        <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">averaged_predictions</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">preds</span></div>
+
+    <span class="k">def</span> <span class="nf">_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns all probabilistic predictions given by a CV estimator</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Test ata</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            preds : array-like, shape (nreps, n_examples, n_classes) for the training set or</span>
+<span class="sd">                    (n_reps*n_folds, n_examples, n_classes) for a testing bag</span>
+
+<span class="sd">                Raw probabilistic predictions for all the example of X. Each example may have more than one prediction</span>
+
+<span class="sd">            When X is equal to the training set (X_train) each example is just predicted by those estimators not</span>
+<span class="sd">            trained with that example.</span>
+<span class="sd">            When X is a test bag, each examples is predicted by all estimators</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+            <span class="c1"># predicting over training examples, same partitions</span>
+            <span class="c1">#  computing number of repetitions</span>
+            <span class="n">n_preds</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span><span class="p">):</span>
+                <span class="n">n_preds</span> <span class="o">=</span> <span class="n">n_preds</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_index</span><span class="p">)</span>
+            <span class="n">n_repeats</span> <span class="o">=</span> <span class="n">n_preds</span> <span class="o">//</span> <span class="n">n_examples</span>
+            <span class="c1">#  storing predictions</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_repeats</span><span class="p">,</span> <span class="n">n_examples</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="n">n_rep</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">n_preds</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">nfold</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span><span class="p">)):</span>
+                <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
+                <span class="n">preds</span><span class="p">[</span><span class="n">n_rep</span><span class="p">,</span> <span class="n">test_index</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">nfold</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+                <span class="n">n_preds</span> <span class="o">=</span> <span class="n">n_preds</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_index</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">n_preds</span> <span class="o">==</span> <span class="n">n_examples</span><span class="p">:</span>
+                    <span class="n">n_rep</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">n_preds</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#   it is a test sample, predicting with each estimator</span>
+            <span class="n">preds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">),</span> <span class="n">n_examples</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">n_est</span><span class="p">,</span> <span class="n">est</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">):</span>
+                <span class="n">preds</span><span class="p">[</span><span class="n">n_est</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">preds</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.cross_validation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,423 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.decomposition.ordinal module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.ensembles package" href="quantificationlib.ensembles.html" />
+    <link rel="prev" title="quantificationlib.decomposition.multiclass module" href="quantificationlib.decomposition.multiclass.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.ensembles.html" title="quantificationlib.ensembles package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.decomposition.multiclass.html" title="quantificationlib.decomposition.multiclass module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.decomposition.html" accesskey="U">quantificationlib.decomposition package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.decomposition.ordinal module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.decomposition.ordinal">
+<span id="quantificationlib-decomposition-ordinal-module"></span><h1>quantificationlib.decomposition.ordinal module<a class="headerlink" href="#module-quantificationlib.decomposition.ordinal" title="Permalink to this heading">¶</a></h1>
+<p>Generic decomposition quantifier based on Frank and Hall approach</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FrankAndHallQuantifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quantifier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Implements a Frank and Hall Ordinal Quantifier given any base quantifier</p>
+<p>Trains one quantifier per each model of the Frank and Hall (FH) decocompositon. For instance, in a ordinal
+classification problem with classes ranging from 1-star to 5-star, FHQuantifier trains 4 quantifiers:
+1 vs 2-3-4-5, 1-2 vs 3-4-5, 1-2-3 vs 4-5, 1-2-3-4 vs 5 and combines their predictions. The positive class
+correspond to the left group of each quantifier ({1}, {1,2}, and so on)</p>
+<p>The class works both with quantifiers that require classifiers or not. In the former case, the estimator
+used for the training distribution and the testing distribution must be a FrankAndHallClassifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>quantifier</strong> (<em>quantifier object</em>) – The base quantifier used to build the FH decomposition. Any quantifier can be used</p></li>
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and one of <cite>predict</cite> or <cite>predict_proba</cite>. It is used to classify
+the examples of the training set and to obtain their distribution when the base quantifier is an
+instance of the class UsingClassifiers. Notice that some quantifiers of this kind, namely CC and PCC,
+do not require an estimator for the training distribution</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and one of <cite>predict</cite> or <cite>predict_proba</cite>. It is used to classify
+the examples of the testing bag and to obtain their distribution when the base quantifier is an
+instance of the class UsingClassifiers</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimators could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifier">
+<span class="sig-name descname"><span class="pre">quantifier</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The base quantifier used to build the FH decomposition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantifier object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes-1) (probabilistic)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes-1) (probabilistic)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the base quantifier needs to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, (default=True)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Not used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifiers_">
+<span class="sig-name descname"><span class="pre">quantifiers_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifiers_" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of quantifiers, one for each model of a FH decomposition. The number is equal to n_classes - 1</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes-1, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id2"><span class="problematic" id="id3">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
+CV_estimator) than y. In other cases, <a href="#id4"><span class="problematic" id="id5">y_ext_</span></a> == y.
+<a href="#id6"><span class="problematic" id="id7">y_ext_</span></a> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
+instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id8"><span class="problematic" id="id9">predictions_train_</span></a>), )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.check_and_correct_prevalences_asc">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_and_correct_prevalences_asc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalences</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier.check_and_correct_prevalences_asc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.check_and_correct_prevalences_asc" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function checks and corrects the prevalences of a quantifier based on the Frank and Hall decomposition
+that are inconsistent. It is used by FrankAndHallQuantifier.</p>
+<p>To obtain consistent prevalences, we need to ensure that the consecutive probabilities do not decrease.</p>
+<p class="rubric">Example</p>
+<p>Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
+Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
+Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</p>
+<p>This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
+left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
+monotonically increasing (from left to right) and monotonically decreasing (from right to left),
+respectively. The average value is assigned to each group</p>
+<p class="rubric">Example</p>
+<p>{1}   {1-2}  {1-2-3}</p>
+<p>0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</p>
+<section id="lower-cumulative-prevalences-adjusting-from-right-to-left">
+<h2>0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)<a class="headerlink" href="#lower-cumulative-prevalences-adjusting-from-right-to-left" title="Permalink to this heading">¶</a></h2>
+<p>0.25  0.25   0.6    Averaged prevalences</p>
+<dl class="field-list simple">
+<dt class="field-odd">param prevalences<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The prevalences of the binary quantifiers of a FrankAndHallQuantifier for a single dataset</p>
+</dd>
+<dt class="field-even">type prevalences<span class="colon">:</span></dt>
+<dd class="field-even"><p>array, shape(n_classes-1, )</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences_ok</strong> – The corrected prevalences ensuring that do not decrease (from left to right)</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>array, shape(n_classes-1)</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.
+Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,
+Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
+</section>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits all the quanfifiers of a FH decomposition</p>
+<p>First, the method fits the estimators (estimator_train and estimator_test) (if needed) using
+the <cite>fit</cite> method of its superclass</p>
+<p>Then, it creates (using <cite>deepcopy</cite>) the set on <a href="#id10"><span class="problematic" id="id11">quantifiers_</span></a> (n_classes-1 quantifiers) and fit them</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes-1</em><em>) </em><em>(</em><em>probs</em><em>)</em>) – Predictions of the examples in the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_train or estimator_test are not instances of OneVsRestClassifier</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregates the prevalences of the <a href="#id12"><span class="problematic" id="id13">quantifiers_</span></a> to compute the final prediction</p>
+<p>In this kind of decomposition strategy it is important to ensure that the aggregated consecutive
+prevalencences do not decrease:</p>
+<p class="rubric">Example</p>
+<p>Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
+Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
+Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</p>
+<p>This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
+left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
+monotonically increasing (from left to right) and monotonically decreasing (from right to left),
+respectively. The average value is assigned to each group and the prevalence for each class is computed as:</p>
+<blockquote>
+<div><p>Prevalence({y_k}) = Prevalence({y_1,…,y_k}) - Prevalence({y_1,…,y_k-1})</p>
+</div></blockquote>
+<p class="rubric">Example</p>
+<p>{1}   {1-2}  {1-2-3}</p>
+<p>0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</p>
+<section id="id1">
+<h2>0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
+<p>0.25  0.25   0.6    Averaged prevalences</p>
+<p>Prevalence({1}) = 0.25
+Prevalence({2}) = Prevalence({1,2}) - Prevalence({1}) = 0.25 - 0 .25 = 0
+Prevalence({3}) = Prevalence({1,2,3}} - Prevalence({1,2}) = 0.6 - 0.25 = 0.35</p>
+<p>The last class is computed as 1 - the sum of prevalences for the rest of classes</p>
+<p>Prevalence({4}) = 1 - Prevalence({1,2,3}} = 1 - 0.6 = 0.4</p>
+<dl class="field-list simple">
+<dt class="field-odd">param X<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Data</p>
+</dd>
+<dt class="field-even">type X<span class="colon">:</span></dt>
+<dd class="field-even"><p>(sparse) array-like, shape (n_examples, n_features)</p>
+</dd>
+<dt class="field-odd">param predictions_test<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Predictions for the testing bag</p>
+</dd>
+<dt class="field-even">type predictions_test<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape (n_examples, n_classes) (default=None)</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
+</dd>
+<dt class="field-even">rtype<span class="colon">:</span></dt>
+<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Destercke, S., &amp; Yang, G. (2014, September). Cautious ordinal classification by binary decomposition.
+In Joint European Conference on Machine Learning and Knowledge Discovery in Databases (pp. 323-337).</p>
+</section>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.decomposition.ordinal module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier"><code class="docutils literal notranslate"><span class="pre">FrankAndHallQuantifier</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifier"><code class="docutils literal notranslate"><span class="pre">quantifier</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.quantifiers_"><code class="docutils literal notranslate"><span class="pre">quantifiers_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.check_and_correct_prevalences_asc"><code class="docutils literal notranslate"><span class="pre">check_and_correct_prevalences_asc()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.decomposition.multiclass.html"
+                          title="previous chapter">quantificationlib.decomposition.multiclass module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.ensembles.html"
+                          title="next chapter">quantificationlib.ensembles package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.decomposition.ordinal.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.ensembles.html" title="quantificationlib.ensembles package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.decomposition.multiclass.html" title="quantificationlib.decomposition.multiclass module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.decomposition.html" >quantificationlib.decomposition package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.decomposition.ordinal module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

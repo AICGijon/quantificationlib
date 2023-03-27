@@ -1,0 +1,286 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.estimators.weighted_knn module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.metrics package" href="quantificationlib.metrics.html" />
+    <link rel="prev" title="quantificationlib.estimators.ordinal_ddag module" href="quantificationlib.estimators.ordinal_ddag.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.html" title="quantificationlib.metrics package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ordinal_ddag.html" title="quantificationlib.estimators.ordinal_ddag module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" accesskey="U">quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.weighted_knn module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.estimators.weighted_knn">
+<span id="quantificationlib-estimators-weighted-knn-module"></span><h1>quantificationlib.estimators.weighted_knn module<a class="headerlink" href="#module-quantificationlib.estimators.weighted_knn" title="Permalink to this heading">¶</a></h1>
+<p>Proportion-weighted K-Nearest Neighbor Classifier</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PWK</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">leaf_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minkowski'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/weighted_knn.html#PWK"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></p>
+<p>Proportion-weighted k-Nearest Neighbor Classifier</p>
+<p>This class is an kind of wrapper of sklearn.neighbors.KNeighborsClassifier (version 1.0.2) to use
+class-dependent weights to deal with imbalanced problems. The parameters are the same, except weights
+that are computed by this class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_neighbors</strong> (<em>int</em><em>, </em><em>(</em><em>default=10</em><em>)</em>) – Number of neighbors to use by default for <code class="xref py py-meth docutils literal notranslate"><span class="pre">kneighbors()</span></code> queries.</p></li>
+<li><p><strong>algorithm</strong> (<em>{'auto'</em><em>, </em><em>'ball_tree'</em><em>, </em><em>'kd_tree'</em><em>, </em><em>'brute'}</em><em>, </em><em>default='auto'</em>) – <p>Algorithm used to compute the nearest neighbors:
+- ‘ball_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">BallTree</span></code>
+- ‘kd_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code>
+- ‘brute’ will use a brute-force search.
+- ‘auto’ will attempt to decide the most appropriate algorithm</p>
+<blockquote>
+<div><p>based on the values passed to <a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.fit" title="quantificationlib.estimators.weighted_knn.PWK.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
+</div></blockquote>
+<p>Note: fitting on sparse input will override the setting of
+this parameter, using brute force.</p>
+</p></li>
+<li><p><strong>leaf_size</strong> (<em>int</em><em>, </em><em>default=30</em>) – Leaf size passed to BallTree or KDTree.  This can affect the
+speed of the construction and query, as well as the memory
+required to store the tree.  The optimal value depends on the
+nature of the problem.</p></li>
+<li><p><strong>p</strong> (<em>int</em><em>, </em><em>default=2</em>) – Power parameter for the Minkowski metric. When p = 1, this is
+equivalent to using manhattan_distance (l1), and euclidean_distance
+(l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.</p></li>
+<li><p><strong>metric</strong> (<em>str</em><em> or </em><em>callable</em><em>, </em><em>default='minkowski'</em>) – The distance metric to use for the tree.  The default metric is
+minkowski, and with p=2 is equivalent to the standard Euclidean
+metric. For a list of available metrics, see the documentation of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">DistanceMetric</span></code>.
+If metric is “precomputed”, X is assumed to be a distance matrix and
+must be square during fit. X may be a <span class="xref std std-term">sparse graph</span>,
+in which case only “nonzero” elements may be considered neighbors.</p></li>
+<li><p><strong>metric_params</strong> (<em>dict</em><em>, </em><em>default=None</em>) – Additional keyword arguments for the metric function.</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em>, </em><em>default=None</em>) – The number of parallel jobs to run for neighbors search.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors. See <span class="xref std std-term">Glossary</span>
+for more details.
+Doesn’t affect <a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.fit" title="quantificationlib.estimators.weighted_knn.PWK.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.knn_">
+<span class="sig-name descname"><span class="pre">knn_</span></span><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.knn_" title="Permalink to this definition">¶</a></dt>
+<dd><p>KNN classifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>KNeighborsClassifier object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels known to the classifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of shape (n_classes,)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.weights_">
+<span class="sig-name descname"><span class="pre">weights_</span></span><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.weights_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The weight for each example</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, shape (n_samples, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.y_">
+<span class="sig-name descname"><span class="pre">y_</span></span><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.y_" title="Permalink to this definition">¶</a></dt>
+<dd><p>True labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/weighted_knn.html#PWK.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the k-nearest neighbors classifier and compute the weights using the training dataset</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/weighted_knn.html#PWK.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the crisp predictions for the provided data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>preds</strong> – Crisp predictions for the examples in X</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape shape(n_examples, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.weighted_knn.PWK.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/weighted_knn.html#PWK.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.weighted_knn.PWK.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the probabilistic predictions for the provided data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>preds</strong> – Probabilistic predictions for the examples in X</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape shape(n_examples, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.estimators.weighted_knn module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK"><code class="docutils literal notranslate"><span class="pre">PWK</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.knn_"><code class="docutils literal notranslate"><span class="pre">knn_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.weights_"><code class="docutils literal notranslate"><span class="pre">weights_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.y_"><code class="docutils literal notranslate"><span class="pre">y_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.ordinal_ddag.html"
+                          title="previous chapter">quantificationlib.estimators.ordinal_ddag module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.metrics.html"
+                          title="next chapter">quantificationlib.metrics package</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.estimators.weighted_knn.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.metrics.html" title="quantificationlib.metrics package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ordinal_ddag.html" title="quantificationlib.estimators.ordinal_ddag module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" >quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.weighted_knn module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

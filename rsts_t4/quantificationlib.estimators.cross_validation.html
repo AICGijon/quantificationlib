@@ -1,0 +1,402 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.estimators.cross_validation module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.estimators.ensembles module" href="quantificationlib.estimators.ensembles.html" />
+    <link rel="prev" title="quantificationlib.estimators package" href="quantificationlib.estimators.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ensembles.html" title="quantificationlib.estimators.ensembles module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.html" title="quantificationlib.estimators package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" accesskey="U">quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.cross_validation module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.estimators.cross_validation">
+<span id="quantificationlib-estimators-cross-validation-module"></span><h1>quantificationlib.estimators.cross_validation module<a class="headerlink" href="#module-quantificationlib.estimators.cross_validation" title="Permalink to this heading">¶</a></h1>
+<p>Estimator object based on Cross Validation</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CV_estimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'warn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pre_dispatch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'2*n_jobs'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">averaged_predictions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voting</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'hard'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ClassifierMixin</span></code></p>
+<p>Cross Validation Estimator</p>
+<p>The idea is to have an estimator in which the model is formed by the models of a CV. This object is needed
+to estimate the distribution of the training set and testing sets. It has a <cite>fit</cite> method, that trains
+the models of the CV, and the typical methods <cite>predict</cite> y <cite>predict_proba</cite> to compute the predictions using
+such models. This implies that this object can be used by any distribution matching method that requires an
+estimator to represent the distributions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sklearn</strong> (<em>Mainly the same that cross_validate method in</em>) – </p></li>
+<li><p><strong>estimator</strong> (<em>estimator object implementing 'fit'</em>) – The object to use to fit the data.</p></li>
+<li><p><strong>groups</strong> (<em>array-like</em><em>, </em><em>with shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Group labels for the samples used while splitting the dataset into train/test set.</p></li>
+<li><p><strong>cv</strong> (<em>int</em><em>, </em><em>cross-validation generator</em><em> or </em><em>an iterable</em><em>, </em><em>optional</em>) – <p>Determines the cross-validation splitting strategy. Possible inputs for cv are:</p>
+<ul>
+<li><p>None, to use the default 3-fold cross validation,</p></li>
+<li><p>integer, to specify the number of folds in a <cite>(Stratified)KFold</cite>,</p></li>
+<li><p><span class="xref std std-term">CV splitter</span>,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+<p>For integer/None inputs, if the estimator is a classifier and <code class="docutils literal notranslate"><span class="pre">y</span></code> is either binary or multiclass,
+<code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedKFold</span></code> is used. In all other cases, <code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code> is used.</p>
+</p></li>
+<li><p><strong>n_jobs</strong> (<em>int</em><em> or </em><em>None</em><em>, </em><em>optional</em><em> (</em><em>default=None</em><em>)</em>) – The number of CPUs to use to do the computation.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> means 1 unless in a <code class="xref py py-obj docutils literal notranslate"><span class="pre">joblib.parallel_backend</span></code> context.
+<code class="docutils literal notranslate"><span class="pre">-1</span></code> means using all processors.</p></li>
+<li><p><strong>fit_params</strong> (<em>dict</em><em>, </em><em>optional</em>) – Parameters to pass to the fit method of the estimator.</p></li>
+<li><p><strong>pre_dispatch</strong> (<em>int</em><em>, or </em><em>string</em><em>, </em><em>optional</em>) – <p>Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be
+useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process.
+This parameter can be:
+- None, in which case all the jobs are immediately</p>
+<blockquote>
+<div><p>created and spawned. Use this for lightweight and
+fast-running jobs, to avoid delays due to on-demand
+spawning of the jobs</p>
+</div></blockquote>
+<ul>
+<li><p>An int, giving the exact number of total jobs that are
+spawned</p></li>
+<li><p>A string, giving an expression as a function of n_jobs,
+as in ‘2*n_jobs’</p></li>
+</ul>
+</p></li>
+<li><p><strong>averaged_predictions</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – If True, <cite>predict`and `predict_proba</cite> methods average the predictions given by <a href="#id3"><span class="problematic" id="id4">estimators_</span></a> for
+each example</p></li>
+<li><p><strong>voting</strong> (<em>str</em><em>, </em><em>{'hard'</em><em>, </em><em>'soft'}</em><em> (</em><em>default='hard'</em><em>)</em>) – Only used when averaged_predictions is True.
+If ‘hard’, <cite>predict`and `predict_proba</cite> methods apply majority rule voting.
+If ‘soft’, predict the class label based on the argmax of the sums of the predicted probabilities,
+which is recommended for an ensemble of well-calibrated classifiers.</p></li>
+<li><p><strong>verbose</strong> (<em>integer</em><em>, </em><em>optional</em><em> (</em><em>default=0</em><em>)</em>) – The verbosity level.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">In</span> <span class="pre">addition</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">parameters</span> <span class="pre">needed</span> <span class="pre">to</span> <span class="pre">call</span> <span class="pre">`cross_validate``</span> <span class="pre">the</span> <span class="pre">class</span> <span class="pre">has</span> <span class="pre">this</span> <span class="pre">important</span> <span class="pre">attributes</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.estimator">
+<span class="sig-name descname"><span class="pre">estimator</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The estimator to fit each model of the CV</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>An estimator object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The list of estimators trained by <a href="#id1"><span class="problematic" id="id2">`</span></a>fit`method.
+The number of estimators is equal to the number of folds times number of repetitions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of trained estimators</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.averaged_predictions">
+<span class="sig-name descname"><span class="pre">averaged_predictions</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.averaged_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines whether the predictions for each example given by <a href="#id5"><span class="problematic" id="id6">estimators_</span></a> are averaged or not</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.voting">
+<span class="sig-name descname"><span class="pre">voting</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.voting" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>How predictions are aggregated:</dt><dd><ul class="simple">
+<li><p>‘hard’, applying majority rule voting</p></li>
+<li><p>‘soft’, based on the argmax of the sums of the predicted probabilities</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str, {‘hard’, ‘soft’} (default=’hard’)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.le_">
+<span class="sig-name descname"><span class="pre">le_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.le_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used to compute the class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a LabelEncoder fitted object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.X_train_">
+<span class="sig-name descname"><span class="pre">X_train_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.X_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Data. It is needed to obtain the predictions over the own training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape (n_examples, n_features)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.y_train_">
+<span class="sig-name descname"><span class="pre">y_train_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.y_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>True classes. It is needed to obtain the predictions over the own training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape (n_examples, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>integer</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the models
+It calls <cite>cross_validate</cite> to fit the models and save them in <a href="#id7"><span class="problematic" id="id8">estimators_</span></a> attribute.
+It also stores some attributes needed by <cite>predict</cite> and <cite>predict_proba</cite>, namely, <a href="#id9"><span class="problematic" id="id10">le_</span></a>, <a href="#id11"><span class="problematic" id="id12">classes_</span></a> X_train
+and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the crisp predictions given by a CV estimator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>preds</strong> –    the value of averaged_predictions attribute</p>
+<dl class="simple">
+<dt>Training set:</dt><dd><ul class="simple">
+<li><p>averaged_predictions == True,  shape(n_examples, )</p></li>
+<li><p>averaged_predictions == False, shape(n_examples * n_reps, )</p></li>
+</ul>
+</dd>
+<dt>Testing set:</dt><dd><ul class="simple">
+<li><p>averaged_predictions == True,  shape(n_examples, )</p></li>
+<li><p>averaged_predictions == False, shape(n_examples * n_reps * n_folds, )</p></li>
+</ul>
+</dd>
+</dl>
+<p>Crisp predictions for the examples in X</p>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape depends on two factors: the type of the examples (training or testing) and</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.predict_proba">
+<span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.predict_proba" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns probabilistic predictions given by a CV estimator</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p><strong>preds</strong> –     the value of averaged_predictions attribute</p>
+<p>Probabilistic predictions for the examples in X.
+Shape:</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Training set:</dt><dd><ul class="simple">
+<li><p>averaged_predictions == True,  shape(n_examples, n_classes)</p></li>
+<li><p>averaged_predictions == False, shape(n_examples * n_reps, n_classes)</p></li>
+</ul>
+</dd>
+<dt>Testing set:</dt><dd><ul class="simple">
+<li><p>averaged_predictions == True,  shape(n_examples, n_classes)</p></li>
+<li><p>averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)</p></li>
+</ul>
+</dd>
+</dl>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape depends on two factors: the type of the examples (training or testing) and</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.estimators.cross_validation module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator"><code class="docutils literal notranslate"><span class="pre">CV_estimator</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimator"><code class="docutils literal notranslate"><span class="pre">estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.averaged_predictions"><code class="docutils literal notranslate"><span class="pre">averaged_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.voting"><code class="docutils literal notranslate"><span class="pre">voting</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.le_"><code class="docutils literal notranslate"><span class="pre">le_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.X_train_"><code class="docutils literal notranslate"><span class="pre">X_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.y_train_"><code class="docutils literal notranslate"><span class="pre">y_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.estimators.cross_validation.CV_estimator.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.html"
+                          title="previous chapter">quantificationlib.estimators package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.estimators.ensembles.html"
+                          title="next chapter">quantificationlib.estimators.ensembles module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.estimators.cross_validation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.ensembles.html" title="quantificationlib.estimators.ensembles module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.estimators.html" title="quantificationlib.estimators package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.estimators.html" >quantificationlib.estimators package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.estimators.cross_validation module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,276 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>quantificationlib.multiclass.knn &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.knn</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for quantificationlib.multiclass.knn</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PWKQuantifier a quantifier based on K-Nearest Neighbor</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Authors: Alberto Castaño &lt;bertocast@gmail.com&gt;</span>
+<span class="c1">#          Pablo González &lt;gonzalezgpablo@uniovi.es&gt;</span>
+<span class="c1">#          Jaime Alonso &lt;jalonso@uniovi.es&gt;</span>
+<span class="c1">#          Juan José del Coz &lt;juanjo@uniovi.es&gt;</span>
+<span class="c1"># License: BSD 3 clause, University of Oviedo</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="kn">from</span> <span class="nn">quantificationlib.base</span> <span class="kn">import</span> <span class="n">WithoutClassifiers</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.estimators.weighted_knn</span> <span class="kn">import</span> <span class="n">PWK</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.optimization</span> <span class="kn">import</span> <span class="n">solve_l1</span>
+
+
+<div class="viewcode-block" id="PWKQuantifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.knn.html#quantificationlib.multiclass.knn.PWKQuantifier">[docs]</a><span class="k">class</span> <span class="nc">PWKQuantifier</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Quantifier based on K-Nearest Neighbor proposed by (Barranquero et al., 2013)</span>
+
+<span class="sd">        It is a AC method in which the estimator is PWK, a weighted version of KNN in</span>
+<span class="sd">        which the weight depends on the proportion of each class in the training set. It is not derived from AC to</span>
+<span class="sd">        allow decomposition</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        n_neighbors : int, (default=10)</span>
+<span class="sd">            Number of neighbors to use by default for :meth:`kneighbors` queries.</span>
+<span class="sd">        p : int, default=2</span>
+<span class="sd">            Power parameter for the Minkowski metric. When p = 1, this is</span>
+<span class="sd">            equivalent to using manhattan_distance (l1), and euclidean_distance</span>
+<span class="sd">            (l2) for p = 2. For arbitrary p, minkowski_distance (l_p) is used.</span>
+<span class="sd">        metric : str or callable, default=&#39;minkowski&#39;</span>
+<span class="sd">            The distance metric to use for the tree.  The default metric is</span>
+<span class="sd">            minkowski, and with p=2 is equivalent to the standard Euclidean</span>
+<span class="sd">            metric. For a list of available metrics, see the documentation of</span>
+<span class="sd">            :class:`~sklearn.metrics.DistanceMetric`.</span>
+<span class="sd">            If metric is &quot;precomputed&quot;, X is assumed to be a distance matrix and</span>
+<span class="sd">            must be square during fit. X may be a :term:`sparse graph`,</span>
+<span class="sd">            in which case only &quot;nonzero&quot; elements may be considered neighbors.</span>
+<span class="sd">        metric_params : dict, default=None</span>
+<span class="sd">            Additional keyword arguments for the metric function.</span>
+
+<span class="sd">        verbose : int, optional, (default=0)</span>
+<span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
+
+<span class="sd">        Attributes</span>
+<span class="sd">        ----------</span>
+<span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
+<span class="sd">             Class labels</span>
+
+<span class="sd">        cm_ : ndarray, shape (n_classes, n_classes)</span>
+<span class="sd">            Confusion matrix. The true classes are in the rows and the predicted classes in the columns. So, for</span>
+<span class="sd">            the binary case, the count of true negatives is cm_[0,0], false negatives is cm_[1,0],</span>
+<span class="sd">            true positives is cm_[1,1] and false positives is cm_[0,1] .</span>
+
+<span class="sd">        problem_ : a cvxpy Problem object</span>
+<span class="sd">            This attribute is set to None in the fit() method. With such model, the first time a testing bag is</span>
+<span class="sd">            predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the</span>
+<span class="sd">            case of &#39;L1&#39; and &#39;HD&#39;). For the rest testing bags, this object is passed to allow a warm start. The</span>
+<span class="sd">            solving process is faster.</span>
+
+<span class="sd">        verbose : int</span>
+<span class="sd">            The verbosity level</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Jose Barranquero, Pablo González, Jorge Díez, Juna José del Coz: On the study of nearest neighbor algorithms</span>
+<span class="sd">        for prevalence estimation in binary problems. Pattern Recognition, 46(2), 472-482. 2013</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;minkowski&#39;</span><span class="p">,</span> <span class="n">metric_params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PWKQuantifier</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="c1">#  Attributes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_estimator_</span> <span class="o">=</span> <span class="n">PWK</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="n">n_neighbors</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="n">metric</span><span class="p">,</span> <span class="n">metric_params</span><span class="o">=</span><span class="n">metric_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cm_</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="PWKQuantifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.knn.html#quantificationlib.multiclass.knn.PWKQuantifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
+<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are</span>
+<span class="sd">            performed by the `fit` method of its superclass.</span>
+<span class="sd">            Finally the method computes the confusion matrix of the training set using predictions_train_</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Data</span>
+
+<span class="sd">            y : array-like, shape (n_examples, )</span>
+<span class="sd">                True classes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">knn_estimator_</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">predictions_train</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_estimator_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Estimating confusion matrix for training distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                  <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="c1">#  estimating the confusion matrix</span>
+        <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+        <span class="c1">#  normalizing cm by row</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cm_</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">cm</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>  <span class="c1"># binary:  [[1-fpr  fpr]</span>
+        <span class="c1">#                                                                          [1-tpr  tpr]]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="PWKQuantifier.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.knn.html#quantificationlib.multiclass.knn.PWKQuantifier.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
+
+<span class="sd">            The prevalences are computed solving a system of linear scalar equations:</span>
+
+<span class="sd">                         cm_.T * prevalences = CC(X)</span>
+
+<span class="sd">            For binary problems the system is directly solved using the original AC algorithm proposed by Forman</span>
+
+<span class="sd">                        p = (p_0 - fpr ) / ( tpr - fpr)</span>
+
+<span class="sd">            For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an</span>
+<span class="sd">            optimization problem of this kind:</span>
+
+<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) )</span>
+<span class="sd">                      s.t.  sum(prevalences) = 1</span>
+<span class="sd">                            prevalecences_i &gt;= 0</span>
+
+<span class="sd">            in which distance is &#39;L1&#39;</span>
+
+<span class="sd">            Parameters</span>
+<span class="sd">            ----------</span>
+<span class="sd">            X : array-like, shape (n_examples, n_features)</span>
+<span class="sd">                Testing bag</span>
+
+<span class="sd">            Returns</span>
+<span class="sd">            -------</span>
+<span class="sd">            prevalences : ndarray, shape(n_classes, )</span>
+<span class="sd">                Contains the predicted prevalence for each class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predictions_test</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">knn_estimator_</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Class </span><span class="si">%s</span><span class="s1">: Computing prevalences for testing distribution...&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
+
+        <span class="n">freq</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_classes</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">):</span>
+            <span class="n">freq</span><span class="p">[</span><span class="n">n_cls</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">predictions_test</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="n">prevalences_0</span> <span class="o">=</span> <span class="n">freq</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">predictions_test</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">n_classes</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span> <span class="o">&gt;</span> <span class="mf">0.001</span><span class="p">:</span>
+                <span class="n">p</span> <span class="o">=</span> <span class="p">(</span><span class="n">prevalences_0</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+                <span class="n">prevalences</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences_0</span>
+
+            <span class="c1"># clipping the prevalences according to (Forman 2008)</span>
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">))</span>
+
+            <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">,</span> <span class="n">prevalences</span> <span class="o">=</span> <span class="n">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cm_</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">test_distrib</span><span class="o">=</span><span class="n">prevalences_0</span><span class="p">,</span>
+                                                  <span class="n">n_classes</span><span class="o">=</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">problem_</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">prevalences</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+
+
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.multiclass.knn</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>

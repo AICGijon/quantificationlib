@@ -1,0 +1,365 @@
+
+
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>quantificationlib.binary.debias module &#8212; Prueba QLIB Jaime 0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="quantificationlib.binary.emd module" href="quantificationlib.binary.emd.html" />
+    <link rel="prev" title="quantificationlib.binary package" href="quantificationlib.binary.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <!--[if lt IE 9]>
+    <script src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.binary.emd.html" title="quantificationlib.binary.emd module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.binary.html" title="quantificationlib.binary package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.binary.html" accesskey="U">quantificationlib.binary package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.binary.debias module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-quantificationlib.binary.debias">
+<span id="quantificationlib-binary-debias-module"></span><h1>quantificationlib.binary.debias module<a class="headerlink" href="#module-quantificationlib.binary.debias" title="Permalink to this heading">¶</a></h1>
+<p>De-Bias quantifier (just for binary quantification)</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DeBias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/binary/debias.html#DeBias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.binary.debias.DeBias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
+<p>Binary quantifier based on De-Bias estimate proposed by Friedman</p>
+<p>prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</p>
+<p>where</p>
+<p>Vt =[ 1/<a href="#id3"><span class="problematic" id="id4">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
+<p>This class works in two different ways:</p>
+<ol class="arabic simple">
+<li><p>An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</p></li>
+<li><p>You can directly provide the predictions for the examples in the predict method. This is useful
+for synthetic/artificial experiments</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+training set and to compute the confusion matrix</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to obtain the confusion matrix of the testing set</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimators could be the</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilistic estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilistic estimator)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id9"><span class="problematic" id="id10">predictions_train_</span></a>/<a href="#id11"><span class="problematic" id="id12">predictions_test_</span></a> contain probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because DeBias quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>True labels of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_examples, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.train_prevs_">
+<span class="sig-name descname"><span class="pre">train_prevs_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.train_prevs_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevalence of each class in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.Vt_">
+<span class="sig-name descname"><span class="pre">Vt_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.Vt_" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>The value of equation</dt><dd><p>Vt =[ 1/<a href="#id5"><span class="problematic" id="id6">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])</p>
+</dd>
+</dl>
+<p>applied over the training examples D</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
+<p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
+must be not None. If both are None a ValueError exception will be raised. If both are not None,
+predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
+<p>Jerome Friedman. Class counts in future unlabeled samples. Presentation at MIT CSAIL Big Data Event, 2014.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/binary/debias.html#DeBias.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
+testing set (if needed), and 2) computes <a href="#id13"><span class="problematic" id="id14">predictions_train_</span></a> (probabilities) if needed. Both operations are
+performed by the <a href="#id1"><span class="problematic" id="id2">`</span></a>fit method of its superclass.</p>
+<p>Finally the method computes the value of Vt</p>
+<p>Vt =[ 1/<a href="#id7"><span class="problematic" id="id8">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>)</em>) – Predictions of the training set</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – When estimator_train and predictions_train are both None</p></li>
+<li><p><strong>AttributeError</strong> – When the number of classes &gt; 2</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.predict">
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/binary/debias.html#DeBias.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predict the class distribution of a testing bag</p>
+<p>The prevalence for the positive class is</p>
+<p>prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a predict_proba method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id15"><span class="problematic" id="id16">predictions_test_</span></a> and used.
+If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
+method of estimator_test (it must be an actual estimator)</p>
+</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When estimator_test and predictions_test are both None</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An ndarray, shape(n_classes, ) with the prevalence for each class</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+
+
+
+
+
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li><a class="reference internal" href="#">quantificationlib.binary.debias module</a><ul>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias"><code class="docutils literal notranslate"><span class="pre">DeBias</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.train_prevs_"><code class="docutils literal notranslate"><span class="pre">train_prevs_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.Vt_"><code class="docutils literal notranslate"><span class="pre">Vt_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.binary.debias.DeBias.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quantificationlib.binary.html"
+                          title="previous chapter">quantificationlib.binary package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="quantificationlib.binary.emd.html"
+                          title="next chapter">quantificationlib.binary.emd module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/rsts_t4/quantificationlib.binary.debias.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.binary.emd.html" title="quantificationlib.binary.emd module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="quantificationlib.binary.html" title="quantificationlib.binary package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">Prueba QLIB Jaime 0.1 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="quantificationlib.binary.html" >quantificationlib.binary package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">quantificationlib.binary.debias module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Jaime.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+    </div>
+  </body>
+</html>
