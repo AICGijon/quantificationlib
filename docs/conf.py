@@ -6,9 +6,9 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'Prueba QLIB Jaime'
+project = 'quantificationlib'
 copyright = '2023, Jaime'
-author = 'Jaime'
+author = 'Juan José, Jaime, Pablo'
 release = '0.1'
 
 # -- General configuration ---------------------------------------------------
