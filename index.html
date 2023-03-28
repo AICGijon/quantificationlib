@@ -49,48 +49,55 @@
 <h1>Quantification Learning library for Python<a class="headerlink" href="#quantification-learning-library-for-python" title="Permalink to this heading">¶</a></h1>
 <p>QuantificationLib is an open source library for <strong>quantification learning</strong>. Quantification is also known as prevalence estimation or class prior
 estimation. It is a supervised machine learning task that involves training models to estimate the relative frequencies or prevalence values of
-the classes of interest in a samples (set of examples) of unlabelled data.</p>
-<p>QuantificationLib implements a wide variety of binary and multiclass quantification methods. From well stablished baselines
-as <em>Classify and Count</em> or <em>Adjusted Count</em>, to more soffisticated methods like <em>distribution matching</em> methods or <em>ensembles</em>.</p>
+the classes of interest in a samples (set of examples) of unlabelled data. Quantification is an important area of research with many applications
+that vary from ecological analysis, social sciences, epidemiology, etc.</p>
+<p>QuantificationLib implements a wide variety of binary and multiclass quantification methods. From well established baselines
+as <em>Classify and Count</em> or <em>Adjusted Count</em>, to more sophisticated methods like <em>distribution matching</em> methods or <em>ensembles</em>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>The library is designed with quick and efficient quantification experimentation in mind. The classifiers used by the quantifiers
 are reused by the different quantifiers (no need to train them multiple times). Quantifiers <cite>fit</cite> methods have also the option to
 work directly with classifier predictions.</p>
 </div>
-<section id="quickstart">
-<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h2>
-<p><span class="xref std std-doc">Installing</span>
-In order to install the library, just use pip:</p>
+<p>For an introduction to quantification, you can read the <a class="reference external" href="https://en.wikipedia.org/wiki/Quantification_(machine_learning)">quantification wikipedia page</a>.
+For a more in depth quantification text, we refer the practitioners to the paper:</p>
+<p>González, P., Castaño, A., Chawla, N. V., &amp; Coz, J. J. D. (2017). A review on quantification learning. ACM Computing Surveys (CSUR), 50(5), 1-40.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>In order to install the library you need Python 3. The library can be installed using pip:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
 </pre></div>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>We recomend to make the installation inside a virtual environment:</p>
+<p>We recommend to make the installation inside a virtual environment:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
 <span class="nb">source</span><span class="w"> </span>venv/bin/activate
 pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
 </pre></div>
 </div>
 </div>
-<p>Now it is time to train your first quantifier:</p>
+</section>
+<section id="quickstart">
+<h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h2>
+<p>It is time to train your first quantifier:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+
 <span class="kn">from</span> <span class="nn">quantificationlib.baselines.ac</span> <span class="kn">import</span> <span class="n">AC</span>
 <span class="kn">from</span> <span class="nn">quantificationlib.bag_generator</span> <span class="kn">import</span> <span class="n">PriorShift_BagGenerator</span>
 <span class="kn">from</span> <span class="nn">quantificationlib.metrics.multiclass</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
 
 <span class="kn">from</span> <span class="nn">data_utils</span> <span class="kn">import</span> <span class="n">load_data</span><span class="p">,</span><span class="n">normalize</span>
 
-<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;../datasets/binary/iris.3.csv&#39;</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;datasets/binary/iris.3.csv&#39;</span><span class="p">)</span>
 
 <span class="c1"># generating training-test partition</span>
-<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span>
 
 <span class="c1">#base classifier</span>
-<span class="n">estimator</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
 <span class="c1">#quantifier</span>
 <span class="n">ac</span> <span class="o">=</span> <span class="n">AC</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator</span><span class="p">)</span>
@@ -107,7 +114,22 @@ pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
          <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">prev_true</span><span class="p">[:,</span><span class="n">n_bag</span><span class="p">],</span><span class="n">prev_pred</span><span class="p">)))</span>
 </pre></div>
 </div>
-<p>This example is taken from <a class="reference external" href="https://github.com/AICGijon/quantificationlib/quantificationlib/examples">https://github.com/AICGijon/quantificationlib/quantificationlib/examples</a>. Check the link for more useful examples.</p>
+<p>The previous example will train an <em>Adjusted Count</em> quantifier over the
+data and quantify 10 test bags, printing the real and estimated prevalence
+of each one, along with the absolute error of the quantifier in each bag:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.688889</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.619048</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.069841</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.355556</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.298060</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.057496</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.400000</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.347443</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.052557</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.177778</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.149912</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.027866</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.555556</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.396825</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.158730</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.222222</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.174603</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.047619</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.755556</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.668430</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.087125</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.111111</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.051146</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.059965</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.111111</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.075838</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.035273</span>
+<span class="kc">True</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.844444</span><span class="p">,</span> <span class="n">estimated</span> <span class="n">prevalence</span><span class="o">=</span><span class="mf">0.767196</span><span class="p">,</span> <span class="n">AE</span><span class="o">=</span><span class="mf">0.077249</span>
+</pre></div>
+</div>
+<p>This example is taken from <a class="reference external" href="https://github.com/AICGijon/quantificationlib/examples">here</a>. Check the link for more useful examples.</p>
 </section>
 <section id="library-summary">
 <h2>Library Summary<a class="headerlink" href="#library-summary" title="Permalink to this heading">¶</a></h2>
@@ -331,6 +353,7 @@ pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
 <h3><a href="#">Table of Contents</a></h3>
 <ul>
 <li><a class="reference internal" href="#">Quantification Learning library for Python</a><ul>
+<li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#quickstart">Quickstart</a></li>
 <li><a class="reference internal" href="#library-summary">Library Summary</a><ul>
 <li><a class="reference internal" href="#main-packages">Main Packages</a></li>
