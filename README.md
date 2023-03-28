@@ -1,6 +1,6 @@
 # QuantificationLib
 
-QuantificationLib is an open source library for quantification learning. 
+QuantificationLib is an open-source library for quantification learning. 
 
 ### Last updates:
 
@@ -9,4 +9,3 @@ QuantificationLib is an open source library for quantification learning.
 ### Installation and documentation
 
 The installation, quick-start guide and documentation are available [here](https://aicgijon.github.io/quantificationlib/).
-```
