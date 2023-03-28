@@ -51,13 +51,59 @@
 <p class="admonition-title">Note</p>
 <p>See <a class="reference external" href="https://github.com/AICGijon/quantificationlib">https://github.com/AICGijon/quantificationlib</a> for complete documentation.</p>
 </div>
-<p>Introduction to the library here.</p>
+<p>QuantificationLib is an open source library for <strong>quantification learning</strong>. Quantification is also known as prevalence estimation or class prior
+estimation. It is a supervised machine learning task that involves training models to estimate the relative frequencies or prevalence values of
+the classes of interest in a samples (set of examples) of unlabelled data.</p>
 <section id="quickstart">
 <h2>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this heading">¶</a></h2>
-<dl class="simple">
-<dt><span class="xref std std-doc">installing</span></dt><dd><p>How to install this library</p>
-</dd>
-</dl>
+<p><span class="xref std std-doc">Installing</span>
+In order to install the library, just use pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We recomend to make the installation inside a virtual environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<span class="nb">source</span><span class="w"> </span>venv/bin/activate
+pip<span class="w"> </span>install<span class="w"> </span>quantificationlib
+</pre></div>
+</div>
+</div>
+<p>Now it is time to train your first quantifier:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.baselines.ac</span> <span class="kn">import</span> <span class="n">AC</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.bag_generator</span> <span class="kn">import</span> <span class="n">PriorShift_BagGenerator</span>
+<span class="kn">from</span> <span class="nn">quantificationlib.metrics.multiclass</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+
+<span class="kn">from</span> <span class="nn">data_utils</span> <span class="kn">import</span> <span class="n">load_data</span><span class="p">,</span><span class="n">normalize</span>
+
+<span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="s1">&#39;../datasets/binary/iris.3.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># generating training-test partition</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">)</span>
+
+<span class="c1">#base classifier</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+
+<span class="c1">#quantifier</span>
+<span class="n">ac</span> <span class="o">=</span> <span class="n">AC</span><span class="p">(</span><span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator</span><span class="p">)</span>
+<span class="n">ac</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+<span class="c1">#  Testing bags</span>
+<span class="n">bag_generator</span> <span class="o">=</span> <span class="n">PriorShift_BagGenerator</span><span class="p">(</span><span class="n">n_bags</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">bag_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span><span class="n">min_prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">prev_true</span><span class="p">,</span> <span class="n">indexes</span> <span class="o">=</span> <span class="n">bag_generator</span><span class="o">.</span><span class="n">generate_bags</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n_bag</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+   <span class="n">prev_pred</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">n_bag</span><span class="p">],</span> <span class="p">:])</span>
+   <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;True prevalence=</span><span class="si">%f</span><span class="s1">, estimated prevalence=</span><span class="si">%f</span><span class="s1">, AE=</span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span>
+         <span class="p">(</span><span class="n">prev_true</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">n_bag</span><span class="p">],</span><span class="n">prev_pred</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+         <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">prev_true</span><span class="p">[:,</span><span class="n">n_bag</span><span class="p">],</span><span class="n">prev_pred</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>This example is taken from <a class="reference external" href="https://github.com/AICGijon/quantificationlib/quantificationlib/examples">https://github.com/AICGijon/quantificationlib/quantificationlib/examples</a>. Check the link for more useful examples.</p>
 </section>
 <section id="library-summary">
 <h2>Library Summary<a class="headerlink" href="#library-summary" title="Permalink to this heading">¶</a></h2>
