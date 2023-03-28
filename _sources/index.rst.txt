@@ -2,13 +2,19 @@
 Quantification Learning library for Python
 ==========================================
 
-.. note::
-
-    See https://github.com/AICGijon/quantificationlib for complete documentation.
-
 QuantificationLib is an open source library for **quantification learning**. Quantification is also known as prevalence estimation or class prior
 estimation. It is a supervised machine learning task that involves training models to estimate the relative frequencies or prevalence values of 
 the classes of interest in a samples (set of examples) of unlabelled data.
+
+QuantificationLib implements a wide variety of binary and multiclass quantification methods. From well stablished baselines 
+as *Classify and Count* or *Adjusted Count*, to more soffisticated methods like *distribution matching* methods or *ensembles*.
+
+.. note::
+
+   The library is designed with quick and efficient quantification experimentation in mind. The classifiers used by the quantifiers 
+   are reused by the different quantifiers (no need to train them multiple times). Quantifiers `fit` methods have also the option to
+   work directly with classifier predictions.
+
 
 Quickstart
 ==========
