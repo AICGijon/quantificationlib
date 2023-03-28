@@ -8,7 +8,7 @@
 
 project = 'quantificationlib'
 copyright = '2023, Jaime'
-author = 'Juan José, Jaime, Pablo'
+author = 'Alberto Castaño, Pablo González, Jaime Alonso, Juan José del Coz'
 release = '0.1'
 
 # -- General configuration ---------------------------------------------------
