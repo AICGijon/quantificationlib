@@ -7,14 +7,14 @@ from quantificationlib.metrics.multiclass import mean_absolute_error
 
 from data_utils import load_data,normalize
 
-X, y = load_data('../datasets/binary/iris.3.csv')
+X, y = load_data('datasets/binary/iris.3.csv')
 
 # generating training-test partition
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
 X_train, X_test = normalize(X_train, X_test)
 
 #base classifier
-estimator = LogisticRegression()
+estimator = LogisticRegression(random_state=1)
 
 #quantifier
 ac = AC(estimator_train=estimator, estimator_test=estimator)
