@@ -234,7 +234,7 @@ def compute_l2_param_train(train_distrib, classes):
     #  constraints, sum prevalences = 1, every prevalence >=0
     n_classes = len(classes)
     C = np.vstack([np.ones((1, n_classes)), np.eye(n_classes)]).T
-    b = np.array([1] + [0] * n_classes, dtype=np.float)
+    b = np.array([1] + [0] * n_classes, dtype=float)
     return G, C, b
 
 
@@ -456,7 +456,7 @@ def compute_ed_param_train(distance_func, train_distrib, classes, n_cls_i):
         G = nearest_pd(G)
 
     C = -np.vstack([np.ones((1, n_classes - 1)), -np.eye(n_classes - 1)]).T
-    b = -np.array([1] + [0] * (n_classes - 1), dtype=np.float)
+    b = -np.array([1] + [0] * (n_classes - 1), dtype=float)
 
     return K, G, C, b
 

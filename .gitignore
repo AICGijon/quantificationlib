@@ -4,3 +4,4 @@ __pycache__
 docs/_build
 venv
 quantificationlib.egg-info
+examples/results

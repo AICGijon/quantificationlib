@@ -238,7 +238,7 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
 
         # computing the probabilites of the left group for all estimators
         # notice that the probabilities of the right group is 1 - probability of the left group
-        predictions = self.compute_binary_proba(X)
+        predictions = self.__compute_binary_proba(X)
 
         n_classes = len(self.classes_)
         n_samples = len(predictions)
@@ -255,7 +255,7 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
 
         return probs_samples
 
-    def compute_binary_proba(self, X):
+    def __compute_binary_proba(self, X):
         """ Compute the class probabilities of the internal binary estimators
 
             Parameters
@@ -468,7 +468,7 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
         if self.classes_ is None:
             raise NotFittedError("This instance of %s class is not fitted yet", type(self).__name__)
 
-        predictions_left = self.compute_binary_proba(X)
+        predictions_left = self._FrankAndHallClassifier__compute_binary_proba(X)
 
         n_classes = len(self.classes_)
         n_samples = len(predictions_left)
@@ -676,7 +676,7 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
         super().fit(X, y)
 
         # building the tree
-        self._generate_tree(X, y)
+        self.__generate_tree(X, y)
         if self.verbose > 0:
             print(self.tree_)
         return self
@@ -753,11 +753,11 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
         n_classes = len(self.classes_)
         n_samples = X.shape[0]
         probs_samples = np.ones((n_samples, n_classes))
-        self._compute_probabilities(self.tree_, X, probs_samples, classes_in_subtree=[])
+        self.__compute_probabilities(self.tree_, X, probs_samples, classes_in_subtree=[])
 
         return probs_samples
 
-    def _generate_tree(self, X, y):
+    def __generate_tree(self, X, y):
         """ Build the tree for a given dataset X,y. This dataset is used to measure the quantification performance
             of each binary classifier.
 
@@ -779,7 +779,7 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
         """
         # obtain the probabilistic predictions of each binary classifier (needed to apply PCC). Recall that these
         # models return the probabilities of the classes of the left group
-        predictions_left = self.compute_binary_proba(X)
+        predictions_left = self._FrankAndHallClassifier__compute_binary_proba(X)
 
         # compute the predicted prevalence of the left group (PCC algorithm, it is just the mean)
         p_pred = np.mean(predictions_left, axis=0)

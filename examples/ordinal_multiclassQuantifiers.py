@@ -25,7 +25,7 @@ from quantificationlib.metrics.multiclass import hd, l1, l2
 
 from quantificationlib.metrics.ordinal import emd, emd_distances
 
-from quantificationlib.examples.data_utils import load_data, normalize
+from data_utils import load_data, normalize
 
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):
@@ -197,7 +197,7 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
 
 if __name__ == '__main__':
-    main(dataset='../datasets/ordinal/ESL.csv', estimator_name='RF',
+    main(dataset='datasets/ordinal/ESL.csv', estimator_name='RF',
          n_reps=2, n_bags=50, master_seed=2032)
 
 # EMD results
