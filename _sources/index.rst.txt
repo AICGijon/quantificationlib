@@ -22,7 +22,7 @@ For a more in depth quantification text, we refer the practitioners to the paper
 González, P., Castaño, A., Chawla, N. V., & Coz, J. J. D. (2017). A review on quantification learning. ACM Computing Surveys (CSUR), 50(5), 1-40.  
 
 Installation
-==========
+============
 
 In order to install the library you need Python 3. The library can be installed using pip:
 
