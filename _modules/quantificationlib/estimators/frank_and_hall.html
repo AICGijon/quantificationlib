@@ -282,7 +282,7 @@
 
         <span class="c1"># computing the probabilites of the left group for all estimators</span>
         <span class="c1"># notice that the probabilities of the right group is 1 - probability of the left group</span>
-        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
         <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
@@ -299,7 +299,7 @@
 
         <span class="k">return</span> <span class="n">probs_samples</span></div>
 
-<div class="viewcode-block" id="FrankAndHallClassifier.compute_binary_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba">[docs]</a>    <span class="k">def</span> <span class="nf">compute_binary_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__compute_binary_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Compute the class probabilities of the internal binary estimators</span>
 
 <span class="sd">            Parameters</span>
@@ -329,7 +329,7 @@
             <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
             <span class="n">predictions_left</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">predictions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
 
-        <span class="k">return</span> <span class="n">predictions_left</span></div></div>
+        <span class="k">return</span> <span class="n">predictions_left</span></div>
 
 
 <div class="viewcode-block" id="FrankAndHallMonotoneClassifier"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.frank_and_hall.html#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier">[docs]</a><span class="k">class</span> <span class="nc">FrankAndHallMonotoneClassifier</span><span class="p">(</span><span class="n">FrankAndHallClassifier</span><span class="p">):</span>
@@ -512,7 +512,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s2">&quot;This instance of </span><span class="si">%s</span><span class="s2"> class is not fitted yet&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
 
-        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FrankAndHallClassifier__compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
         <span class="n">n_samples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">predictions_left</span><span class="p">)</span>
@@ -720,7 +720,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
         <span class="c1"># building the tree</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_generate_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__generate_tree</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -797,11 +797,11 @@
         <span class="n">n_classes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">)</span>
         <span class="n">n_samples</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">probs_samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_samples</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_compute_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_in_subtree</span><span class="o">=</span><span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__compute_probabilities</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tree_</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">probs_samples</span><span class="p">,</span> <span class="n">classes_in_subtree</span><span class="o">=</span><span class="p">[])</span>
 
         <span class="k">return</span> <span class="n">probs_samples</span></div>
 
-    <span class="k">def</span> <span class="nf">_generate_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__generate_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Build the tree for a given dataset X,y. This dataset is used to measure the quantification performance</span>
 <span class="sd">            of each binary classifier.</span>
 
@@ -823,7 +823,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># obtain the probabilistic predictions of each binary classifier (needed to apply PCC). Recall that these</span>
         <span class="c1"># models return the probabilities of the classes of the left group</span>
-        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="n">predictions_left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_FrankAndHallClassifier__compute_binary_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="c1"># compute the predicted prevalence of the left group (PCC algorithm, it is just the mean)</span>
         <span class="n">p_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions_left</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

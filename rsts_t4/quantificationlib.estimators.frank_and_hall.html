@@ -212,25 +212,6 @@ estimators_[1] -&gt; 1-2 vs 3-4-5
 <p>Eibe Frank and Mark Hall. 2001. A simple approach to ordinal classification.
 In Proceedings of the European Conference on Machine Learning. Springer, 145156.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba">
-<span class="sig-name descname"><span class="pre">compute_binary_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.compute_binary_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba" title="Permalink to this definition">¶</a></dt>
-<dd><p>Compute the class probabilities of the internal binary estimators</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – </p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>For each sample, this matrix contains the probabily that such sample belongs to left group of classes
-of each estimator of the FH decomposition
-Recall that n_estimators = n_classes-1</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(n_samples, n_estimators)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition</p>
@@ -827,7 +808,6 @@ and so on.</p></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.label_binarizer_"><code class="docutils literal notranslate"><span class="pre">label_binarizer_</span></code></a></li>
-<li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.compute_binary_proba"><code class="docutils literal notranslate"><span class="pre">compute_binary_proba()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba"><code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code></a></li>
