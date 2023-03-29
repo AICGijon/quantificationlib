@@ -27,8 +27,9 @@ extensions = [
     'sphinx.ext.todo',          # to-do syntax highlighting
     'sphinx.ext.ifconfig',      # Content based configuration
     'm2r2',                     # Markdown support 
-    'sphinx.ext.viewcode'       # Add links to highlighted source code
+    'sphinx.ext.viewcode',      # Add links to highlighted source code
 ]
+
 
 source_suffix = ['.rst', '.md']
 
@@ -46,8 +47,10 @@ html_theme_options = {
 "sidebarwidth": 280,
 }
 
+html_show_sourcelink = False
+
 # Customlocaltoc must be in _templates
-html_sidebars = { '**': ['custom_localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html'], }
+html_sidebars = { '**': ['custom_localtoc.html', 'mylink.html', 'relations.html', 'sourcelink.html', 'searchbox.html'], }
 
 add_module_names = False
 toc_object_entries_show_parents = 'hide'
