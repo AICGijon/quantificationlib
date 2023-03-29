@@ -211,7 +211,7 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
 
 if __name__ == '__main__':
-    main(dataset='../datasets/binary/iris.3.csv', estimator_name='CV',
+    main(dataset='datasets/binary/iris.3.csv', estimator_name='RF',
          n_reps=2, n_bags=50, master_seed=2032)
 
 #  RF MAE results

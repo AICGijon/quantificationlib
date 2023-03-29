@@ -185,7 +185,7 @@ class FriedmanME(UsingClassifiers):
         #   to that class is >= than the prevalence of that class in the training set
         Vp = np.zeros((len(self.predictions_train_), n_classes))
         for n_cls in range(n_classes):
-            Vp[:, n_cls] = np.array(self.predictions_train_[:, n_cls] >= self.train_prevs_[n_cls]).astype(np.int)
+            Vp[:, n_cls] = np.array(self.predictions_train_[:, n_cls] >= self.train_prevs_[n_cls]).astype(int)
 
         self.train_distrib_ = np.zeros((n_classes, n_classes))
         for n_cls, cls in enumerate(self.classes_):
@@ -245,7 +245,7 @@ class FriedmanME(UsingClassifiers):
 
         Up = np.zeros((len(self.predictions_test_), n_classes))
         for n_cls in range(n_classes):
-            Up[:, n_cls] = np.array(self.predictions_test_[:, n_cls] >= self.train_prevs_[n_cls]).astype(np.int)
+            Up[:, n_cls] = np.array(self.predictions_test_[:, n_cls] >= self.train_prevs_[n_cls]).astype(int)
 
         self.test_distrib_ = Up.mean(axis=0).reshape(-1, 1)
 

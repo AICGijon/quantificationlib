@@ -27,7 +27,7 @@ from quantificationlib.ensembles.eoq import EoQ
 from quantificationlib.bag_generator import PriorShift_BagGenerator
 from quantificationlib.metrics.multiclass import hd, l1, l2, topsoe, mean_absolute_error
 
-from quantificationlib.examples.data_utils import load_data, normalize
+from data_utils import load_data, normalize
 
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):
@@ -274,4 +274,4 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
 
 if __name__ == '__main__':
-    main(dataset='../datasets/binary/iris.3.csv', estimator_name='RF', n_reps=2, n_bags=50, master_seed=2032)
+    main(dataset='datasets/binary/iris.3.csv', estimator_name='RF', n_reps=2, n_bags=50, master_seed=2032)

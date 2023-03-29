@@ -112,7 +112,7 @@ setup(
 
     python_requires='>=3.6',
 
-    install_requires=['scikit-learn', 'cvxpy', 'quadprog', 'scipy', 'numpy==1.21.6', 'ecos', 'statsmodels', 'pandas'],
+    install_requires=['scikit-learn', 'cvxpy', 'quadprog', 'scipy', 'numpy', 'ecos', 'statsmodels', 'pandas'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
