@@ -187,7 +187,6 @@ def test_binary_quantifiers():
             results[n_bag, n_method] = mean_absolute_error(prev_true[:, n_bag], prev_pred)
 
     avg = np.mean(results, axis=0)
-    print(avg)
     for name, result in zip(method_name,avg):
         assert result >= 0 and result <= 0.08, "Error in method %s " % name
 
