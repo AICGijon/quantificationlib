@@ -15,7 +15,7 @@ jobs:
       run: |
         pip install .
         pip install pytest coverage
-        coverage run -m pytest
+        coverage run --source quantificationlib --omit __init__.py -m pytest
     - uses: codecov/codecov-action@v3
   docs:
     needs: [tests]
