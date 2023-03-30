@@ -1,4 +1,5 @@
 ![cibadge](https://github.com/aicgijon/quantificationlib/actions/workflows/quantificationlib.yml/badge.svg)
+[![codecov](https://codecov.io/github/AICGijon/quantificationlib/branch/main/graph/badge.svg?token=6Y3SMCVWCD)](https://codecov.io/github/AICGijon/quantificationlib)
 
 
 # QuantificationLib
