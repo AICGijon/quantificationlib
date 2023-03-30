@@ -1,3 +1,6 @@
+![cibadge](https://github.com/aicgijon/quantificationlib/actions/workflows/quantificationlib.yml/badge.svg)
+
+
 # QuantificationLib
 
 QuantificationLib is an open-source library for quantification learning. 
