@@ -1,10 +1,6 @@
 import numpy as np
-import os
-import warnings
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.exceptions import DataConversionWarning
 from sklearn.ensemble import RandomForestClassifier
 
 from quantificationlib.baselines.ac import AC, PAC

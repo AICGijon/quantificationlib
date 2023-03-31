@@ -5,6 +5,7 @@ Base classes for all quantifiers
 # Authors: Alberto Castaño <bertocast@gmail.com>
 #          Pablo González <gonzalezgpablo@uniovi.es>
 #          Jaime Alonso <jalonso@uniovi.es>
+#          Pablo Pérez <pabloperez@uniovi.es>
 #          Juan José del Coz <juanjo@uniovi.es>
 # License: GPLv3 clause, University of Oviedo
 

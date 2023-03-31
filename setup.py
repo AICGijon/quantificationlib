@@ -72,11 +72,11 @@ setup(
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
     url='https://github.com/AICGijon/quantificationlib',  # Optional
-    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.1.tar.gz',
+    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.0.1.tar.gz',
 
-    maintainer='Juan Jose del Coz',
+    author='Alberto Castaño, Pablo González, Jaime Alonso, Pablo Pérez, Juan José del Coz',
 
-    maintainer_email='juanjo@uniovi.es',
+    author_email='bertocast@gmail.com, gonzalezgpablo@uniovi.es, jalonso@uniovi.es, pabloperez@uniovi.es, juanjo@uniovi.es',
 
     classifiers=[
         'Development Status :: 5 - Production/Stable',
