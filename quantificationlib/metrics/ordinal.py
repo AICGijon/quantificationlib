@@ -6,7 +6,7 @@ Score functions and loss functions for ordinal quantification problems
 #          Pablo González <gonzalezgpablo@uniovi.es>
 #          Jaime Alonso <jalonso@uniovi.es>
 #          Juan José del Coz <juanjo@uniovi.es>
-# License: GPLv3 3 clause, University of Oviedo
+# License: GPLv3 clause, University of Oviedo
 
 import numpy as np
 
