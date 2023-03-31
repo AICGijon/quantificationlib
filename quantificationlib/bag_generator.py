@@ -6,7 +6,7 @@ Classes and functions for generating bags of examples and distributions of bags 
 #          Pablo González <gonzalezgpablo@uniovi.es>
 #          Jaime Alonso <jalonso@uniovi.es>
 #          Juan José del Coz <juanjo@uniovi.es>
-# License: BSD 3 clause, University of Oviedo
+# License: GPLv3 clause, University of Oviedo
 
 import numpy as np
 import numbers

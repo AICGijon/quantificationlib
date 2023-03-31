@@ -21,7 +21,7 @@ from quantificationlib.estimators.frank_and_hall import FrankAndHallTreeClassifi
 from quantificationlib.bag_generator import PriorShift_BagGenerator
 from quantificationlib.metrics.ordinal import emd, emd_distances
 
-from data_utils import load_data, normalize
+from quantificationlib.data_utils import load_data, normalize
 
 
 def main(dataset, n_reps, n_bags, master_seed):

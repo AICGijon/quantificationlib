@@ -6,7 +6,7 @@ Ordinal quantification trees
 #          Pablo González <gonzalezgpablo@uniovi.es>
 #          Jaime Alonso <jalonso@uniovi.es>
 #          Juan José del Coz <juanjo@uniovi.es>
-# License: BSD 3 clause, University of Oviedo
+# License: GPLv3 3 clause, University of Oviedo
 
 from quantificationlib.baselines.cc import PCC
 from quantificationlib.estimators.frank_and_hall import FrankAndHallTreeClassifier

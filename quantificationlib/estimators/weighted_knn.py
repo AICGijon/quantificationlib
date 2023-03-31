@@ -4,7 +4,7 @@
 #          Pablo González <gonzalezgpablo@uniovi.es>
 #          Jaime Alonso <jalonso@uniovi.es>
 #          Juan José del Coz <juanjo@uniovi.es>
-# License: BSD 3 clause, University of Oviedo
+# License: GPLv3 3 clause, University of Oviedo
 
 import numpy as np
 import warnings

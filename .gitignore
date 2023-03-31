@@ -6,3 +6,5 @@ venv
 quantificationlib.egg-info
 examples/results
 .coverage
+dist
+.pytest_cache

@@ -1,3 +1,7 @@
+"""
+Basic tools for data loading and normalization. Basically used in the examples and tests.
+"""
+
 import numpy as np
 import warnings
 

@@ -5,7 +5,7 @@ from quantificationlib.baselines.ac import AC
 from quantificationlib.bag_generator import PriorShift_BagGenerator
 from quantificationlib.metrics.multiclass import mean_absolute_error
 
-from data_utils import load_data,normalize
+from quantificationlib.data_utils import load_data,normalize
 
 X, y = load_data('datasets/binary/iris.3.csv')
 

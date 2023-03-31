@@ -25,7 +25,7 @@ from quantificationlib.estimators.cross_validation import CV_estimator
 from quantificationlib.bag_generator import PriorShift_BagGenerator
 from quantificationlib.metrics.multiclass import hd, l1, l2, topsoe, mean_absolute_error
 
-from data_utils import load_data, normalize
+from quantificationlib.data_utils import load_data, normalize
 
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):

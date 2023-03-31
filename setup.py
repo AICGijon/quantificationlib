@@ -71,21 +71,19 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/jjdelcoz/quantificationlib',  # Optional
+    url='https://github.com/AICGijon/quantificationlib',  # Optional
+    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.1.tar.gz',
 
-    maintainer='Juan José del Coz',
+    maintainer='Juan Jose del Coz',
 
     maintainer_email='juanjo@uniovi.es',
 
     classifiers=[
-        'Development Status :: 0 - Beta',
-
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Science/Research',
         'Programming Language :: Python',
         'Topic :: Scientific/Engineering',
-
-        'License :: OSI Approved :: BSD License',
-
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

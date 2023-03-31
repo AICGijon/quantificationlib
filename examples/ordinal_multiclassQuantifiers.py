@@ -25,7 +25,7 @@ from quantificationlib.metrics.multiclass import hd, l1, l2
 
 from quantificationlib.metrics.ordinal import emd, emd_distances
 
-from data_utils import load_data, normalize
+from quantificationlib.data_utils import load_data, normalize
 
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):
