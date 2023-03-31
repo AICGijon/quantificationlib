@@ -3,29 +3,19 @@ import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedKFold
 
-from sklearn.linear_model import LinearRegression
+from quantificationlib.baselines.ac import PAC
+from quantificationlib.baselines.cc import PCC
 
-from quantificationlib.baselines.ac import AC, PAC
-from quantificationlib.baselines.cc import CC, PCC
-
-from quantificationlib.binary.debias import DeBias
-from quantificationlib.binary.emd import SORDy
-from quantificationlib.binary.quantiles import QUANTy
 
 from quantificationlib.multiclass.em import EM
-from quantificationlib.multiclass.df import HDX, HDy, MMy, DFX, DFy
-from quantificationlib.multiclass.friedman import FriedmanME
-from quantificationlib.multiclass.energy import EDX, EDy, CvMy
-from quantificationlib.multiclass.regression import REGX, REGy
-from quantificationlib.multiclass.knn import PWKQuantifier
+
 
 from quantificationlib.estimators.ensembles import EnsembleOfClassifiers
 from quantificationlib.ensembles.eoq import EoQ
 
 from quantificationlib.bag_generator import PriorShift_BagGenerator
-from quantificationlib.metrics.multiclass import hd, l1, l2, topsoe, mean_absolute_error
+from quantificationlib.metrics.multiclass import mean_absolute_error
 
 from quantificationlib.data_utils import load_data, normalize
 
