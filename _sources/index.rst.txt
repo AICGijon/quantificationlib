@@ -44,7 +44,7 @@ In order to install the library you need Python 3. The library can be installed 
 Quickstart
 ==========
 
-It is time to train your first quantifier:
+It is time to train your first quantifier. First, download the data for the example `here <https://raw.githubusercontent.com/AICGijon/quantificationlib/main/examples/datasets/binary/iris.3.csv>`_.
 
 .. code-block:: python
 
@@ -57,7 +57,7 @@ It is time to train your first quantifier:
 
    from quantificationlib.data_utils import load_data,normalize
 
-   X, y = load_data('datasets/binary/iris.3.csv')
+   X, y = load_data('iris.3.csv')
 
    # generating training-test partition
    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
