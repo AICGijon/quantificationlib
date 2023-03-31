@@ -4,9 +4,12 @@ from sklearn.linear_model import LogisticRegression
 from quantificationlib.baselines.ac import AC
 from quantificationlib.bag_generator import PriorShift_BagGenerator
 from quantificationlib.metrics.multiclass import mean_absolute_error
+import urllib.request
 
 from quantificationlib.data_utils import load_data,normalize
 
+#download data
+urllib.request.urlretrieve("https://raw.githubusercontent.com/AICGijon/quantificationlib/main/examples/datasets/binary/iris.3.csv", "iris.3.csv")
 X, y = load_data('datasets/binary/iris.3.csv')
 
 # generating training-test partition
