@@ -8,3 +8,5 @@ examples/results
 .coverage
 dist
 .pytest_cache
+build
+.vscode
