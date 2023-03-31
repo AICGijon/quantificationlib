@@ -16,7 +16,7 @@ See https://github.com/AICGijon/quantificationlib for complete documentation.
 # from quantificationlib import multiclass
 # from quantificationlib import ordinal
 #
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 
 # __all__ = [
 #     'baselines',
