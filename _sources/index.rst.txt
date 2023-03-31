@@ -44,20 +44,22 @@ In order to install the library you need Python 3. The library can be installed 
 Quickstart
 ==========
 
-It is time to train your first quantifier. First, download the data for the example `here <https://raw.githubusercontent.com/AICGijon/quantificationlib/main/examples/datasets/binary/iris.3.csv>`_.
+It is time to train your first quantifier:
 
 .. code-block:: python
 
    from sklearn.model_selection import train_test_split
    from sklearn.linear_model import LogisticRegression
+   import urllib.request
 
    from quantificationlib.baselines.ac import AC
    from quantificationlib.bag_generator import PriorShift_BagGenerator
    from quantificationlib.metrics.multiclass import mean_absolute_error
-
    from quantificationlib.data_utils import load_data,normalize
 
-   X, y = load_data('iris.3.csv')
+   #download data
+   urllib.request.urlretrieve("https://raw.githubusercontent.com/AICGijon/quantificationlib/main/examples/datasets/binary/iris.3.csv", "iris.3.csv")
+   X, y = load_data('datasets/binary/iris.3.csv')
 
    # generating training-test partition
    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
