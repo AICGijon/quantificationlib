@@ -59,7 +59,7 @@ It is time to train your first quantifier:
 
    #download data
    urllib.request.urlretrieve("https://raw.githubusercontent.com/AICGijon/quantificationlib/main/examples/datasets/binary/iris.3.csv", "iris.3.csv")
-   X, y = load_data('datasets/binary/iris.3.csv')
+   X, y = load_data('iris.3.csv')
 
    # generating training-test partition
    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, stratify=y, random_state=1)
