@@ -9,7 +9,7 @@ from quantificationlib.multiclass.df import HDX
 
 from quantificationlib.decomposition.multiclass import OneVsRestQuantifier
 
-from quantificationlib.metrics.ordinal import emd
+from quantificationlib.metrics.ordinal import emd, emd_score
 
 from quantificationlib.estimators.frank_and_hall import FrankAndHallClassifier
 from quantificationlib.decomposition.ordinal import FrankAndHallQuantifier
@@ -83,7 +83,8 @@ def test_decomposition_ordinal():
 
     method_name = ['FH-CC', 'FH-AC']
 
-    results = np.zeros((n_bags, len(method_name)))
+    results_emd = np.zeros((n_bags, len(method_name)))
+    results_emd_score = np.zeros((n_bags, len(method_name)))
 
     X, y = load_data(dataset)
 
@@ -118,8 +119,13 @@ def test_decomposition_ordinal():
         ]
 
     for n_method, prev_pred in enumerate(prev_preds):
-        results[n_bag, n_method] = emd(prev_true[:, n_bag], prev_pred)
+        results_emd[n_bag, n_method] = emd(prev_true[:, n_bag], prev_pred)
+        results_emd_score[n_bag, n_method] = emd_score(prev_true[:, n_bag], prev_pred)
 
-    avg = np.mean(results, axis=0)
-    for name, result in zip(method_name,avg):
+    avg_emd = np.mean(results_emd, axis=0)
+    avg_emd_score = np.mean(results_emd_score, axis=0)
+    for name, result in zip(method_name,avg_emd):
         assert result >= 0 and result <= 0.05, "Error in method %s " % name
+
+    for name, result in zip(method_name,avg_emd_score):
+        assert result >= 0 and result <= 0.2, "Error in method %s " % name
