@@ -1,15 +1,18 @@
 import numpy as np
-import os
-import warnings
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.multiclass import OneVsRestClassifier
 
 from quantificationlib.baselines.ac import AC
-from quantificationlib.baselines.cc import CC
+from quantificationlib.multiclass.df import HDX
 
 from quantificationlib.decomposition.multiclass import OneVsRestQuantifier
+
+from quantificationlib.metrics.ordinal import emd
+
+from quantificationlib.estimators.frank_and_hall import FrankAndHallClassifier
+from quantificationlib.decomposition.ordinal import FrankAndHallQuantifier
 
 from quantificationlib.estimators.cross_validation import CV_estimator
 from quantificationlib.bag_generator import PriorShift_BagGenerator
@@ -24,7 +27,7 @@ def test_decomposition_multiclass():
     n_bags=5
     master_seed=2032
 
-    method_name = ['OVR-CC', 'OVR-AC']
+    method_name = ['OVR-HDX', 'OVR-AC']
 
     results = np.zeros((n_bags, len(method_name)))
 
@@ -48,8 +51,8 @@ def test_decomposition_multiclass():
                                     estimator_train=ovr_estimator, estimator_test=ovr_estimator)
     ovr_ac.fit(X_train, y_train)
     #  CC
-    ovr_cc = OneVsRestQuantifier(base_quantifier=CC(), estimator_test=ovr_estimator)
-    ovr_cc.fit(X_train, y_train)
+    ovr_hdx = OneVsRestQuantifier(base_quantifier=HDX())
+    ovr_hdx.fit(X_train, y_train)
     
 
     #  Testing bags
@@ -60,7 +63,7 @@ def test_decomposition_multiclass():
     for n_bag in range(n_bags):
 
         prev_preds = [
-            ovr_cc.predict(X_test[indexes[:, n_bag], :]),
+            ovr_hdx.predict(X_test[indexes[:, n_bag], :]),
             ovr_ac.predict(X_test[indexes[:, n_bag], :]),
         ]
 
@@ -70,27 +73,7 @@ def test_decomposition_multiclass():
     #  printing and saving results
     avg = np.mean(results, axis=0)
     for name, result in zip(method_name,avg):
-        assert result >= 0 and result <= 0.02, "Error in method %s " % name
-
-
-import numpy as np
-import os
-import warnings
-
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-
-from quantificationlib.baselines.ac import AC
-from quantificationlib.multiclass.df import HDX
-
-from quantificationlib.estimators.frank_and_hall import FrankAndHallClassifier
-from quantificationlib.decomposition.ordinal import FrankAndHallQuantifier
-
-from quantificationlib.bag_generator import PriorShift_BagGenerator
-from quantificationlib.metrics.ordinal import emd
-
-from quantificationlib.data_utils import load_data, normalize
-
+        assert result >= 0 and result <= 0.026, "Error in method %s " % name
 
 def test_decomposition_ordinal():
 

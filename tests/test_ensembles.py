@@ -26,7 +26,7 @@ def test_ensembles():
     master_seed = 2032
     n_bags = 5
 
-    method_name = ['EOQ-PCC', 'EOQ-PAC', 'EOQ-EM']
+    method_name = ['EOQ-HDX', 'EOQ-PAC', 'EOQ-EM']
 
     results = np.zeros((n_bags, len(method_name)))
    
