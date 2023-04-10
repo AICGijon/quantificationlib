@@ -5,7 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 from quantificationlib.baselines.ac import PAC
-from quantificationlib.baselines.cc import PCC
+from quantificationlib.multiclass.df import HDX
 
 
 from quantificationlib.multiclass.em import EM
@@ -49,12 +49,11 @@ def test_ensembles():
     bag_generator_eoq = PriorShift_BagGenerator(n_bags=100, bag_size=len(X_train),
                                                 min_prevalence=0.05, random_state=current_seed)
 
-    #  PCC
-    eoq_pcc = EoQ(base_quantifier=PCC(),
+    #  HDX
+    eoq_hdx = EoQ(base_quantifier=HDX(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
-                    combination_strategy='mean',
-                    ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator)
-    eoq_pcc.fit(X_train, y_train)
+                    combination_strategy='mean')
+    eoq_hdx.fit(X_train, y_train)
     #  PAC
     eoq_pac = EoQ(base_quantifier=PAC(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
@@ -77,7 +76,7 @@ def test_ensembles():
     for n_bag in range(n_bags):
 
         prev_preds = [
-            eoq_pcc.predict(X_test[indexes[:, n_bag], :]),
+            eoq_hdx.predict(X_test[indexes[:, n_bag], :]),
             eoq_pac.predict(X_test[indexes[:, n_bag], :]),
             eoq_em.predict(X_test[indexes[:, n_bag], :]),
         ]

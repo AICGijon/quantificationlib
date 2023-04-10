@@ -58,7 +58,7 @@ def test_binary_quantifiers():
     estimator = RandomForestClassifier(n_estimators=100, random_state=master_seed, class_weight='balanced')
 
     #  AC
-    ac = AC(estimator_train=estimator, estimator_test=estimator)
+    ac = AC(estimator_train=estimator, estimator_test=estimator, verbose=1)
     ac.fit(X_train, y_train)
     #  CC
     cc = CC(estimator_test=estimator)
