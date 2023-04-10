@@ -52,12 +52,12 @@ def test_ensembles():
     #  HDX
     eoq_hdx = EoQ(base_quantifier=HDX(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
-                    combination_strategy='mean')
+                    combination_strategy='prevalence_similarity')
     eoq_hdx.fit(X_train, y_train)
     #  PAC
     eoq_pac = EoQ(base_quantifier=PAC(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
-                    combination_strategy='mean',
+                    combination_strategy='median',
                     ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator)
     eoq_pac.fit(X_train, y_train)
 

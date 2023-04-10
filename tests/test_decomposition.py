@@ -81,7 +81,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 
 from quantificationlib.baselines.ac import AC
-from quantificationlib.baselines.cc import CC
+from quantificationlib.multiclass.df import HDX
 
 from quantificationlib.estimators.frank_and_hall import FrankAndHallClassifier
 from quantificationlib.decomposition.ordinal import FrankAndHallQuantifier
@@ -120,8 +120,8 @@ def test_decomposition_ordinal():
     fh_ac = FrankAndHallQuantifier(quantifier=AC(), estimator_train=fh, estimator_test=fh)
     fh_ac.fit(X_train, y_train)
     #  CC
-    fh_cc = FrankAndHallQuantifier(quantifier=CC(), estimator_train=None, estimator_test=fh)
-    fh_cc.fit(X_train, y_train)
+    fh_hdx = FrankAndHallQuantifier(quantifier=HDX(), estimator_train=None, estimator_test=None)
+    fh_hdx.fit(X_train, y_train)
     
 
     bag_generator = PriorShift_BagGenerator(n_bags=n_bags, bag_size=len(X_test),
@@ -130,7 +130,7 @@ def test_decomposition_ordinal():
     prev_true, indexes = bag_generator.generate_bags(X_test, y_test)
     for n_bag in range(n_bags):
         prev_preds = [
-            fh_cc.predict(X_test[indexes[:, n_bag], :]),
+            fh_hdx.predict(X_test[indexes[:, n_bag], :]),
             fh_ac.predict(X_test[indexes[:, n_bag], :]),
         ]
 
