@@ -100,7 +100,7 @@ of each one, along with the absolute error of the quantifier in each bag:
    True prevalence=0.844444, estimated prevalence=0.767196, AE=0.077249
 
 
-This example is taken from `here <https://github.com/AICGijon/quantificationlib/examples>`_. Check the link for more useful examples.
+This example is taken from `here <https://github.com/AICGijon/quantificationlib/tree/main/examples>`_. Check the link for more useful examples.
 
 Library Summary
 ===============
