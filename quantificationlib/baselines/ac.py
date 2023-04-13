@@ -253,7 +253,8 @@ class AC(UsingClassifiers):
 
                 prevalences[prevalences < 0] = 0
                 prevalences = prevalences / sum(prevalences)
-
+                prevalences = prevalences.squeeze()
+                
             except np.linalg.LinAlgError:
                 #  inversion fails, looking for a solution that optimizes the selected distance
                 if self.distance == 'HD':
