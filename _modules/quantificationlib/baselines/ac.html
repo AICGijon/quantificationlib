@@ -297,7 +297,8 @@
 
                 <span class="n">prevalences</span><span class="p">[</span><span class="n">prevalences</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">)</span>
-
+                <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+                
             <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
                 <span class="c1">#  inversion fails, looking for a solution that optimizes the selected distance</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span> <span class="o">==</span> <span class="s1">&#39;HD&#39;</span><span class="p">:</span>
