@@ -129,6 +129,7 @@ Modules
    rsts_t4/quantificationlib.bag_generator
    rsts_t4/quantificationlib.cvxpy_installed_solvers
    rsts_t4/quantificationlib.optimization
+   rsts_t4/quantificationlib.plot
    rsts_t4/quantificationlib.search
 
 

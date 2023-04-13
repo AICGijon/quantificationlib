@@ -114,7 +114,7 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
     ### To plot prevalences
     fig1, ax1 = plt.subplots()
-    ax1 = plot_line_prevalences(ax1, total_prev_true, order="descending")
+    plot_line_prevalences(ax1, total_prev_true, order="descending")
     ax1.set_title("TRUTH")
 
     rows = total_prev_preds.shape[0]
@@ -123,7 +123,7 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
     for i, name in enumerate(method_name):
         idx= np.arange(i, rows, systems)
         system_prev_preds = total_prev_preds[idx, :]
-        axes[i] = plot_line_prevalences(axes[i], system_prev_preds, order="descending")
+        plot_line_prevalences(axes[i], system_prev_preds, order="descending")
         axes[i].set_title(name)
 
     plt.show()

@@ -1,36 +1,50 @@
-import matplotlib.pyplot as plt
+"""
+Visualization related functions. 
+"""
+
+# Authors: Alberto Castaño <bertocast@gmail.com>
+#          Pablo González <gonzalezgpablo@uniovi.es>
+#          Jaime Alonso <jalonso@uniovi.es>
+#          Juan José del Coz <juanjo@uniovi.es>
+# License: BSD 3 clause, University of Oviedo
+
+
 import numpy as np
 from matplotlib.collections import LineCollection
 import matplotlib.colors as mcolors
 
-# sort rows based on the list of columns
-# by default sort based on the first column ascending
 def sort_rows_bycolumns(m, columns=[0], order='ascending'):
-    columns.reverse()  #jojo!!
+    """
+    Sort rows of matrix based on the list of columns. 
+    By default sort based on the firt column ascending
+    """
+    columns.reverse() 
     sort_order = np.lexsort(tuple(m[:, i] for i in columns))
     if order=='descending':
         sort_order = sort_order[::-1]
     m_sorted = m[sort_order]
     return m_sorted
 
-# sort columns based on the means of its values
-# return the new matrix and the index of the columns
+
 def sort_columns_bymeans(m, order='ascending'):
+    """
+    Sort columns of matrix based on the means of its values.
+    Return the new matrix and the index of the columns
+    """
     means = np.mean(m, axis=0)
     print("means:",means)
     idx_means = np.argsort(means)
     if order=='descending':
         idx_means = idx_means[::-1]
     print(idx_means)
-    m_new = m[:, idx_means]  #consider inline ordering??
+    m_new = m[:, idx_means]
     return m_new, idx_means
 
-
-def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors.TABLEAU_COLORS), param_dict=''):
+def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors.TABLEAU_COLORS)):
     """
     Function to build a graph to represent prevalences of experiments in a linear form.
     Each horizontal line corresponds to one experiment, each color is a class
-    and its horizontal length corresponds to its proportion (prevalence)
+    and its horizontal length corresponds to its proportion (prevalence).
 
     Parameters
     ----------
@@ -39,24 +53,13 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
 
     prevalence_matrix : ndarray, shape(number_of_experiments, number_ of_clases)
         Prevalences of the experiments
-        Example for 4 classes:
-        [[0.01974937 0.87850524 0.0584321  0.04331329]
-        ...
-        [0.47830422 0.09838137 0.10653123 0.31678318]]
 
     order: str    
-        Sort matrix based on the first column in order "ascending", "desdecending" or none
+        To sort matrix based on the first column in order "ascending", "desdending" or none
        
     colors: list
         List of colors for classes
 
-    param_dict : dict
-        Dictionary of keyword arguments to pass to ax.plot
-
-    Returns
-    -------
-    out : list
-        list of artists added  ???????
     """
 
     if order!=None:
@@ -82,5 +85,3 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
            #print(segments)
            line_segments = LineCollection(segments, colors=colors, linewidths=2)
            ax.add_collection(line_segments)
-
-    return ax
