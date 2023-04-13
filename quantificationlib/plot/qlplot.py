@@ -4,7 +4,7 @@ from matplotlib.collections import LineCollection
 import matplotlib.colors as mcolors
 
 # sort rows based on the list of columns
-# by default sort based on the firt column ascending
+# by default sort based on the first column ascending
 def sort_rows_bycolumns(m, columns=[0], order='ascending'):
     columns.reverse()  #jojo!!
     sort_order = np.lexsort(tuple(m[:, i] for i in columns))
@@ -56,7 +56,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
     Returns
     -------
     out : list
-        list of artists added  ??????? CAMBIAR
+        list of artists added  ???????
     """
 
     if order!=None:
@@ -80,7 +80,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
                segments.append([(x0,y),(x1,y)])
                x0=x1
            #print(segments)
-           line_segments = LineCollection(segments, colors=colors, linewidths=1)
+           line_segments = LineCollection(segments, colors=colors, linewidths=2)
            ax.add_collection(line_segments)
 
     return ax

@@ -130,7 +130,8 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
 
 if __name__ == '__main__':
-     main(dataset='./datasets/multiclass/iris.csv', estimator_name='RF',
-          n_reps=2, n_bags=100, master_seed=2032)
+     #main(dataset='./datasets/multiclass/iris.csv', estimator_name='RF',
+     #     n_reps=2, n_bags=100, master_seed=2032)
 
-
+     main(dataset='./datasets/multiclass/MaternalHealthRisk.csv', estimator_name='RF',
+          n_reps=4, n_bags=50, master_seed=2032)
