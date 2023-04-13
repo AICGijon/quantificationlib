@@ -3,16 +3,14 @@ import os
 import warnings
 
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-from sklearn.exceptions import DataConversionWarning
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import StratifiedKFold
 
 from quantificationlib.baselines.ac import AC, PAC
 from quantificationlib.baselines.cc import CC, PCC
 from quantificationlib.multiclass.energy import EDX, EDy, CvMy
 from quantificationlib.multiclass.df import HDX, HDy, MMy, DFX, DFy
+from quantificationlib.multiclass.em import EM
 
 from quantificationlib.estimators.cross_validation import CV_estimator
 from quantificationlib.bag_generator import PriorShift_BagGenerator
@@ -25,7 +23,7 @@ import matplotlib.pyplot as plt                                     ### To plot 
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
-    method_name = ['AC_HD', 'CC', 'PCC', 'EDy', 'HDY']
+    method_name = ['PCC', 'HDY', 'EM']
 
     results = np.zeros((n_reps * n_bags, len(method_name)))
 
@@ -57,21 +55,15 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
                                                                       class_weight='balanced'), cv=skf_train)
 
 
-        #  AC_HD
-        ac_hd = AC(estimator_train=estimator, estimator_test=estimator, distance='HD')
-        ac_hd.fit(X_train, y_train)
-         #  CC
-        cc = CC(estimator_test=estimator)
-        cc.fit(X_train, y_train)
-        #  PCC
+         #  PCC
         pcc = PCC(estimator_test=estimator)
         pcc.fit(X_train, y_train)
-        #  EDy
-        edy = EDy(estimator_train=estimator, estimator_test=estimator)
-        edy.fit(X_train, y_train)
         #  HDY
         hdy = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8)
         hdy.fit(X_train, y_train)
+        #  EM
+        em = EM(estimator_train=estimator, estimator_test=estimator)
+        em.fit(X_train, y_train)
 
         #  Testing bags
         bag_generator = PriorShift_BagGenerator(n_bags=n_bags, bag_size=len(X_test),
@@ -85,11 +77,9 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
         for n_bag in range(n_bags):
 
             prev_preds = [
-                ac_hd.predict(X_test[indexes[:, n_bag], :]),
-                cc.predict(X_test[indexes[:, n_bag], :]),
                 pcc.predict(X_test[indexes[:, n_bag], :]),
-                edy.predict(X_test[indexes[:, n_bag], :]),
-                hdy.predict(X_test[indexes[:, n_bag], :])
+                hdy.predict(X_test[indexes[:, n_bag], :]),
+                em.predict(X_test[indexes[:, n_bag], :])
             ]
    
             ### To plot prevalences
@@ -112,20 +102,20 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
         file_avg.write('%-15s%.5f\n' % (method, avg[n_method]))
         print('%-15s%.5f' % (method, avg[n_method]))
 
-    ### To plot prevalences
-    fig1, ax1 = plt.subplots()
-    ax1 = plot_line_prevalences(ax1, total_prev_true, order="descending")
-    ax1.set_title("TRUTH")
+    # Create a single row of subplots
+    fig, axs = plt.subplots(ncols=len(method_name)+1, figsize=(15, 4))
 
-    rows = total_prev_preds.shape[0]
-    systems = len(method_name)
-    axes = [plt.subplots()[1] for i in range(systems)]
+    # Plot the truth data in the first subplot
+    plot_line_prevalences(axs[0], total_prev_true, order="descending")
+    axs[0].set_title("TRUTH")
+
+    # Loop through each method and plot the data in the corresponding subplot
     for i, name in enumerate(method_name):
-        idx= np.arange(i, rows, systems)
-        system_prev_preds = total_prev_preds[idx, :]
-        axes[i] = plot_line_prevalences(axes[i], system_prev_preds, order="descending")
-        axes[i].set_title(name)
+        plot_line_prevalences(axs[i+1], total_prev_preds[i::len(method_name), :], order="descending")
+        axs[i+1].set_title("%s (AE=%.5f)" % (name,avg[i]))
 
+    # Adjust the layout and display the plot
+    plt.tight_layout()
     plt.show()
 
 

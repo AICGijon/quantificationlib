@@ -72,7 +72,7 @@ setup(
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
     url='https://github.com/AICGijon/quantificationlib',  # Optional
-    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.0.6.tar.gz',
+    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.0.7.tar.gz',
 
     author='Alberto Castaño, Pablo González, Jaime Alonso, Pablo Pérez, Juan José del Coz',
 
@@ -110,7 +110,7 @@ setup(
 
     python_requires='>=3.6',
 
-    install_requires=['scikit-learn', 'cvxpy', 'quadprog', 'scipy', 'numpy', 'ecos', 'statsmodels', 'pandas'],
+    install_requires=['scikit-learn', 'cvxpy', 'quadprog', 'scipy', 'numpy', 'ecos', 'statsmodels', 'pandas', 'matplotlib'],
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
