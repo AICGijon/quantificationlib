@@ -13,7 +13,7 @@ import numpy as np
 from matplotlib.collections import LineCollection
 import matplotlib.colors as mcolors
 
-def sort_rows_bycolumns(m, columns=[0], order='ascending'):
+def _sort_rows_bycolumns(m, columns=[0], order='ascending'):
     """
     Sort rows of matrix based on the list of columns. 
     By default sort based on the firt column ascending
@@ -26,7 +26,7 @@ def sort_rows_bycolumns(m, columns=[0], order='ascending'):
     return m_sorted
 
 
-def sort_columns_bymeans(m, order='ascending'):
+def _sort_columns_bymeans(m, order='ascending'):
     """
     Sort columns of matrix based on the means of its values.
     Return the new matrix and the index of the columns
@@ -63,7 +63,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
     """
 
     if order!=None:
-       prevalence_matrix = sort_rows_bycolumns(prevalence_matrix, order=order)
+       prevalence_matrix = _sort_rows_bycolumns(prevalence_matrix, order=order)
 
 
     N = 100  # points per line
