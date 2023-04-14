@@ -102,31 +102,17 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
         file_avg.write('%-15s%.5f\n' % (method, avg[n_method]))
         print('%-15s%.5f' % (method, avg[n_method]))
 
-<<<<<<< HEAD
-    ### To plot prevalences
-    fig1, ax1 = plt.subplots()
-    plot_line_prevalences(ax1, total_prev_true, order="descending")
-    ax1.set_title("TRUTH")
-=======
     # Create a single row of subplots
     fig, axs = plt.subplots(ncols=len(method_name)+1, figsize=(15, 4))
->>>>>>> f918ab6372786ae109a8de05a0699782561be879
 
     # Plot the truth data in the first subplot
     plot_line_prevalences(axs[0], total_prev_true, order="descending")
-    axs[0].set_title("TRUTH")
+    axs[0].set_title("TRUTH", fontsize=16)
 
     # Loop through each method and plot the data in the corresponding subplot
     for i, name in enumerate(method_name):
-<<<<<<< HEAD
-        idx= np.arange(i, rows, systems)
-        system_prev_preds = total_prev_preds[idx, :]
-        plot_line_prevalences(axes[i], system_prev_preds, order="descending")
-        axes[i].set_title(name)
-=======
         plot_line_prevalences(axs[i+1], total_prev_preds[i::len(method_name), :], order="descending")
-        axs[i+1].set_title("%s (AE=%.5f)" % (name,avg[i]))
->>>>>>> f918ab6372786ae109a8de05a0699782561be879
+        axs[i+1].set_title("%s (AE=%.5f)" % (name,avg[i]), fontsize=16)
 
     # Adjust the layout and display the plot
     plt.tight_layout()
