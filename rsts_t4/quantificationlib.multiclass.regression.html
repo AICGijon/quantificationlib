@@ -14,6 +14,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -57,98 +58,184 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">REG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bag_generator=&lt;quantificationlib.bag_generator.PriorShift_BagGenerator</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins=8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy='equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>REG base class for REGX y REGy</p>
-<blockquote>
-<div><p>The idea of these quantifiers is to learn a regression model able to predict the prevalences. To learn said
+<p>The idea of these quantifiers is to learn a regression model able to predict the prevalences. To learn said
 regression model, this kind of objects generates a training set of bag of examples using a selected kind of
 shift (prior probability shift, covariate shift or a mix of both). The training set contains a collection of
 pairs (PDF distribution, prevalences) in which each pair is obtained from a bag of examples. The PDF tries
 to capture the distribution of the bag.</p>
-<dl>
-<dt>bag_generator<span class="classifier">BagGenerator object (default=PriorShift_BagGenerator())</span></dt><dd><p>Object to generate the bags with a selected shift</p>
-</dd>
-<dt>n_bins<span class="classifier">int (default=8)</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
-</dd>
-<dt>bin_strategy<span class="classifier">str (default=’normal’)</span></dt><dd><dl>
-<dt>Method to compute the boundaries of the bins:</dt><dd><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bag_generator</strong> (<em>BagGenerator object</em><em> (</em><em>default=PriorShift_BagGenerator</em><em>(</em><em>)</em><em>)</em>) – Object to generate the bags with a selected shift</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em> (</em><em>default=8</em><em>)</em>) – Number of bins to compute the PDF of each distribution</p></li>
+<li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='normal'</em><em>)</em>) – <dl>
+<dt>Method to compute the boundaries of the bins:</dt><dd><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
 <div><blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal
 distribution:</p>
 </div></blockquote>
-<p>$c_i =</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
 <blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<div><p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
+</div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feature follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><dl class="simple">
-<dt>regression_estimator: estimator object (default=None)</dt><dd><p>A regression estimator object. If the value is None the regression estimator used is a Generalized Linear
+</dd>
+</dl>
+</p></li>
+<li><p><strong>regression_estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – A regression estimator object. If the value is None the regression estimator used is a Generalized Linear
 Model (GLM) from statsmodels package with logit link and Binomial family as parameters (see Baum 2008).
 It is used to learn a regression model able to predict the prevalence for each class, so the method will
-fit as many regression estimators as classes in multiclass problems and just one for binary problems.</p>
-</dd>
-<dt>verbose<span class="classifier">int, optional, (default=0)</span></dt><dd><p>The verbosity level. The default value, zero, means silent mode</p>
+fit as many regression estimators as classes in multiclass problems and just one for binary problems.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>bag_generator<span class="classifier">BagGenerator object</span></dt><dd><p>Object to generate the bags with a selected shift</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.bag_generator">
+<span class="sig-name descname"><span class="pre">bag_generator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.bag_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to generate the bags with a selected shift</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BagGenerator object</p>
 </dd>
-<dt>n_bins<span class="classifier">int</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.n_bins">
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.n_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of bins to compute the PDF of each distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt>bin_strategy<span class="classifier">str</span></dt><dd><p>Method to compute the boundaries of the bins</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.bin_strategy">
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute the boundaries of the bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt>regression_estimator: estimator object, None</dt><dd><p>A regression estimator object</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.regression_estimator">
+<span class="sig-name descname"><span class="pre">regression_estimator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.regression_estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regression estimator object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object, None</p>
 </dd>
-<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt><a href="#id1"><span class="problematic" id="id2">dataX_</span></a><span class="classifier">array-like, shape(n_bags, n_features)</span></dt><dd><p>X data for training REGX/REGy’s regressor model. Each row corresponds to the collection of histograms (one
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.dataX_">
+<span class="sig-name descname"><span class="pre">dataX_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.dataX_" title="Permalink to this definition">¶</a></dt>
+<dd><p>X data for training REGX/REGy’s regressor model. Each row corresponds to the collection of histograms (one
 per input feature) of the corresponding bag</p>
-</dd>
-<dt><a href="#id3"><span class="problematic" id="id4">dataY_</span></a><span class="classifier">array-like, shape(n_bags, n_classes)</span></dt><dd><p>Y data for training REGX/REGy’s regressor model. Each value corresponds to the prevalences of the
-corresponding bag</p>
-</dd>
-<dt><a href="#id5"><span class="problematic" id="id6">bincuts_</span></a><span class="classifier">ndarray, shape (n_features, n_bins + 1)</span></dt><dd><p>Bin cuts for each feature</p>
-</dd>
-<dt><a href="#id7"><span class="problematic" id="id8">estimators_</span></a><span class="classifier">array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span></dt><dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
-for each class</p>
-</dd>
-<dt><a href="#id9"><span class="problematic" id="id10">models_</span></a><span class="classifier">array of models, i.e., fitted estimators, shape (n_classes, )</span></dt><dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
-a GML models are used (these objects do not store the fitted model).</p>
-</dd>
-<dt><a href="#id11"><span class="problematic" id="id12">n_classes_</span></a><span class="classifier">int</span></dt><dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_features)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.dataY_">
+<span class="sig-name descname"><span class="pre">dataY_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.dataY_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y data for training REGX/REGy’s regressor model. Each value corresponds to the prevalences of the
+corresponding bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.bincuts_">
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.bincuts_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bin cuts for each feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_features, n_bins + 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
+for each class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.models_">
+<span class="sig-name descname"><span class="pre">models_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.models_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
+a GML models are used (these objects do not store the fitted model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of models, i.e., fitted estimators, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.n_classes_">
+<span class="sig-name descname"><span class="pre">n_classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.n_classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
 <p>Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</p>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.create_training_set_of_distributions">
 <span class="sig-name descname"><span class="pre">create_training_set_of_distributions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REG.create_training_set_of_distributions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.create_training_set_of_distributions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a training set for REG objects. Each example corresponds to a histogram of a bag
 of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because
 it is formed by concatenating the histogram for each input feature. This method computes the values
-for <a href="#id13"><span class="problematic" id="id14">dataX_</span></a>, <a href="#id15"><span class="problematic" id="id16">dataY_</span></a> and <a href="#id17"><span class="problematic" id="id18">bincuts_</span></a> attributes</p>
+for <a href="#id1"><span class="problematic" id="id2">dataX_</span></a>, <a href="#id3"><span class="problematic" id="id4">dataY_</span></a> and <a href="#id5"><span class="problematic" id="id6">bincuts_</span></a> attributes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -165,7 +252,7 @@ predictions, these values will be 0 and 1. These values may be needed by compute
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REG.fit_regressor">
 <span class="sig-name descname"><span class="pre">fit_regressor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REG.fit_regressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REG.fit_regressor" title="Permalink to this definition">¶</a></dt>
-<dd><p>This method trains the regressor model using <a href="#id19"><span class="problematic" id="id20">dataX_</span></a> and <a href="#id21"><span class="problematic" id="id22">dataY_</span></a></p>
+<dd><p>This method trains the regressor model using <a href="#id7"><span class="problematic" id="id8">dataX_</span></a> and <a href="#id9"><span class="problematic" id="id10">dataY_</span></a></p>
 </dd></dl>
 
 <dl class="py method">
@@ -191,90 +278,176 @@ predictions, these values will be 0 and 1. These values may be needed by compute
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">REGX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bag_generator=&lt;quantificationlib.bag_generator.PriorShift_BagGenerator</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins=8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy='normal'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REGX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a>, <a class="reference internal" href="#quantificationlib.multiclass.regression.REG" title="quantificationlib.multiclass.regression.REG"><code class="xref py py-class docutils literal notranslate"><span class="pre">REG</span></code></a></p>
-<blockquote>
-<div><p>The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,
+<p>The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,
 the distributions are represented using PDFs of the input features (X). To learn such regression model, this
 object generates a training set of bags of examples using a selected kind of shift (prior probability shift,
 covariate shift or a mix of both)</p>
-<dl>
-<dt>bag_generator<span class="classifier">BagGenerator object (default=PriorShift_BagGenerator())</span></dt><dd><p>Object to generate the bags with a selected shift</p>
-</dd>
-<dt>n_bins<span class="classifier">int (default=8)</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
-</dd>
-<dt>bin_strategy<span class="classifier">str (default=’normal’)</span></dt><dd><dl>
-<dt>Method to compute the boundaries of the bins:</dt><dd><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bag_generator</strong> (<em>BagGenerator object</em><em> (</em><em>default=PriorShift_BagGenerator</em><em>(</em><em>)</em><em>)</em>) – Object to generate the bags with a selected shift</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em> (</em><em>default=8</em><em>)</em>) – Number of bins to compute the PDF of each distribution</p></li>
+<li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='normal'</em><em>)</em>) – <dl>
+<dt>Method to compute the boundaries of the bins:</dt><dd><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
 <div><blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal
 distribution:</p>
 </div></blockquote>
-<p>$c_i =</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
 <blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<div><p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
+</div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feacture follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><dl class="simple">
-<dt>regression_estimator: estimator object (default=None)</dt><dd><p>A regression estimator object. If the value is None the regression estimator used is a Generalized Linear
+</dd>
+</dl>
+</p></li>
+<li><p><strong>regression_estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – A regression estimator object. If the value is None the regression estimator used is a Generalized Linear
 Model (GLM) from statsmodels package with logit link and Binomial family as parameters (see Baum 2008).
 It is used to learn a regression model able to predict the prevalence for each class, so the method will
-fit as many regression estimators as classes in multiclass problems and just one for binary problems.</p>
-</dd>
-<dt>verbose<span class="classifier">int, optional, (default=0)</span></dt><dd><p>The verbosity level. The default value, zero, means silent mode</p>
+fit as many regression estimators as classes in multiclass problems and just one for binary problems.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>bag_generator<span class="classifier">BagGenerator object</span></dt><dd><p>Object to generate the bags with a selected shift</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.bag_generator">
+<span class="sig-name descname"><span class="pre">bag_generator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.bag_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to generate the bags with a selected shift</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BagGenerator object</p>
 </dd>
-<dt>n_bins<span class="classifier">int</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.n_bins">
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.n_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of bins to compute the PDF of each distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt>bin_strategy<span class="classifier">str</span></dt><dd><p>Method to compute the boundaries of the bins</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.bin_strategy">
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute the boundaries of the bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt>regression_estimator: estimator object, None</dt><dd><p>A regression estimator object</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.regression_estimator">
+<span class="sig-name descname"><span class="pre">regression_estimator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.regression_estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regression estimator object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object, None</p>
 </dd>
-<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt><a href="#id23"><span class="problematic" id="id24">dataX_</span></a><span class="classifier">array-like, shape(n_bags, n_features)</span></dt><dd><p>X data for training REGX’s regressor model. Each row corresponds to the collection of histograms (one
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.dataX_">
+<span class="sig-name descname"><span class="pre">dataX_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.dataX_" title="Permalink to this definition">¶</a></dt>
+<dd><p>X data for training REGX’s regressor model. Each row corresponds to the collection of histograms (one
 per input feature) of the corresponding bag</p>
-</dd>
-<dt><a href="#id25"><span class="problematic" id="id26">dataY_</span></a><span class="classifier">array-like, shape(n_bags, n_classes)</span></dt><dd><p>Y data for training REGX’s regressor model. Each value corresponds to the prevalences of the
-corresponding bag</p>
-</dd>
-<dt><a href="#id27"><span class="problematic" id="id28">bincuts_</span></a><span class="classifier">ndarray, shape (n_features, n_bins + 1)</span></dt><dd><p>Bin cuts for each feature</p>
-</dd>
-<dt><a href="#id29"><span class="problematic" id="id30">estimators_</span></a><span class="classifier">array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span></dt><dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
-for each class</p>
-</dd>
-<dt><a href="#id31"><span class="problematic" id="id32">models_</span></a><span class="classifier">array of models, i.e., fitted estimators, shape (n_classes, )</span></dt><dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
-a GML models are used (this objects do not store the fitted model).</p>
-</dd>
-<dt><a href="#id33"><span class="problematic" id="id34">n_classes_</span></a><span class="classifier">int</span></dt><dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_features)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.dataY_">
+<span class="sig-name descname"><span class="pre">dataY_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.dataY_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y data for training REGX’s regressor model. Each value corresponds to the prevalences of the
+corresponding bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.bincuts_">
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.bincuts_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bin cuts for each feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_features, n_bins + 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
+for each class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.models_">
+<span class="sig-name descname"><span class="pre">models_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.models_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
+a GML models are used (this objects do not store the fitted model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of models, i.e., fitted estimators, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.n_classes_">
+<span class="sig-name descname"><span class="pre">n_classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.n_classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
 <p>Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</p>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGX.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REGX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REGX.fit" title="Permalink to this definition">¶</a></dt>
@@ -316,112 +489,259 @@ inherited method predict_bag</p>
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">REGy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bag_generator=&lt;quantificationlib.bag_generator.PriorShift_BagGenerator</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins=8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy='equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_estimator=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REGy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a>, <a class="reference internal" href="#quantificationlib.multiclass.regression.REG" title="quantificationlib.multiclass.regression.REG"><code class="xref py py-class docutils literal notranslate"><span class="pre">REG</span></code></a></p>
-<blockquote>
-<div><p>The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,
+<p>The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,
 the distributions are represented using PDFs of the predictions (y) from a classifer. To learn such regression
 model, this object first trains a classifier using all data and then generates a training set of bags of
 examples (in this case the predictions of each example) using a selected kind of shift (prior probability
 shift, covariate shift or a mix of both)</p>
-<dl>
-<dt>estimator_train<span class="classifier">estimator object (default=None)</span></dt><dd><p>An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to train a classifier using the
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to train a classifier using the
 examples of the training set. This classifier is used to obtain the predictions for the training
-examples and to compute the PDF of each class individually using such predictions</p>
-</dd>
-<dt>estimator_test<span class="classifier">estimator object (default=None)</span></dt><dd><p>An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to compute the distribution of the whole testing set</p>
-</dd>
-<dt>bag_generator<span class="classifier">BagGenerator object (default=PriorShift_BagGenerator())</span></dt><dd><p>Object to generate the bags with a selected shift</p>
-</dd>
-<dt>n_bins<span class="classifier">int (default=8)</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
-</dd>
-<dt>bin_strategy<span class="classifier">str (default=’normal’)</span></dt><dd><dl>
-<dt>Method to compute the boundaries of the bins:</dt><dd><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+examples and to compute the PDF of each class individually using such predictions</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to compute the distribution of the whole testing set</p></li>
+<li><p><strong>bag_generator</strong> (<em>BagGenerator object</em><em> (</em><em>default=PriorShift_BagGenerator</em><em>(</em><em>)</em><em>)</em>) – Object to generate the bags with a selected shift</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em> (</em><em>default=8</em><em>)</em>) – Number of bins to compute the PDF of each distribution</p></li>
+<li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='normal'</em><em>)</em>) – <dl>
+<dt>Method to compute the boundaries of the bins:</dt><dd><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
 <div><blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal
 distribution:</p>
 </div></blockquote>
-<p>$c_i =</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
 <blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<div><p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and :math`mu`
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
+</div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feacture follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><dl class="simple">
-<dt>regression_estimator: estimator object (default=None)</dt><dd><p>A regression estimator object. If it is None the regression estimator used is a Generalized Linear
+</dd>
+</dl>
+</p></li>
+<li><p><strong>regression_estimator</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – A regression estimator object. If it is None the regression estimator used is a Generalized Linear
 Model (GLM) from statsmodels package with logit link and Binomial family as parameters.
 It is used to learn a regression model able to predict the prevalence for each class, so the method will
-fit as many regression estimators as classes in multiclass problem and just one for binary problems.</p>
-</dd>
-<dt>verbose<span class="classifier">int, optional, (default=0)</span></dt><dd><p>The verbosity level. The default value, zero, means silent mode</p>
+fit as many regression estimators as classes in multiclass problem and just one for binary problems.</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
 </dd>
 </dl>
-<dl class="simple">
-<dt>estimator_train<span class="classifier">estimator</span></dt><dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
 </dd>
-<dt>estimator_test<span class="classifier">estimator</span></dt><dd><p>Estimator used to classify the examples of the testing bag</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
 </dd>
-<dt>bag_generator<span class="classifier">BagGenerator object</span></dt><dd><p>Object to generate the bags with a selected shift</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.bag_generator">
+<span class="sig-name descname"><span class="pre">bag_generator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.bag_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to generate the bags with a selected shift</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BagGenerator object</p>
 </dd>
-<dt>needs_predictions_train<span class="classifier">bool, True</span></dt><dd><p>It is True because PDFy quantifiers need to estimate the training distribution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because PDFy quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
 </dd>
-<dt>probabilistic_predictions<span class="classifier">bool, True</span></dt><dd><p>This means that <a href="#id35"><span class="problematic" id="id36">predictions_train_</span></a>/<a href="#id37"><span class="problematic" id="id38">predictions_test_</span></a> contain probabilistic predictions</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a>/<a href="#id13"><span class="problematic" id="id14">predictions_test_</span></a> contain probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
 </dd>
-<dt>n_bins<span class="classifier">int</span></dt><dd><p>Number of bins to compute the PDF of each distribution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.n_bins">
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.n_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of bins to compute the PDF of each distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt>bin_strategy<span class="classifier">str</span></dt><dd><p>Method to compute the boundaries of the bins</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.bin_strategy">
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute the boundaries of the bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt>regression_estimator: estimator object, None</dt><dd><p>A regression estimator object</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.regression_estimator">
+<span class="sig-name descname"><span class="pre">regression_estimator</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.regression_estimator" title="Permalink to this definition">¶</a></dt>
+<dd><p>A regression estimator object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object, None</p>
 </dd>
-<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt><a href="#id39"><span class="problematic" id="id40">predictions_train_</span></a><span class="classifier">ndarray, shape (n_examples, n_classes) (probabilities)</span></dt><dd><p>Predictions of the examples in the training set</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
 </dd>
-<dt><a href="#id41"><span class="problematic" id="id42">predictions_test_</span></a><span class="classifier">ndarray, shape (n_examples, n_classes) (probabilities)</span></dt><dd><p>Predictions of the examples in the testing bag</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
 </dd>
-<dt><a href="#id43"><span class="problematic" id="id44">classes_</span></a><span class="classifier">ndarray, shape (n_classes, )</span></dt><dd><p>Class labels</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
 </dd>
-<dt><a href="#id45"><span class="problematic" id="id46">dataX_</span></a><span class="classifier">array-like, shape(n_bags, n_features)</span></dt><dd><p>X data for training REGy’s regressor model. Each row corresponds to the predictions histogram for the
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.dataX_">
+<span class="sig-name descname"><span class="pre">dataX_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.dataX_" title="Permalink to this definition">¶</a></dt>
+<dd><p>X data for training REGy’s regressor model. Each row corresponds to the predictions histogram for the
 examples of the corresponding bag</p>
-</dd>
-<dt><a href="#id47"><span class="problematic" id="id48">dataY_</span></a><span class="classifier">array-like, shape(n_bags, n_classes)</span></dt><dd><p>Y data for training REGy’s regressor model. Each value corresponds to the prevalences of the
-corresponding bag</p>
-</dd>
-<dt><a href="#id49"><span class="problematic" id="id50">bincuts_</span></a><span class="classifier">ndarray, shape (n_features, n_bins + 1)</span></dt><dd><p>Bin cuts for each feature</p>
-</dd>
-<dt><a href="#id51"><span class="problematic" id="id52">estimators_</span></a><span class="classifier">array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</span></dt><dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
-for each class</p>
-</dd>
-<dt><a href="#id53"><span class="problematic" id="id54">models_</span></a><span class="classifier">array of models, i.e., fitted estimators, shape (n_classes, )</span></dt><dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
-a GML models are used (this objects do not store the fitted model).</p>
-</dd>
-<dt><a href="#id55"><span class="problematic" id="id56">n_classes_</span></a><span class="classifier">int</span></dt><dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_features)</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.dataY_">
+<span class="sig-name descname"><span class="pre">dataY_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.dataY_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Y data for training REGy’s regressor model. Each value corresponds to the prevalences of the
+corresponding bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_bags, n_classes)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.bincuts_">
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.bincuts_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bin cuts for each feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_features, n_bins + 1)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.estimators_">
+<span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.estimators_" title="Permalink to this definition">¶</a></dt>
+<dd><p>It stores the estimators. For multiclass problems, the method learns an individual estimator
+for each class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of estimators, shape (n_classes, ) multiclass (1, ) binary quantification</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.models_">
+<span class="sig-name descname"><span class="pre">models_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.models_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the fitted regressor model for each class. It is needed when regression_estimator is None and
+a GML models are used (this objects do not store the fitted model).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array of models, i.e., fitted estimators, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.n_classes_">
+<span class="sig-name descname"><span class="pre">n_classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.n_classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of classes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">References</p>
 <p>Christopher F. Baum: Stata tip 63: Modeling proportions. The Stata Journal 8.2 (2008): 299-303</p>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.regression.REGy.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/regression.html#REGy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.regression.REGy.fit" title="Permalink to this definition">¶</a></dt>
@@ -454,7 +774,7 @@ inherited method predict_bag</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id57"><span class="problematic" id="id58">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <a href="#id15"><span class="problematic" id="id16">predictions_test_</span></a> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -492,17 +812,57 @@ method of estimator_test (it must be an actual estimator)</p>
 <ul>
 <li><a class="reference internal" href="#">quantificationlib.multiclass.regression module</a><ul>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG"><code class="docutils literal notranslate"><span class="pre">REG</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.bag_generator"><code class="docutils literal notranslate"><span class="pre">bag_generator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.n_bins"><code class="docutils literal notranslate"><span class="pre">n_bins</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.bin_strategy"><code class="docutils literal notranslate"><span class="pre">bin_strategy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.regression_estimator"><code class="docutils literal notranslate"><span class="pre">regression_estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.dataX_"><code class="docutils literal notranslate"><span class="pre">dataX_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.dataY_"><code class="docutils literal notranslate"><span class="pre">dataY_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.bincuts_"><code class="docutils literal notranslate"><span class="pre">bincuts_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.models_"><code class="docutils literal notranslate"><span class="pre">models_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.n_classes_"><code class="docutils literal notranslate"><span class="pre">n_classes_</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.create_training_set_of_distributions"><code class="docutils literal notranslate"><span class="pre">create_training_set_of_distributions()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.fit_regressor"><code class="docutils literal notranslate"><span class="pre">fit_regressor()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REG.predict_bag"><code class="docutils literal notranslate"><span class="pre">predict_bag()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX"><code class="docutils literal notranslate"><span class="pre">REGX</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.bag_generator"><code class="docutils literal notranslate"><span class="pre">bag_generator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.n_bins"><code class="docutils literal notranslate"><span class="pre">n_bins</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.bin_strategy"><code class="docutils literal notranslate"><span class="pre">bin_strategy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.regression_estimator"><code class="docutils literal notranslate"><span class="pre">regression_estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.dataX_"><code class="docutils literal notranslate"><span class="pre">dataX_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.dataY_"><code class="docutils literal notranslate"><span class="pre">dataY_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.bincuts_"><code class="docutils literal notranslate"><span class="pre">bincuts_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.models_"><code class="docutils literal notranslate"><span class="pre">models_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.n_classes_"><code class="docutils literal notranslate"><span class="pre">n_classes_</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGX.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy"><code class="docutils literal notranslate"><span class="pre">REGy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.bag_generator"><code class="docutils literal notranslate"><span class="pre">bag_generator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.n_bins"><code class="docutils literal notranslate"><span class="pre">n_bins</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.bin_strategy"><code class="docutils literal notranslate"><span class="pre">bin_strategy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.regression_estimator"><code class="docutils literal notranslate"><span class="pre">regression_estimator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.dataX_"><code class="docutils literal notranslate"><span class="pre">dataX_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.dataY_"><code class="docutils literal notranslate"><span class="pre">dataY_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.bincuts_"><code class="docutils literal notranslate"><span class="pre">bincuts_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.estimators_"><code class="docutils literal notranslate"><span class="pre">estimators_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.models_"><code class="docutils literal notranslate"><span class="pre">models_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.n_classes_"><code class="docutils literal notranslate"><span class="pre">n_classes_</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.regression.REGy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 </ul>

@@ -285,8 +285,7 @@ distance attribute</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DFy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Generic Multiclass DFy method</p>
-<blockquote>
-<div><p>The idea is to represent the mixture of the training distribution and the testing distribution
+<p>The idea is to represent the mixture of the training distribution and the testing distribution
 (using CDFs/PDFs) of the predictions given by a classifier (y). The difference between both is minimized
 using a distance/loss function. Originally, (González-Castro et al. 2013) propose the combination of PDF and
 Hellinger Distance, but also CDF and any other distance/loss function could be used, like L1 or L2. In fact,
@@ -307,114 +306,288 @@ for synthetic/artificial experiments</p></li>
 the same predictions when you compare this kind of quantifiers (and others that also employ an underlying
 classifier, for instance, CC/PCC and AC/PAC). In the first case, estimators are only trained once and can
 be shared for several quantifiers of this kind</p>
-<dl>
-<dt>estimator_train<span class="classifier">estimator object (default=None)</span></dt><dd><p>An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-training set and to compute the distribution of each class individually</p>
-</dd>
-<dt>estimator_test<span class="classifier">estimator object (default=None)</span></dt><dd><p>An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to compute the distribution of the whole testing set</p>
-</dd>
-<dt>distribution_function<span class="classifier">str, (default=’PDF’)</span></dt><dd><p>Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p>
-</dd>
-<dt>n_bins<span class="classifier">int  (default=8)</span></dt><dd><p>Number of bins to compute the CDFs/PDFs</p>
-</dd>
-<dt>bin_strategy<span class="classifier">str (default=’norm’)</span></dt><dd><dl>
-<dt>Method to compute the boundaries of the bins:</dt><dd><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+training set and to compute the distribution of each class individually</p></li>
+<li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
+testing set and to compute the distribution of the whole testing set</p></li>
+<li><p><strong>distribution_function</strong> (<em>str</em><em>, </em><em>(</em><em>default='PDF'</em><em>)</em>) – Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em>  (</em><em>default=8</em><em>)</em>) – Number of bins to compute the CDFs/PDFs</p></li>
+<li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='norm'</em><em>)</em>) – <dl>
+<dt>Method to compute the boundaries of the bins:</dt><dd><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal distribution:</p>
-<p>$c_i =</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</div></blockquote>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feacture follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><dl class="simple">
-<dt>distance<span class="classifier">str, representing the distance function (default=’HD’)</span></dt><dd><p>It is the name of the distance used to compute the difference between the mixture of the training
-distribution and the testing distribution</p>
-</dd>
-<dt>tol<span class="classifier">float, (default=1e-05)</span></dt><dd><p>The precision of the solution when search is used to compute the prevalence</p>
-</dd>
-<dt>verbose<span class="classifier">int, optional, (default=0)</span></dt><dd><p>The verbosity level. The default value, zero, means silent mode</p>
 </dd>
 </dl>
-<p>For some experiments both estimator_train and estimator_test could be the same</p>
-<dl>
-<dt><a href="#id3"><span class="problematic" id="id4">classes_</span></a><span class="classifier">ndarray, shape (n_classes, )</span></dt><dd><p>Class labels</p>
+</p></li>
+<li><p><strong>distance</strong> (<em>str</em><em>, </em><em>representing the distance function</em><em> (</em><em>default='HD'</em><em>)</em>) – It is the name of the distance used to compute the difference between the mixture of the training
+distribution and the testing distribution</p></li>
+<li><p><strong>tol</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-05</em><em>)</em>) – The precision of the solution when search is used to compute the prevalence</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
+</ul>
 </dd>
-<dt>estimator_train<span class="classifier">estimator</span></dt><dd><p>Estimator used to classify the examples of the training set</p>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
 </dd>
-<dt>estimator_test<span class="classifier">estimator</span></dt><dd><p>Estimator used to classify the examples of the testing bag</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.estimator_train">
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
 </dd>
-<dt><a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a><span class="classifier">ndarray, shape (n_examples, n_classes) (probabilities)</span></dt><dd><p>Predictions of the examples in the training set</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.estimator_test">
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator</p>
 </dd>
-<dt><a href="#id7"><span class="problematic" id="id8">predictions_test_</span></a><span class="classifier">ndarray, shape (n_examples, n_classes) (probabilities)</span></dt><dd><p>Predictions of the examples in the testing bag</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predictions_train_">
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
 </dd>
-<dt>needs_predictions_train<span class="classifier">bool, True</span></dt><dd><p>It is True because PDFy quantifiers need to estimate the training distribution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predictions_test_">
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Predictions of the examples in the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_examples, n_classes) (probabilities)</p>
 </dd>
-<dt>probabilistic_predictions<span class="classifier">bool, True</span></dt><dd><p>This means that <a href="#id9"><span class="problematic" id="id10">predictions_train_</span></a>/<a href="#id11"><span class="problematic" id="id12">predictions_test_</span></a> contain probabilistic predictions</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.needs_predictions_train">
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>It is True because PDFy quantifiers need to estimate the training distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
 </dd>
-<dt>bin_strategy<span class="classifier">str</span></dt><dd><p>Method to compute the boundaries of the bins</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.probabilistic_predictions">
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<dd><p>This means that <a href="#id3"><span class="problematic" id="id4">predictions_train_</span></a>/<a href="#id5"><span class="problematic" id="id6">predictions_test_</span></a> contain probabilistic predictions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool, True</p>
 </dd>
-<dt>distance<span class="classifier">str or a distance function</span></dt><dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’) or a distance function</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.bin_strategy">
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to compute the boundaries of the bins</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt><a href="#id13"><span class="problematic" id="id14">bincuts_</span></a><span class="classifier">ndarray, shape(n_features, b+1)</span></dt><dd><p>Bin cuts for each input feature</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distance" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’) or a distance function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str or a distance function</p>
 </dd>
-<dt>tol<span class="classifier">float</span></dt><dd><p>The precision of the solution when search is used to compute the solution</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.bincuts_">
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bincuts_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bin cuts for each input feature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_features, b+1)</p>
 </dd>
-<dt><a href="#id15"><span class="problematic" id="id16">classes_</span></a><span class="classifier">ndarray, shape (n_classes, )</span></dt><dd><p>Class labels</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.tol">
+<span class="sig-name descname"><span class="pre">tol</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.tol" title="Permalink to this definition">¶</a></dt>
+<dd><p>The precision of the solution when search is used to compute the solution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
-<dt><a href="#id17"><span class="problematic" id="id18">y_ext_</span></a><span class="classifier">ndarray, shape(len(<a href="#id19"><span class="problematic" id="id20">predictions_train_</span></a>, 1)</span></dt><dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id21"><span class="problematic" id="id22">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id23"><span class="problematic" id="id24">y_ext_</span></a> == y.
-<a href="#id25"><span class="problematic" id="id26">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
 </dd>
-<dt>distribution_function<span class="classifier">str</span></dt><dd><p>Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.y_ext_">
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
+<a href="#id7"><span class="problematic" id="id8">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> == y.
+<a href="#id11"><span class="problematic" id="id12">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id13"><span class="problematic" id="id14">predictions_train_</span></a>, 1)</p>
 </dd>
-<dt>n_bins<span class="classifier">int</span></dt><dd><p>The number of bins to compute the CDFs/PDFs</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.distribution_function">
+<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distribution_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt><a href="#id27"><span class="problematic" id="id28">train_distrib_</span></a><span class="classifier">ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * <a href="#id29"><span class="problematic" id="id30">n_classes_</span></a>, n_classes) multiclass</span></dt><dd><p>The CDF/PDF for each class in the training set</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.n_bins">
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.n_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of bins to compute the CDFs/PDFs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt><a href="#id31"><span class="problematic" id="id32">test_distrib_</span></a><span class="classifier">ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * <a href="#id33"><span class="problematic" id="id34">n_classes_</span></a>, 1) multiclass q</span></dt><dd><p>The CDF/PDF for the testing bag</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.train_distrib_">
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The CDF/PDF for each class in the training set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * <a href="#id15"><span class="problematic" id="id16">n_classes_</span></a>, n_classes) multiclass</p>
 </dd>
-<dt><a href="#id35"><span class="problematic" id="id36">G_</span></a>, <a href="#id37"><span class="problematic" id="id38">C_</span></a>, <a href="#id39"><span class="problematic" id="id40">b_</span></a>: variables of different kind for defining the optimization problem</dt><dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.test_distrib_">
+<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.test_distrib_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The CDF/PDF for the testing bag</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * <a href="#id17"><span class="problematic" id="id18">n_classes_</span></a>, 1) multiclass q</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">G_,</span> <span class="pre">C_,</span> <span class="pre">b_</span></span></dt>
+<dd><p>These variables are precomputed in the <cite>fit</cite> method and are used for solving the optimization problem
 using <cite>quadprog.solve_qp</cite>. See <cite>compute_l2_param_train</cite> function</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>variables of different kind for defining the optimization problem</p>
 </dd>
-<dt><a href="#id41"><span class="problematic" id="id42">problem_</span></a><span class="classifier">a cvxpy Problem object</span></dt><dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.problem_">
+<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.problem_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
 predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
 case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
 solving process is faster.</p>
-</dd>
-<dt><a href="#id43"><span class="problematic" id="id44">mixtures_</span></a><span class="classifier">ndarray, shape (101, n_quantiles)</span></dt><dd><p>Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction
-for a collection of testing bags</p>
-</dd>
-<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>a cvxpy Problem object</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.mixtures_">
+<span class="sig-name descname"><span class="pre">mixtures_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.mixtures_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction
+for a collection of testing bags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (101, n_quantiles)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p class="rubric">Notes</p>
 <p>Notice that at least one between estimator_train/predictions_train and estimator_test/predictions_test
 must be not None. If both are None a ValueError exception will be raised. If both are not None,
 predictions_train/predictions_test are used</p>
+<p class="rubric">References</p>
 <p>Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based
 on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</p>
 <p>George Forman: Counting positives accurately despite inaccurate classification. In: Proceedings of the 16th
@@ -422,12 +595,11 @@ European conference on machine learning (ECML’05), Porto, (2005) pp 564–575<
 <p>Aykut Firat. 2016. Unified Framework for Quantification. arXiv preprint arXiv:1606.00868 (2016).</p>
 <p>Dirk Tasche: Confidence intervals for class prevalences under prior probability shift. Machine Learning
 and Knowledge Extraction, 1(3), (2019) 805-831.</p>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id45"><span class="problematic" id="id46">predictions_train_</span></a> (probabilities) if needed. Both operations are
+testing set (if needed), and 2) computes <a href="#id19"><span class="problematic" id="id20">predictions_train_</span></a> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
 After that, the method computes the pdfs for all the classes in the training set</p>
 <dl class="field-list simple">
@@ -448,7 +620,7 @@ After that, the method computes the pdfs for all the classes in the training set
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id47"><span class="problematic" id="id48">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <a href="#id21"><span class="problematic" id="id22">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
 <p>After that, the method computes the PDF for the testing bag.</p>
 <p>Finally, the prevalences are computed using the corresponding function according to the value of
@@ -458,7 +630,7 @@ distance attribute</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id49"><span class="problematic" id="id50">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <a href="#id23"><span class="problematic" id="id24">predictions_test_</span></a> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -514,61 +686,53 @@ European conference on machine learning (ECML’05), Porto, (2005) pp 564–575<
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.compute_bincuts">
 <span class="sig-name descname"><span class="pre">compute_bincuts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#compute_bincuts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.compute_bincuts" title="Permalink to this definition">¶</a></dt>
-<dd><dl>
-<dt>Compute the bincuts for calculate a histrogram with the values in X. These bincuts depends on</dt><dd><p>the bincut strategy</p>
-<dl>
-<dt>x<span class="classifier">array-like, shape (n_examples, )</span></dt><dd><p>Input feature</p>
-</dd>
-<dt>y<span class="classifier">array-like, shape (n_examples, ), (default=None)</span></dt><dd><p>True classes. It is needed when bin_strategy is ‘binormal’. In other cases, it is ignored</p>
-</dd>
-<dt>classes<span class="classifier">ndarray, shape (n_classes, )</span></dt><dd><p>Class labels</p>
-</dd>
-<dt>n_bins<span class="classifier">int, (default=8)</span></dt><dd><p>Number of bins</p>
-</dd>
-<dt>bin_strategy<span class="classifier">str (default=’equal_width’)</span></dt><dd><dl>
-<dt>Method to compute the boundaries of the bins:</dt><dd><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+<dd><p>Compute the bincuts for calculate a histrogram with the values in X. These bincuts depends on
+the bincut strategy</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – Input feature</p></li>
+<li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – True classes. It is needed when bin_strategy is ‘binormal’. In other cases, it is ignored</p></li>
+<li><p><strong>classes</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>)</em>) – Class labels</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em>, </em><em>(</em><em>default=8</em><em>)</em>) – Number of bins</p></li>
+<li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='equal_width'</em><em>)</em>) – <dl>
+<dt>Method to compute the boundaries of the bins:</dt><dd><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal distribution:</p>
-<p>$c_i =</p>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feacture follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><dl class="simple">
+</dd>
+</dl>
+</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
 <dt>att_range: array-like, (2,1)</dt><dd><p>Min and Max possible values of the input feature x. These values might not coincide with the actual Min and
 Max values of vector x. For instance, in the case of x represents a set of probabilistic predictions, these
 values will be 0 and 1</p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>bincuts: float, shape (n_bins +1 , )</dt><dd><p>Bin cuts for input feature x</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bincuts</strong> – Bin cuts for input feature x</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float, shape (n_bins +1 , )</p>
 </dd>
 </dl>
-</div></blockquote>
 </dd></dl>
 
 </section>
@@ -606,6 +770,26 @@ values will be 0 and 1</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy"><code class="docutils literal notranslate"><span class="pre">DFy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.estimator_train"><code class="docutils literal notranslate"><span class="pre">estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.estimator_test"><code class="docutils literal notranslate"><span class="pre">estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.predictions_train_"><code class="docutils literal notranslate"><span class="pre">predictions_train_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.predictions_test_"><code class="docutils literal notranslate"><span class="pre">predictions_test_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.needs_predictions_train"><code class="docutils literal notranslate"><span class="pre">needs_predictions_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.probabilistic_predictions"><code class="docutils literal notranslate"><span class="pre">probabilistic_predictions</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.bin_strategy"><code class="docutils literal notranslate"><span class="pre">bin_strategy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.distance"><code class="docutils literal notranslate"><span class="pre">distance</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.bincuts_"><code class="docutils literal notranslate"><span class="pre">bincuts_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.tol"><code class="docutils literal notranslate"><span class="pre">tol</span></code></a></li>
+<li><a class="reference internal" href="#id0"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.y_ext_"><code class="docutils literal notranslate"><span class="pre">y_ext_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.distribution_function"><code class="docutils literal notranslate"><span class="pre">distribution_function</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.n_bins"><code class="docutils literal notranslate"><span class="pre">n_bins</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.train_distrib_"><code class="docutils literal notranslate"><span class="pre">train_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.test_distrib_"><code class="docutils literal notranslate"><span class="pre">test_distrib_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.problem_"><code class="docutils literal notranslate"><span class="pre">problem_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.mixtures_"><code class="docutils literal notranslate"><span class="pre">mixtures_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 </ul>

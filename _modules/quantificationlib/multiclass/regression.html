@@ -79,21 +79,21 @@
 <span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
 <span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
 <span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
 <span class="sd">                            distribution:</span>
 
-<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
 
-<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
-<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`</span>
+<span class="sd">                            and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                            the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                &#39;normal&#39;:  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
 <span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
-<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+<span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
-<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
 
 <span class="sd">        regression_estimator: estimator object (default=None)</span>
 <span class="sd">            A regression estimator object. If the value is None the regression estimator used is a Generalized Linear</span>
@@ -301,21 +301,21 @@
 <span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
 <span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
 <span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
 <span class="sd">                            distribution:</span>
 
-<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
 
-<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
-<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`</span>
+<span class="sd">                            and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                            the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
 <span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
-<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+<span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
-<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
 
 <span class="sd">        regression_estimator: estimator object (default=None)</span>
 <span class="sd">            A regression estimator object. If the value is None the regression estimator used is a Generalized Linear</span>
@@ -470,21 +470,21 @@
 <span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
 <span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
 <span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$,</span>
+<span class="sd">                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                            are computed as follows based on the assumption that the features follow a normal</span>
 <span class="sd">                            distribution:</span>
 
-<span class="sd">                          $c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
 
-<span class="sd">                            where $\Phi^{-1}$ is the quantile function of the standard normal distribution, and $\mu$</span>
-<span class="sd">                            and $\sigma$ of the normal distribution are estimated as the average of those values for</span>
+<span class="sd">                            where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math`\\mu`</span>
+<span class="sd">                            and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                            the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. $\mu$ and $\sigma$ are</span>
+<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
 <span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
-<span class="sd">                           $-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty$ are computed as follows:</span>
+<span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
-<span class="sd">                           $c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1$</span>
+<span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
 
 <span class="sd">        regression_estimator: estimator object (default=None)</span>
 <span class="sd">            A regression estimator object. If it is None the regression estimator used is a Generalized Linear</span>

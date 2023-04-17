@@ -14,6 +14,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -56,125 +57,281 @@
 <dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EoQ</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_quantifier=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_quantifiers=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bag_generator=&lt;quantificationlib.bag_generator.PriorShift_BagGenerator</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combination_strategy='mean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble_estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensemble_estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution_function='PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy='equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_bags='euclidean'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percentage_of_selected_models=0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ensembles/eoq.html#EoQ"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a></p>
-<dl>
-<dt>This class implements Ensembles of Quantifiers for all kind of quantifiers. All the quantifiers of the</dt><dd><p>ensemble are of the same class and using the same parameters.</p>
-<dl>
-<dt>base_quantifier<span class="classifier">quantifier object, optional, (default=None)</span></dt><dd><p>The quantifier used for each model of the ensemble</p>
-</dd>
-<dt>n_quantifiers: int, (default=100)</dt><dd><p>Number of quantifiers in the ensemble</p>
-</dd>
-<dt>bag_generator<span class="classifier">BagGenerator object (default=PriorShift_BagGenerator())</span></dt><dd><p>Object to generate the bags (with a selected shift) for training each quantifier</p>
-</dd>
-<dt>combination_strategy: str, (default=’mean’)</dt><dd><p>Strategy used to combine the predictions of the quantifiers</p>
-</dd>
-<dt>ensemble_estimator_train<span class="classifier">estimator object, optional, (default=None)</span></dt><dd><p>Estimator used to classify the examples of the training bags when a base_quantifier of
+<p>This class implements Ensembles of Quantifiers for all kind of quantifiers. All the quantifiers of the
+ensemble are of the same class and using the same parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base_quantifier</strong> (<em>quantifier object</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – The quantifier used for each model of the ensemble</p></li>
+<li><p><strong>n_quantifiers</strong> (<em>int</em><em>, </em><em>(</em><em>default=100</em><em>)</em>) – Number of quantifiers in the ensemble</p></li>
+<li><p><strong>bag_generator</strong> (<em>BagGenerator object</em><em> (</em><em>default=PriorShift_BagGenerator</em><em>(</em><em>)</em><em>)</em>) – Object to generate the bags (with a selected shift) for training each quantifier</p></li>
+<li><p><strong>combination_strategy</strong> (<em>str</em><em>, </em><em>(</em><em>default='mean'</em><em>)</em>) – Strategy used to combine the predictions of the quantifiers</p></li>
+<li><p><strong>ensemble_estimator_train</strong> (<em>estimator object</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – Estimator used to classify the examples of the training bags when a base_quantifier of
 class UsingClassifiers is used. A regular estimator can be used, this implies that a unique classifier is
 share for all the quantifiers in the ensemble. If the users prefers that each quantifier uses an
-individual classifier the an estimator of the class EnsembleOfClassifiers must be passed here</p>
-</dd>
-<dt>ensemble_estimator_test<span class="classifier">estimator object, optional, (default=None)</span></dt><dd><p>Estimator used to classify the examples of the testing bags. A regular estimator can be used, this implies
+individual classifier the an estimator of the class EnsembleOfClassifiers must be passed here</p></li>
+<li><p><strong>ensemble_estimator_test</strong> (<em>estimator object</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=None</em><em>)</em>) – Estimator used to classify the examples of the testing bags. A regular estimator can be used, this implies
 that a unique classifier is share for all the quantifiers in the ensemble. If the users prefers that each
 quantifier uses an individual classifier the an estimator of the class EnsembleOfClassifiers must be passed
-here</p>
-</dd>
-<dt>distribution_function<span class="classifier">str, (default=’PDF’)</span></dt><dd><p>Method to estimate the distributions of training and testing bags. Possible values ‘PDF’ or ‘CDF’.
+here</p></li>
+<li><p><strong>distribution_function</strong> (<em>str</em><em>, </em><em>(</em><em>default='PDF'</em><em>)</em>) – Method to estimate the distributions of training and testing bags. Possible values ‘PDF’ or ‘CDF’.
 This is used just for distribution_similarity combination strategy. This strategy is based on comparing
 the PDFs or CDFs of the training bags and the PDF/CDF of the testing bag, selecting those quantifiers
 training over the most similar distributions. To compute the distribution, EoQ employs the input
 features (Xs) for quantifiers derived from WithoutClassifiers class and the predictions (Ys) for
-quantifiers derived from UsingClassifiers</p>
-</dd>
-<dt>n_bins<span class="classifier">int, (default=100)</span></dt><dd><p>Numbers of bins to estimate the distributions of training and testing bags. This is needed for
-distribution_similarity combination strategy.</p>
-</dd>
-<dt>bin_strategy = str, (default=’equal_width’)</dt><dd><p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
+quantifiers derived from UsingClassifiers</p></li>
+<li><p><strong>n_bins</strong> (<em>int</em><em>, </em><em>(</em><em>default=100</em><em>)</em>) – Numbers of bins to estimate the distributions of training and testing bags. This is needed for
+distribution_similarity combination strategy.</p></li>
+<li><p><strong>str</strong> (<em>bin_strategy =</em>) – <p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
 bags when the distribution_similarity combination strategy is used. Possible values:</p>
 <blockquote>
-<div><p>‘equal_width’: bins of equal length (it could be affected by outliers)
+<div><p>’equal_width’: bins of equal length (it could be affected by outliers)
 ‘equal_count’: bins of equal counts (considering the examples of all classes)
 ‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
 <blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, $-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$,
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal distribution:</p>
-<p>$c_i =</p>
-</div></blockquote>
-</div></blockquote>
-</dd>
-</dl>
-</dd>
-</dl>
-<p>rac{sigma^+ + sigma^{-}}{2} Phi^{-1}igg(
-rac{i}{b}igg)  +
-rac{mu^+ + mu^{-}}{2} ,  quad i=1,ldots,b-1$</p>
-<blockquote>
-<div><blockquote>
-<div><p>where $Phi^{-1}$ is the quantile function of the standard normal distribution, and $mu$
-and $sigma$ of the normal distribution are estimated as the average of those values for
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
 </div></blockquote>
 <dl>
-<dt>‘normal’:  The idea is that each feacture follows a normal distribution. $mu$ and $sigma$ are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-$-infty &lt; c_1 &lt; ldots &lt; c_{b-1} &lt; infty$ are computed as follows:</p>
-<p>$c_i = sigma^ Phi^{-1}igg(</p>
+<dt>’normal’:  The idea is that each feature follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
 </div></blockquote>
-<p>rac{i}{b}igg)  + mu ,  quad i=1,ldots,b-1$</p>
+</p></li>
+<li><p><strong>(</strong><strong>default='equal_width'</strong><strong>)</strong> – <p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
+bags when the distribution_similarity combination strategy is used. Possible values:</p>
 <blockquote>
-<div><dl class="simple">
-<dt>distance_bags<span class="classifier">str, (default=’euclidean’)</span></dt><dd><p>Distance used to compute distribution similarity</p>
-</dd>
-<dt>percentage_of_selected_models<span class="classifier">float, value in [0, 1], (default=0.5)</span></dt><dd><p>Percentage of selected models for distribution similarity and prevalence similarity strategies</p>
-</dd>
-<dt>verbose<span class="classifier">int, optional, (default=0)</span></dt><dd><p>The verbosity level. The default value, zero, means silent mode</p>
+<div><p>’equal_width’: bins of equal length (it could be affected by outliers)
+‘equal_count’: bins of equal counts (considering the examples of all classes)
+‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
+<blockquote>
+<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
+are computed as follows based on the assumption that the features follow a normal distribution:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
+<p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
+and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
+the training examples of each class.</p>
+</div></blockquote>
+<dl>
+<dt>’normal’:  The idea is that each feature follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
+<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
+<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>base_quantifier<span class="classifier">quantifier object</span></dt><dd><p>The quantifier used for each model of the ensemble</p>
+</div></blockquote>
+</p></li>
+<li><p><strong>distance_bags</strong> (<em>str</em><em>, </em><em>(</em><em>default='euclidean'</em><em>)</em>) – Distance used to compute distribution similarity</p></li>
+<li><p><strong>percentage_of_selected_models</strong> (<em>float</em><em>, </em><em>value in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>(</em><em>default=0.5</em><em>)</em>) – Percentage of selected models for distribution similarity and prevalence similarity strategies</p></li>
+<li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
+</ul>
 </dd>
-<dt>n_quantifiers: int</dt><dd><p>Number of quantifiers in the ensemble</p>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.base_quantifier">
+<span class="sig-name descname"><span class="pre">base_quantifier</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.base_quantifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>The quantifier used for each model of the ensemble</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>quantifier object</p>
 </dd>
-<dt>bag_generator<span class="classifier">BagGenerator object</span></dt><dd><p>Object to generate the bags for training each quantifier</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.n_quantifiers">
+<span class="sig-name descname"><span class="pre">n_quantifiers</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.n_quantifiers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of quantifiers in the ensemble</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt>combination_strategy: str</dt><dd><p>Strategy used to combine the predictions of the ensemble quantifiers</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.bag_generator">
+<span class="sig-name descname"><span class="pre">bag_generator</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.bag_generator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Object to generate the bags for training each quantifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>BagGenerator object</p>
 </dd>
-<dt>ensemble_estimator_train<span class="classifier">estimator object</span></dt><dd><p>Estimator used to classify the examples of the training bags when a base_quantifier of
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.combination_strategy">
+<span class="sig-name descname"><span class="pre">combination_strategy</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.combination_strategy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Strategy used to combine the predictions of the ensemble quantifiers</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_train">
+<span class="sig-name descname"><span class="pre">ensemble_estimator_train</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the training bags when a base_quantifier of
 class UsingClassifiers is used</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object</p>
 </dd>
-<dt>ensemble_estimator_test<span class="classifier">estimator object</span></dt><dd><p>Estimator used to classify the examples of the testing bags</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_test">
+<span class="sig-name descname"><span class="pre">ensemble_estimator_test</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Estimator used to classify the examples of the testing bags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>estimator object</p>
 </dd>
-<dt>distribution_function<span class="classifier">str</span></dt><dd><p>Method to estimate the distributions of training and testing bags</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.distribution_function">
+<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.distribution_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to estimate the distributions of training and testing bags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt>n_bins<span class="classifier">int</span></dt><dd><p>Numbers of bins to estimate the distributions of training and testing bags</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.n_bins">
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.n_bins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Numbers of bins to estimate the distributions of training and testing bags</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
 </dd>
-<dt>bin_strategy = str, (default=’equal_width’)</dt><dd><p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">bin_strategy</span> <span class="pre">=</span> <span class="pre">str,</span> <span class="pre">(default='equal_width')</span></span></dt>
+<dd><p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
 bags</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.distance_bags">
+<span class="sig-name descname"><span class="pre">distance_bags</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.distance_bags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Distance used to compute distribution similarity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
-<dt>distance_bags<span class="classifier">str</span></dt><dd><p>Distance used to compute distribution similarity</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.percentage_of_selected_models">
+<span class="sig-name descname"><span class="pre">percentage_of_selected_models</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.percentage_of_selected_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>Percentage of selected models for distribution similarity and prevalence similarity strategies</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
-<dt>percentage_of_selected_models<span class="classifier">float</span></dt><dd><p>Percentage of selected models for distribution similarity and prevalence similarity strategies</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.quantifiers_">
+<span class="sig-name descname"><span class="pre">quantifiers_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.quantifiers_" title="Permalink to this definition">¶</a></dt>
+<dd><p>This vector stores the quantifiers of the ensemble</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_quantifiers,)</p>
 </dd>
-<dt><a href="#id1"><span class="problematic" id="id2">quantifiers_</span></a><span class="classifier">ndarray, shape (n_quantifiers,)</span></dt><dd><p>This vector stores the quantifiers of the ensemble</p>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.prevalences_">
+<span class="sig-name descname"><span class="pre">prevalences_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.prevalences_" title="Permalink to this definition">¶</a></dt>
+<dd><p>It contains the prevalence of each training bag used to fit each quantifier of the ensemble</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_quantifiers,)</p>
 </dd>
-<dt><a href="#id3"><span class="problematic" id="id4">prevalences_</span></a><span class="classifier">ndarray, shape (n_quantifiers,)</span></dt><dd><p>It contains the prevalence of each training bag used to fit each quantifier of the ensemble</p>
-</dd>
-<dt><a href="#id5"><span class="problematic" id="id6">indexes_</span></a><span class="classifier">ndarry, shape (n_examples_of_training_bags, n_quantifiers)</span></dt><dd><p>The indexes of the training examples that compose each training bag. The number of training examples
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.indexes_">
+<span class="sig-name descname"><span class="pre">indexes_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.indexes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>The indexes of the training examples that compose each training bag. The number of training examples
 used in each bag is fixed true bag_generator parameter</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarry, shape (n_examples_of_training_bags, n_quantifiers)</p>
 </dd>
-<dt><a href="#id7"><span class="problematic" id="id8">bincuts_</span></a><span class="classifier">ndarray, shape (n_features, n_bins + 1)</span></dt><dd><p>Bin cuts for each feature used to  estimate the training/testing distributions for distribution
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.bincuts_">
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.bincuts_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bin cuts for each feature used to  estimate the training/testing distributions for distribution
 similarity strategy. The total number of features depends on the kind of base_quantifier used and on
 the quantification problem. For quantifiers derived from WithoutClassifiers n_features is the dimension on
 the input space. For quantifiers derived from UsingClassifiers n_features is 1 for binary quantification
 tasks and is n_classes for multiclass/ordinal problems</p>
-</dd>
-<dt><a href="#id9"><span class="problematic" id="id10">distributions_</span></a><span class="classifier">ndarray, shape (n_quantifiers, n_features * n_bins)</span></dt><dd><p>It constains the estimated distribution for each quantifier</p>
-</dd>
-<dt><a href="#id11"><span class="problematic" id="id12">classes_</span></a><span class="classifier">ndarray, shape (n_classes, )</span></dt><dd><p>Class labels</p>
-</dd>
-<dt>verbose<span class="classifier">int</span></dt><dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_features, n_bins + 1)</p>
 </dd>
 </dl>
-</div></blockquote>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.distributions_">
+<span class="sig-name descname"><span class="pre">distributions_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.distributions_" title="Permalink to this definition">¶</a></dt>
+<dd><p>It constains the estimated distribution for each quantifier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_quantifiers, n_features * n_bins)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.classes_">
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.classes_" title="Permalink to this definition">¶</a></dt>
+<dd><p>Class labels</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape (n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.verbose">
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.verbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>The verbosity level</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.ensembles.eoq.EoQ.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prevalences</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indexes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ensembles/eoq.html#EoQ.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ensembles.eoq.EoQ.fit" title="Permalink to this definition">¶</a></dt>
@@ -251,6 +408,23 @@ Each value contains the predicted prevalence for the corresponding class</p>
 <ul>
 <li><a class="reference internal" href="#">quantificationlib.ensembles.eoq module</a><ul>
 <li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ"><code class="docutils literal notranslate"><span class="pre">EoQ</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.base_quantifier"><code class="docutils literal notranslate"><span class="pre">base_quantifier</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.n_quantifiers"><code class="docutils literal notranslate"><span class="pre">n_quantifiers</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.bag_generator"><code class="docutils literal notranslate"><span class="pre">bag_generator</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.combination_strategy"><code class="docutils literal notranslate"><span class="pre">combination_strategy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_train"><code class="docutils literal notranslate"><span class="pre">ensemble_estimator_train</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.ensemble_estimator_test"><code class="docutils literal notranslate"><span class="pre">ensemble_estimator_test</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.distribution_function"><code class="docutils literal notranslate"><span class="pre">distribution_function</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.n_bins"><code class="docutils literal notranslate"><span class="pre">n_bins</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.distance_bags"><code class="docutils literal notranslate"><span class="pre">distance_bags</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.percentage_of_selected_models"><code class="docutils literal notranslate"><span class="pre">percentage_of_selected_models</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.quantifiers_"><code class="docutils literal notranslate"><span class="pre">quantifiers_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.prevalences_"><code class="docutils literal notranslate"><span class="pre">prevalences_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.indexes_"><code class="docutils literal notranslate"><span class="pre">indexes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.bincuts_"><code class="docutils literal notranslate"><span class="pre">bincuts_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.distributions_"><code class="docutils literal notranslate"><span class="pre">distributions_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.classes_"><code class="docutils literal notranslate"><span class="pre">classes_</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.ensembles.eoq.EoQ.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
 </ul>
