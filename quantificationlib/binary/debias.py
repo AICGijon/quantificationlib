@@ -104,7 +104,7 @@ class DeBias(UsingClassifiers):
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
             testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
-            performed by the `fit method of its superclass.
+            performed by the `fit` method of its superclass.
 
             Finally the method computes the value of Vt
 

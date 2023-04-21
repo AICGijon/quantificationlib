@@ -57,7 +57,7 @@ def kld(p_true, p_pred, eps=1e-12):
 
             :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`
 
-        being l the number of classes.
+        being `l` the number of classes.
 
         Also known as discrimination information, relative entropy or normalized cross-entropy
         (see [Esuli and Sebastiani 2010; Forman 2008]).
@@ -88,7 +88,7 @@ def mean_absolute_error(p_true, p_pred):
 
             :math:`mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`
 
-        being l the number of classes
+        being `l` the number of classes
 
         Parameters
         ----------
@@ -112,7 +112,7 @@ def l1(p_true, p_pred):
 
             :math:`l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`
 
-        being l the number of classes
+        being `l` the number of classes
 
         Parameters
         ----------
@@ -136,7 +136,7 @@ def mean_squared_error(p_true, p_pred):
 
             :math:`mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`
 
-        being l the number of classes
+        being `l` the number of classes
 
         Parameters
         ----------
@@ -160,7 +160,7 @@ def l2(p_true, p_pred):
 
             :math:`l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`
 
-        being l the number of classes
+        being `l`  the number of classes
 
         Parameters
         ----------
@@ -184,7 +184,7 @@ def hd(p_true, p_pred):
 
             :math:`hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`
 
-        being l the number of classes
+        being `l` the number of classes
 
         Parameters
         ----------
@@ -220,7 +220,7 @@ def bray_curtis(p_true, p_pred):
 
 
 def topsoe(p_true, p_pred, epsilon=1e-20):
-    """ Topsoe
+    """ Topsoe distance
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = np.sum(p_true*np.log((2*p_true+epsilon)/(p_true+p_pred+epsilon)) +
@@ -238,7 +238,7 @@ def jensenshannon(p_true, p_pred, epsilon=1e-20):
 
 
 def probsymmetric(p_true, p_pred, epsilon=1e-20):
-    """ Probabilistic Symmetric
+    """ Probabilistic Symmetric distance
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = 2*np.sum((p_true-p_pred)**2 / (p_pred+p_true+epsilon))

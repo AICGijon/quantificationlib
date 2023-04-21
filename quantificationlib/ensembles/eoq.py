@@ -58,12 +58,13 @@ class EoQ(WithoutClassifiers):
             Numbers of bins to estimate the distributions of training and testing bags. This is needed for
             distribution_similarity combination strategy.
 
-        bin_strategy = str, (default='equal_width')
+        bin_strategy : str, (default='equal_width')
             Method to compute the boundaries of the bins for to estimate the distributions of training and testing
             bags when the distribution_similarity combination strategy is used. Possible values:
-                'equal_width': bins of equal length (it could be affected by outliers)
-                'equal_count': bins of equal counts (considering the examples of all classes)
-                'binormal': (Only for binary quantification) It is inspired on the method devised by
+
+            - 'equal_width': bins of equal length (it could be affected by outliers)
+            - 'equal_count': bins of equal counts (considering the examples of all classes)
+            - 'binormal': (Only for binary quantification) It is inspired on the method devised by
                           (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
                           are computed as follows based on the assumption that the features follow a normal distribution:
 
@@ -72,12 +73,11 @@ class EoQ(WithoutClassifiers):
                           where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`
                           and :math:`\\sigma` of the normal distribution are estimated as the average of those values for
                           the training examples of each class.
+            - 'normal':  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
+                         estimated as the weighted mean and std from the training distribution. The cut points
+                         :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty` are computed as follows:
 
-                'normal':  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
-                           estimated as the weighted mean and std from the training distribution. The cut points
-                           :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty` are computed as follows:
-
-                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`
+                         :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`
 
         distance_bags : str, (default='euclidean')
             Distance used to compute distribution similarity
@@ -187,9 +187,10 @@ class EoQ(WithoutClassifiers):
 
             1) It generates the training bags using a Bag_Generator object
             2) It fits the quantifiers of the ensemble.
+            
             In the case of quantifiers derived from the class UsingClassifiers, there are 3 possible ways to do this:
-            - train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be
-              passed on ensemble_estimator
+            
+            - train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be passed on ensemble_estimator
             - train a classifier for the whole training set using an estimator from other class
             - uses the predictions_train given in the predictions_train parameter (these predictions usually are
               obtained applying an estimator over the whole training set like in the previous case)

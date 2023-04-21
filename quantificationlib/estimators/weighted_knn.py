@@ -31,13 +31,12 @@ class PWK(BaseEstimator, ClassifierMixin):
 
         algorithm : {'auto', 'ball_tree', 'kd_tree', 'brute'}, default='auto'
             Algorithm used to compute the nearest neighbors:
+            
             - 'ball_tree' will use :class:`BallTree`
             - 'kd_tree' will use :class:`KDTree`
-            - 'brute' will use a brute-force search.
-            - 'auto' will attempt to decide the most appropriate algorithm
-              based on the values passed to :meth:`fit` method.
-            Note: fitting on sparse input will override the setting of
-            this parameter, using brute force.
+            - 'brute' will use a brute-force search
+            - 'auto' will attempt to decide the most appropriate algorithm based on the values passed to :meth:`fit` method.
+            Note: fitting on sparse input will override the setting of this parameter, using brute force.
 
         leaf_size : int, default=30
             Leaf size passed to BallTree or KDTree.  This can affect the

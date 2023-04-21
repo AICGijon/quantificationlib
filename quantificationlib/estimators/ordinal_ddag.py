@@ -19,7 +19,7 @@ class DDAGClassifier(OneVsOneClassifier):
     """ Decision Directed Acyclic Graph ordinal classifier
 
         This strategy consists on learning a classifier per each pair of classes, thus it requires to fit
-        n_classes * (n_classes - 1) / 2 classifiers. For this reason, this class derives from OneVsOneClassifier and
+        `n_classes * (n_classes - 1) / 2` classifiers. For this reason, this class derives from OneVsOneClassifier and
         uses most of its functionalities, mainly to train the binary models.
 
         However, there are two main differences with respect to OneVsOneClassifier:
@@ -30,26 +30,37 @@ class DDAGClassifier(OneVsOneClassifier):
            classes. Thus, the root contains the classifier that decides between the first class of the order and last
            class, and this idea is recursively applied.
 
-            Example: in a ordinal classification problem with classes ranging from 1-star to 5-star,
+        Example::
+             
+            In a ordinal classification problem with classes ranging from 1-star to 5-star,
             the corresponding DDAG will be
 
                                                       1|5
+
                                  1|4                                       2|5
+
                        1|3                 2|4                   2|4                  3|5
+
                   1|2       2|3       2|3       3|4         2|3       3|4        3|4       4|5
+
                 1     2   2     3   2     3   3     4     2     3   3     4    3     4   4     5
 
             Since some subtrees are shared by different branches, for instance, the subtree labeled as node
-            2|4 is shared by the right subtree of 1|4 and the left subtree of 2|5, the tree can be depicted in a more
-            compact way:
+            2|4 is shared by the right subtree of 1|4 and the left subtree of 2|5, the tree can be depicted
+            in a more compact way:
+
                                                       1|5
+
                                               1|4             2|5
+
                                        1|3            2|4            3|5
+
                                  1|2          2|3             3|4           4|5
+
                              1          2              3              4             5
 
-            in which all internal nodes (2|4, 2|3 and 3|4) and all leaves, except the first one, and the last one
-            (2, 3 and 4) are reached from different paths.
+            in which all internal nodes (2|4, 2|3 and 3|4) and all leaves, except the first one, and 
+            the last one (2, 3 and 4) are reached from different paths.
 
 
         The class implements two different strategies to compute the probabilities for a given example:
@@ -59,78 +70,82 @@ class DDAGClassifier(OneVsOneClassifier):
             can be reached following different paths (all except the leaves for the first and the last class), the
             probabilities are summed. With this method, all the classes may have a probability greater that 0.
 
-            Example: For a given example, the probability of the left class returned by each model is the following:
+            Example: For a given example, the probability of the left class returned by each model is the following::
+            
+                P(1|5) = 0.2
+                P(1|4) = 0.1
+                P(2|5) = 0.1
+                P(1|3) = 0.2
+                P(2|4) = 0.3
+                P(3|5) = 0.3
+                P(1|2) = 0.3
+                P(2|3) = 0.4
+                P(3|4) = 0.4
+                P(4|5) = 0.3
 
-            P(1|5) = 0.2
-            P(1|4) = 0.1
-            P(2|5) = 0.1
-            P(1|3) = 0.2
-            P(2|4) = 0.3
-            P(3|5) = 0.3
-            P(1|2) = 0.3
-            P(2|3) = 0.4
-            P(3|4) = 0.4
-            P(4|5) = 0.3
+                P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =
+                         0.2    * 0.1    * 0.2    * 0.3    = 0.0012
 
-            P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =
-                     0.2    * 0.1    * 0.2    * 0.3    = 0.0012
+                P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +
+                         P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +
+                         P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +
+                         (1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =
+                         0.2        * 0.1        * 0.2        * 0.7        +
+                         0.2        * 0.1        * 0.8        * 0.4        +
+                         0.2        * 0.9        * 0.3        * 0.4        +
+                         0.8        * 0.1        * 0.3        * 0.4        = 
+                         0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404
 
-            P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +
-                     P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +
-                     P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +
-                     (1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =
-                     0.2        * 0.1        * 0.2        * 0.7        +
-                     0.2        * 0.1        * 0.8        * 0.4        +
-                     0.2        * 0.9        * 0.3        * 0.4        +
-                     0.8        * 0.1        * 0.3        * 0.4        = 0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404
+                P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +
+                         P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +
+                         P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +
+                         (1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +
+                         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +
+                         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =
+                         0.2        * 0.1        * 0.8        * 0.6        +
+                         0.2        * 0.9        * 0.3        * 0.6        +
+                         0.2        * 0.9        * 0.7        * 0.4        +
+                         0.8        * 0.1        * 0.3        * 0.6        +
+                         0.8        * 0.1        * 0.7        * 0.4        +
+                         0.8        * 0.9        * 0.3        * 0.4        = 
+                         0.0096 + 0.0324 + 0.0504 + 0.0144 + 0.0224 + 0.0864 = 0.2156
 
-            P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +
-                     P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +
-                     P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +
-                     (1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +
-                     (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +
-                     (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =
-                     0.2        * 0.1        * 0.8        * 0.6        +
-                     0.2        * 0.9        * 0.3        * 0.6        +
-                     0.2        * 0.9        * 0.7        * 0.4        +
-                     0.8        * 0.1        * 0.3        * 0.6        +
-                     0.8        * 0.1        * 0.7        * 0.4        +
-                     0.8        * 0.9        * 0.3        * 0.4        = 0.0096 + 0.0324 + 0.0504 +
-                                                                         0.0144 + 0.0224 + 0.0864 = 0.2156
-            P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +
-                     (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +
-                     (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +
-                     (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =
-                     0.2        * 0.9        * 0.7        * 0.6        + 0.0756
-                     0.8        * 0.1        * 0.7        * 0.6        + 0.0336
-                     0.8        * 0.9        * 0.3        * 0.6        + 0.1296
-                     0.8        * 0.9        * 0.7        * 0.3        = 0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900
+                P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +
+                         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +
+                         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +
+                         (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =
+                         0.2        * 0.9        * 0.7        * 0.6        + 0.0756
+                         0.8        * 0.1        * 0.7        * 0.6        + 0.0336
+                         0.8        * 0.9        * 0.3        * 0.6        + 0.1296
+                         0.8        * 0.9        * 0.7        * 0.3        = 
+                         0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900
 
-            P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =
-                     0.8        * 0.9        * 0.7        * 0.7        = 0.3528
+                P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =
+                         0.8        * 0.9        * 0.7        * 0.7        = 0.3528
 
-            Thus, the probabilities returned by `predict_proba` method would be (0.0012, 0.0404, 02156, 0.3900, 0.3528)
+                Thus, the probabilities returned by `predict_proba` method would be:
+                        (0.0012, 0.0404, 02156, 0.3900, 0.3528)
 
         'winner_node'
             Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
             binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
             for the two consecutive classes involved, and zero for the rest of classes.
 
-            Example: For a given example, the probability of the left class returned by each model is the following:
+            Example: For a given example, the probability of the left class returned by each model is the following::
 
-            P(1|5) = 0.2
-            P(1|4) = 0.1
-            P(2|5) = 0.1
-            P(1|3) = 0.2
-            P(2|4) = 0.3
-            P(3|5) = 0.3
-            P(1|2) = 0.3
-            P(2|3) = 0.4
-            P(3|4) = 0.4
-            P(4|5) = 0.3
+                P(1|5) = 0.2
+                P(1|4) = 0.1
+                P(2|5) = 0.1
+                P(1|3) = 0.2
+                P(2|4) = 0.3
+                P(3|5) = 0.3
+                P(1|2) = 0.3
+                P(2|3) = 0.4
+                P(3|4) = 0.4
+                P(4|5) = 0.3
 
-            Taking binary decisions from the root, we reach the binary classifier 4|5, thus the returned probabilities
-            are (0, 0, 0, 0.3, 0.7)
+                Taking binary decisions from the root, we reach the binary classifier 4|5, thus 
+                the returned probabilities are (0, 0, 0, 0.3, 0.7)
 
         Parameters
         ----------
@@ -222,14 +237,14 @@ class DDAGClassifier(OneVsOneClassifier):
             Two different methods are implemented depending on the value of `predict_method` attribute
 
             'full_probabilistic'
-            The probabilities computed by each node are propagated through the tree. For those leaves that
-            can be reached following different paths (all except the leaves for the first and the last class), the
-            probabilities are summed. With this method, all the classes may have a probability greater that 0.
+               The probabilities computed by each node are propagated through the tree. For those leaves that
+               can be reached following different paths (all except the leaves for the first and the last class), the
+               probabilities are summed. With this method, all the classes may have a probability greater that 0.
 
             'winner_node'
-            Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
-            binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
-            for the two consecutive classes involved, and zero for the rest of classes.
+               Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
+               binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
+               for the two consecutive classes involved, and zero for the rest of classes.
 
             The method uses a recursive auxiliar method to compute the class probabilities
 

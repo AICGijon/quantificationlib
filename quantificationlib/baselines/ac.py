@@ -27,7 +27,7 @@ class AC(UsingClassifiers):
         1) Two estimators are used to classify the examples of the training set and the testing set in order to
            compute the confusion matrix of both sets. Estimators can be already trained
 
-        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful
+        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful
            for synthetic/artificial experiments
 
         The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**
@@ -145,7 +145,7 @@ class AC(UsingClassifiers):
 
             predictions_train : ndarray, shape (n_examples, ) or (n_examples, n_classes)
                 Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are
-                converted to crisp values by `super().fit()
+                converted to crisp values by `super().fit()`
 
             Raises
             ------
@@ -191,9 +191,8 @@ class AC(UsingClassifiers):
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, CC(X) )
-                      s.t.  sum(prevalences) = 1
-                            prevalecences_i >= 0
+                      Min   distance ( cm_.T * prevalences, CC(X) ) 
+                      s.t.  sum(prevalences) = 1 , prevalecences_i >= 0
 
             in which distance can be 'HD' (defect value), 'L1' or 'L2'
 
@@ -203,7 +202,7 @@ class AC(UsingClassifiers):
                 Testing bag
 
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
-                They must be probabilities (the estimator used must have a `predict_proba method)
+                They must be probabilities (the estimator used must have a `predict_proba` method)
 
                 If predictions_test is not None they are copied on predictions_test_ and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
@@ -283,7 +282,7 @@ class PAC(UsingClassifiers):
         1) Two estimators are used to classify the examples of the training set and the testing set in order to
            compute the (probabilistic) confusion matrix of both sets. Estimators can be already trained
 
-        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful
+        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful
            for synthetic/artificial experiments
 
         The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**
@@ -388,7 +387,7 @@ class PAC(UsingClassifiers):
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
             testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
-            performed by the `fit method of its superclass.
+            performed by the `fit` method of its superclass.
             Finally the method computes the (probabilistic) confusion matrix using predictions_train
 
             Parameters
@@ -434,7 +433,7 @@ class PAC(UsingClassifiers):
         """ Predict the class distribution of a testing bag
 
             First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
-            `super().predict() method.
+            `super().predict()` method.
 
             After that, the prevalences are computed solving a system of linear scalar equations:
 
@@ -450,8 +449,7 @@ class PAC(UsingClassifiers):
             optimization problem of this kind:
 
                       Min   distance ( cm_.T * prevalences, PCC(X) )
-                      s.t.  sum(prevalences) = 1
-                            prevalecences_i >= 0
+                      s.t.  sum(prevalences) = 1, prevalecences_i >= 0
 
             in which distance can be 'HD', 'L1' or 'L2' (defect value)
 

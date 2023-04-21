@@ -71,7 +71,7 @@ class SORDy(UsingClassifiers):
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
             predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
             than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit`/`predict` method whenever the true labels of the training set are needed,
+            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,
             instead of y
 
         tol : float
@@ -168,8 +168,9 @@ class SORDy(UsingClassifiers):
             union is sorted based on the posterior probability of each example.
 
             Finally, the prevalences are computed using golden section search using two functions:
-                -compute_sord_weights: to obtain the mixture depending on the estimated prevalence
-                -sord: distance funtion to measure how similar the mixture and the testing distributions are
+            
+                - compute_sord_weights: to obtain the mixture depending on the estimated prevalence
+                - sord: distance funtion to measure how similar the mixture and the testing distributions are
 
             Parameters
             ----------
