@@ -63,7 +63,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Decision Directed Acyclic Graph ordinal classifier</span>
 
 <span class="sd">        This strategy consists on learning a classifier per each pair of classes, thus it requires to fit</span>
-<span class="sd">        n_classes * (n_classes - 1) / 2 classifiers. For this reason, this class derives from OneVsOneClassifier and</span>
+<span class="sd">        `n_classes * (n_classes - 1) / 2` classifiers. For this reason, this class derives from OneVsOneClassifier and</span>
 <span class="sd">        uses most of its functionalities, mainly to train the binary models.</span>
 
 <span class="sd">        However, there are two main differences with respect to OneVsOneClassifier:</span>
@@ -74,26 +74,37 @@
 <span class="sd">           classes. Thus, the root contains the classifier that decides between the first class of the order and last</span>
 <span class="sd">           class, and this idea is recursively applied.</span>
 
-<span class="sd">            Example: in a ordinal classification problem with classes ranging from 1-star to 5-star,</span>
+<span class="sd">        Example::</span>
+<span class="sd">             </span>
+<span class="sd">            In a ordinal classification problem with classes ranging from 1-star to 5-star,</span>
 <span class="sd">            the corresponding DDAG will be</span>
 
 <span class="sd">                                                      1|5</span>
+
 <span class="sd">                                 1|4                                       2|5</span>
+
 <span class="sd">                       1|3                 2|4                   2|4                  3|5</span>
+
 <span class="sd">                  1|2       2|3       2|3       3|4         2|3       3|4        3|4       4|5</span>
+
 <span class="sd">                1     2   2     3   2     3   3     4     2     3   3     4    3     4   4     5</span>
 
 <span class="sd">            Since some subtrees are shared by different branches, for instance, the subtree labeled as node</span>
-<span class="sd">            2|4 is shared by the right subtree of 1|4 and the left subtree of 2|5, the tree can be depicted in a more</span>
-<span class="sd">            compact way:</span>
+<span class="sd">            2|4 is shared by the right subtree of 1|4 and the left subtree of 2|5, the tree can be depicted</span>
+<span class="sd">            in a more compact way:</span>
+
 <span class="sd">                                                      1|5</span>
+
 <span class="sd">                                              1|4             2|5</span>
+
 <span class="sd">                                       1|3            2|4            3|5</span>
+
 <span class="sd">                                 1|2          2|3             3|4           4|5</span>
+
 <span class="sd">                             1          2              3              4             5</span>
 
-<span class="sd">            in which all internal nodes (2|4, 2|3 and 3|4) and all leaves, except the first one, and the last one</span>
-<span class="sd">            (2, 3 and 4) are reached from different paths.</span>
+<span class="sd">            in which all internal nodes (2|4, 2|3 and 3|4) and all leaves, except the first one, and </span>
+<span class="sd">            the last one (2, 3 and 4) are reached from different paths.</span>
 
 
 <span class="sd">        The class implements two different strategies to compute the probabilities for a given example:</span>
@@ -103,78 +114,82 @@
 <span class="sd">            can be reached following different paths (all except the leaves for the first and the last class), the</span>
 <span class="sd">            probabilities are summed. With this method, all the classes may have a probability greater that 0.</span>
 
-<span class="sd">            Example: For a given example, the probability of the left class returned by each model is the following:</span>
+<span class="sd">            Example: For a given example, the probability of the left class returned by each model is the following::</span>
+<span class="sd">            </span>
+<span class="sd">                P(1|5) = 0.2</span>
+<span class="sd">                P(1|4) = 0.1</span>
+<span class="sd">                P(2|5) = 0.1</span>
+<span class="sd">                P(1|3) = 0.2</span>
+<span class="sd">                P(2|4) = 0.3</span>
+<span class="sd">                P(3|5) = 0.3</span>
+<span class="sd">                P(1|2) = 0.3</span>
+<span class="sd">                P(2|3) = 0.4</span>
+<span class="sd">                P(3|4) = 0.4</span>
+<span class="sd">                P(4|5) = 0.3</span>
 
-<span class="sd">            P(1|5) = 0.2</span>
-<span class="sd">            P(1|4) = 0.1</span>
-<span class="sd">            P(2|5) = 0.1</span>
-<span class="sd">            P(1|3) = 0.2</span>
-<span class="sd">            P(2|4) = 0.3</span>
-<span class="sd">            P(3|5) = 0.3</span>
-<span class="sd">            P(1|2) = 0.3</span>
-<span class="sd">            P(2|3) = 0.4</span>
-<span class="sd">            P(3|4) = 0.4</span>
-<span class="sd">            P(4|5) = 0.3</span>
+<span class="sd">                P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =</span>
+<span class="sd">                         0.2    * 0.1    * 0.2    * 0.3    = 0.0012</span>
 
-<span class="sd">            P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =</span>
-<span class="sd">                     0.2    * 0.1    * 0.2    * 0.3    = 0.0012</span>
+<span class="sd">                P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +</span>
+<span class="sd">                         P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +</span>
+<span class="sd">                         P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +</span>
+<span class="sd">                         (1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =</span>
+<span class="sd">                         0.2        * 0.1        * 0.2        * 0.7        +</span>
+<span class="sd">                         0.2        * 0.1        * 0.8        * 0.4        +</span>
+<span class="sd">                         0.2        * 0.9        * 0.3        * 0.4        +</span>
+<span class="sd">                         0.8        * 0.1        * 0.3        * 0.4        = </span>
+<span class="sd">                         0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404</span>
 
-<span class="sd">            P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +</span>
-<span class="sd">                     P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +</span>
-<span class="sd">                     P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +</span>
-<span class="sd">                     (1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =</span>
-<span class="sd">                     0.2        * 0.1        * 0.2        * 0.7        +</span>
-<span class="sd">                     0.2        * 0.1        * 0.8        * 0.4        +</span>
-<span class="sd">                     0.2        * 0.9        * 0.3        * 0.4        +</span>
-<span class="sd">                     0.8        * 0.1        * 0.3        * 0.4        = 0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404</span>
+<span class="sd">                P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +</span>
+<span class="sd">                         P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +</span>
+<span class="sd">                         P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +</span>
+<span class="sd">                         (1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +</span>
+<span class="sd">                         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +</span>
+<span class="sd">                         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =</span>
+<span class="sd">                         0.2        * 0.1        * 0.8        * 0.6        +</span>
+<span class="sd">                         0.2        * 0.9        * 0.3        * 0.6        +</span>
+<span class="sd">                         0.2        * 0.9        * 0.7        * 0.4        +</span>
+<span class="sd">                         0.8        * 0.1        * 0.3        * 0.6        +</span>
+<span class="sd">                         0.8        * 0.1        * 0.7        * 0.4        +</span>
+<span class="sd">                         0.8        * 0.9        * 0.3        * 0.4        = </span>
+<span class="sd">                         0.0096 + 0.0324 + 0.0504 + 0.0144 + 0.0224 + 0.0864 = 0.2156</span>
 
-<span class="sd">            P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +</span>
-<span class="sd">                     P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +</span>
-<span class="sd">                     P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +</span>
-<span class="sd">                     (1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +</span>
-<span class="sd">                     (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +</span>
-<span class="sd">                     (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =</span>
-<span class="sd">                     0.2        * 0.1        * 0.8        * 0.6        +</span>
-<span class="sd">                     0.2        * 0.9        * 0.3        * 0.6        +</span>
-<span class="sd">                     0.2        * 0.9        * 0.7        * 0.4        +</span>
-<span class="sd">                     0.8        * 0.1        * 0.3        * 0.6        +</span>
-<span class="sd">                     0.8        * 0.1        * 0.7        * 0.4        +</span>
-<span class="sd">                     0.8        * 0.9        * 0.3        * 0.4        = 0.0096 + 0.0324 + 0.0504 +</span>
-<span class="sd">                                                                         0.0144 + 0.0224 + 0.0864 = 0.2156</span>
-<span class="sd">            P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +</span>
-<span class="sd">                     (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +</span>
-<span class="sd">                     (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +</span>
-<span class="sd">                     (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =</span>
-<span class="sd">                     0.2        * 0.9        * 0.7        * 0.6        + 0.0756</span>
-<span class="sd">                     0.8        * 0.1        * 0.7        * 0.6        + 0.0336</span>
-<span class="sd">                     0.8        * 0.9        * 0.3        * 0.6        + 0.1296</span>
-<span class="sd">                     0.8        * 0.9        * 0.7        * 0.3        = 0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900</span>
+<span class="sd">                P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +</span>
+<span class="sd">                         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +</span>
+<span class="sd">                         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +</span>
+<span class="sd">                         (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =</span>
+<span class="sd">                         0.2        * 0.9        * 0.7        * 0.6        + 0.0756</span>
+<span class="sd">                         0.8        * 0.1        * 0.7        * 0.6        + 0.0336</span>
+<span class="sd">                         0.8        * 0.9        * 0.3        * 0.6        + 0.1296</span>
+<span class="sd">                         0.8        * 0.9        * 0.7        * 0.3        = </span>
+<span class="sd">                         0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900</span>
 
-<span class="sd">            P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =</span>
-<span class="sd">                     0.8        * 0.9        * 0.7        * 0.7        = 0.3528</span>
+<span class="sd">                P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =</span>
+<span class="sd">                         0.8        * 0.9        * 0.7        * 0.7        = 0.3528</span>
 
-<span class="sd">            Thus, the probabilities returned by `predict_proba` method would be (0.0012, 0.0404, 02156, 0.3900, 0.3528)</span>
+<span class="sd">                Thus, the probabilities returned by `predict_proba` method would be:</span>
+<span class="sd">                        (0.0012, 0.0404, 02156, 0.3900, 0.3528)</span>
 
 <span class="sd">        &#39;winner_node&#39;</span>
 <span class="sd">            Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like</span>
 <span class="sd">            binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator</span>
 <span class="sd">            for the two consecutive classes involved, and zero for the rest of classes.</span>
 
-<span class="sd">            Example: For a given example, the probability of the left class returned by each model is the following:</span>
+<span class="sd">            Example: For a given example, the probability of the left class returned by each model is the following::</span>
 
-<span class="sd">            P(1|5) = 0.2</span>
-<span class="sd">            P(1|4) = 0.1</span>
-<span class="sd">            P(2|5) = 0.1</span>
-<span class="sd">            P(1|3) = 0.2</span>
-<span class="sd">            P(2|4) = 0.3</span>
-<span class="sd">            P(3|5) = 0.3</span>
-<span class="sd">            P(1|2) = 0.3</span>
-<span class="sd">            P(2|3) = 0.4</span>
-<span class="sd">            P(3|4) = 0.4</span>
-<span class="sd">            P(4|5) = 0.3</span>
+<span class="sd">                P(1|5) = 0.2</span>
+<span class="sd">                P(1|4) = 0.1</span>
+<span class="sd">                P(2|5) = 0.1</span>
+<span class="sd">                P(1|3) = 0.2</span>
+<span class="sd">                P(2|4) = 0.3</span>
+<span class="sd">                P(3|5) = 0.3</span>
+<span class="sd">                P(1|2) = 0.3</span>
+<span class="sd">                P(2|3) = 0.4</span>
+<span class="sd">                P(3|4) = 0.4</span>
+<span class="sd">                P(4|5) = 0.3</span>
 
-<span class="sd">            Taking binary decisions from the root, we reach the binary classifier 4|5, thus the returned probabilities</span>
-<span class="sd">            are (0, 0, 0, 0.3, 0.7)</span>
+<span class="sd">                Taking binary decisions from the root, we reach the binary classifier 4|5, thus </span>
+<span class="sd">                the returned probabilities are (0, 0, 0, 0.3, 0.7)</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -266,14 +281,14 @@
 <span class="sd">            Two different methods are implemented depending on the value of `predict_method` attribute</span>
 
 <span class="sd">            &#39;full_probabilistic&#39;</span>
-<span class="sd">            The probabilities computed by each node are propagated through the tree. For those leaves that</span>
-<span class="sd">            can be reached following different paths (all except the leaves for the first and the last class), the</span>
-<span class="sd">            probabilities are summed. With this method, all the classes may have a probability greater that 0.</span>
+<span class="sd">               The probabilities computed by each node are propagated through the tree. For those leaves that</span>
+<span class="sd">               can be reached following different paths (all except the leaves for the first and the last class), the</span>
+<span class="sd">               probabilities are summed. With this method, all the classes may have a probability greater that 0.</span>
 
 <span class="sd">            &#39;winner_node&#39;</span>
-<span class="sd">            Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like</span>
-<span class="sd">            binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator</span>
-<span class="sd">            for the two consecutive classes involved, and zero for the rest of classes.</span>
+<span class="sd">               Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like</span>
+<span class="sd">               binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator</span>
+<span class="sd">               for the two consecutive classes involved, and zero for the rest of classes.</span>
 
 <span class="sd">            The method uses a recursive auxiliar method to compute the class probabilities</span>
 

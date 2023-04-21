@@ -75,13 +75,12 @@
 
 <span class="sd">        algorithm : {&#39;auto&#39;, &#39;ball_tree&#39;, &#39;kd_tree&#39;, &#39;brute&#39;}, default=&#39;auto&#39;</span>
 <span class="sd">            Algorithm used to compute the nearest neighbors:</span>
+<span class="sd">            </span>
 <span class="sd">            - &#39;ball_tree&#39; will use :class:`BallTree`</span>
 <span class="sd">            - &#39;kd_tree&#39; will use :class:`KDTree`</span>
-<span class="sd">            - &#39;brute&#39; will use a brute-force search.</span>
-<span class="sd">            - &#39;auto&#39; will attempt to decide the most appropriate algorithm</span>
-<span class="sd">              based on the values passed to :meth:`fit` method.</span>
-<span class="sd">            Note: fitting on sparse input will override the setting of</span>
-<span class="sd">            this parameter, using brute force.</span>
+<span class="sd">            - &#39;brute&#39; will use a brute-force search</span>
+<span class="sd">            - &#39;auto&#39; will attempt to decide the most appropriate algorithm based on the values passed to :meth:`fit` method.</span>
+<span class="sd">            Note: fitting on sparse input will override the setting of this parameter, using brute force.</span>
 
 <span class="sd">        leaf_size : int, default=30</span>
 <span class="sd">            Leaf size passed to BallTree or KDTree.  This can affect the</span>

@@ -71,7 +71,7 @@
 <span class="sd">        1) Two estimators are used to classify the examples of the training set and the testing set in order to</span>
 <span class="sd">           compute the confusion matrix of both sets. Estimators can be already trained</span>
 
-<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful</span>
+<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful</span>
 <span class="sd">           for synthetic/artificial experiments</span>
 
 <span class="sd">        The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**</span>
@@ -189,7 +189,7 @@
 
 <span class="sd">            predictions_train : ndarray, shape (n_examples, ) or (n_examples, n_classes)</span>
 <span class="sd">                Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are</span>
-<span class="sd">                converted to crisp values by `super().fit()</span>
+<span class="sd">                converted to crisp values by `super().fit()`</span>
 
 <span class="sd">            Raises</span>
 <span class="sd">            ------</span>
@@ -235,9 +235,8 @@
 <span class="sd">            For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an</span>
 <span class="sd">            optimization problem of this kind:</span>
 
-<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) )</span>
-<span class="sd">                      s.t.  sum(prevalences) = 1</span>
-<span class="sd">                            prevalecences_i &gt;= 0</span>
+<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) ) </span>
+<span class="sd">                      s.t.  sum(prevalences) = 1 , prevalecences_i &gt;= 0</span>
 
 <span class="sd">            in which distance can be &#39;HD&#39; (defect value), &#39;L1&#39; or &#39;L2&#39;</span>
 
@@ -247,7 +246,7 @@
 <span class="sd">                Testing bag</span>
 
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
-<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba method)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
 
 <span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
@@ -327,7 +326,7 @@
 <span class="sd">        1) Two estimators are used to classify the examples of the training set and the testing set in order to</span>
 <span class="sd">           compute the (probabilistic) confusion matrix of both sets. Estimators can be already trained</span>
 
-<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful</span>
+<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful</span>
 <span class="sd">           for synthetic/artificial experiments</span>
 
 <span class="sd">        The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**</span>
@@ -432,7 +431,7 @@
 <div class="viewcode-block" id="PAC.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.ac.html#quantificationlib.baselines.ac.PAC.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
 <span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
-<span class="sd">            performed by the `fit method of its superclass.</span>
+<span class="sd">            performed by the `fit` method of its superclass.</span>
 <span class="sd">            Finally the method computes the (probabilistic) confusion matrix using predictions_train</span>
 
 <span class="sd">            Parameters</span>
@@ -478,7 +477,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
 
 <span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
-<span class="sd">            `super().predict() method.</span>
+<span class="sd">            `super().predict()` method.</span>
 
 <span class="sd">            After that, the prevalences are computed solving a system of linear scalar equations:</span>
 
@@ -494,8 +493,7 @@
 <span class="sd">            optimization problem of this kind:</span>
 
 <span class="sd">                      Min   distance ( cm_.T * prevalences, PCC(X) )</span>
-<span class="sd">                      s.t.  sum(prevalences) = 1</span>
-<span class="sd">                            prevalecences_i &gt;= 0</span>
+<span class="sd">                      s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</span>
 
 <span class="sd">            in which distance can be &#39;HD&#39;, &#39;L1&#39; or &#39;L2&#39; (defect value)</span>
 

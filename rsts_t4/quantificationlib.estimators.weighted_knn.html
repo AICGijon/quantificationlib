@@ -65,16 +65,14 @@ that are computed by this class</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>n_neighbors</strong> (<em>int</em><em>, </em><em>(</em><em>default=10</em><em>)</em>) – Number of neighbors to use by default for <code class="xref py py-meth docutils literal notranslate"><span class="pre">kneighbors()</span></code> queries.</p></li>
-<li><p><strong>algorithm</strong> (<em>{'auto'</em><em>, </em><em>'ball_tree'</em><em>, </em><em>'kd_tree'</em><em>, </em><em>'brute'}</em><em>, </em><em>default='auto'</em>) – <p>Algorithm used to compute the nearest neighbors:
-- ‘ball_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">BallTree</span></code>
-- ‘kd_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code>
-- ‘brute’ will use a brute-force search.
-- ‘auto’ will attempt to decide the most appropriate algorithm</p>
-<blockquote>
-<div><p>based on the values passed to <a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.fit" title="quantificationlib.estimators.weighted_knn.PWK.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p>
-</div></blockquote>
-<p>Note: fitting on sparse input will override the setting of
-this parameter, using brute force.</p>
+<li><p><strong>algorithm</strong> (<em>{'auto'</em><em>, </em><em>'ball_tree'</em><em>, </em><em>'kd_tree'</em><em>, </em><em>'brute'}</em><em>, </em><em>default='auto'</em>) – <p>Algorithm used to compute the nearest neighbors:</p>
+<ul>
+<li><p>’ball_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">BallTree</span></code></p></li>
+<li><p>’kd_tree’ will use <code class="xref py py-class docutils literal notranslate"><span class="pre">KDTree</span></code></p></li>
+<li><p>’brute’ will use a brute-force search</p></li>
+<li><p>’auto’ will attempt to decide the most appropriate algorithm based on the values passed to <a class="reference internal" href="#quantificationlib.estimators.weighted_knn.PWK.fit" title="quantificationlib.estimators.weighted_knn.PWK.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fit()</span></code></a> method.</p></li>
+</ul>
+<p>Note: fitting on sparse input will override the setting of this parameter, using brute force.</p>
 </p></li>
 <li><p><strong>leaf_size</strong> (<em>int</em><em>, </em><em>default=30</em>) – Leaf size passed to BallTree or KDTree.  This can affect the
 speed of the construction and query, as well as the memory

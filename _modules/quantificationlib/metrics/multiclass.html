@@ -101,7 +101,7 @@
 
 <span class="sd">            :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`</span>
 
-<span class="sd">        being l the number of classes.</span>
+<span class="sd">        being `l` the number of classes.</span>
 
 <span class="sd">        Also known as discrimination information, relative entropy or normalized cross-entropy</span>
 <span class="sd">        (see [Esuli and Sebastiani 2010; Forman 2008]).</span>
@@ -132,7 +132,7 @@
 
 <span class="sd">            :math:`mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
 
-<span class="sd">        being l the number of classes</span>
+<span class="sd">        being `l` the number of classes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -156,7 +156,7 @@
 
 <span class="sd">            :math:`l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
 
-<span class="sd">        being l the number of classes</span>
+<span class="sd">        being `l` the number of classes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -180,7 +180,7 @@
 
 <span class="sd">            :math:`mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`</span>
 
-<span class="sd">        being l the number of classes</span>
+<span class="sd">        being `l` the number of classes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -204,7 +204,7 @@
 
 <span class="sd">            :math:`l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`</span>
 
-<span class="sd">        being l the number of classes</span>
+<span class="sd">        being `l`  the number of classes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -228,7 +228,7 @@
 
 <span class="sd">            :math:`hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`</span>
 
-<span class="sd">        being l the number of classes</span>
+<span class="sd">        being `l` the number of classes</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -264,7 +264,7 @@
 
 
 <div class="viewcode-block" id="topsoe"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a><span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span> <span class="o">+</span>
@@ -282,7 +282,7 @@
 
 
 <div class="viewcode-block" id="probsymmetric"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a><span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span><span class="o">-</span><span class="n">p_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span><span class="o">+</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span>

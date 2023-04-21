@@ -225,11 +225,11 @@
 <span class="sd">            In this kind of decomposition strategy it is important to ensure that the aggregated consecutive</span>
 <span class="sd">            prevalencences do not decrease:</span>
 
-<span class="sd">            Example:</span>
+<span class="sd">            Example::</span>
 
-<span class="sd">                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
-<span class="sd">                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
-<span class="sd">                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
+<span class="sd">                 Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
+<span class="sd">                 Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
+<span class="sd">                 Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
 
 <span class="sd">            This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from</span>
 <span class="sd">            left to right) and the lower (from right to left) cumulative prevalences. These sets of values are</span>
@@ -238,15 +238,13 @@
 
 <span class="sd">                Prevalence({y_k}) = Prevalence({y_1,...,y_k}) - Prevalence({y_1,...,y_k-1})</span>
 
-<span class="sd">            Example:</span>
-
-<span class="sd">                {1}   {1-2}  {1-2-3}</span>
-
-<span class="sd">                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</span>
-
-<span class="sd">                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)</span>
+<span class="sd">            Example::</span>
+<span class="sd">            </span>
+<span class="sd">                {1}   {1-2}  {1-2-3} </span>
+<span class="sd">                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right) </span>
+<span class="sd">                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left) </span>
 <span class="sd">                ----------------</span>
-<span class="sd">                0.25  0.25   0.6    Averaged prevalences</span>
+<span class="sd">                0.25  0.25   0.6    Averaged prevalences </span>
 
 <span class="sd">                Prevalence({1}) = 0.25</span>
 <span class="sd">                Prevalence({2}) = Prevalence({1,2}) - Prevalence({1}) = 0.25 - 0 .25 = 0</span>
@@ -317,26 +315,24 @@
 
 <span class="sd">            To obtain consistent prevalences, we need to ensure that the consecutive probabilities do not decrease.</span>
 
-<span class="sd">            Example:</span>
+<span class="sd">            Example::</span>
 
-<span class="sd">                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
-<span class="sd">                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
-<span class="sd">                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
+<span class="sd">                 Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3</span>
+<span class="sd">                 Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2</span>
+<span class="sd">                 Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</span>
 
 <span class="sd">            This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from</span>
 <span class="sd">            left to right) and the lower (from right to left) cumulative prevalences. These sets of values are</span>
 <span class="sd">            monotonically increasing (from left to right) and monotonically decreasing (from right to left),</span>
 <span class="sd">            respectively. The average value is assigned to each group</span>
 
-<span class="sd">            Example:</span>
-
-<span class="sd">                {1}   {1-2}  {1-2-3}</span>
-
-<span class="sd">                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</span>
-
-<span class="sd">                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)</span>
-<span class="sd">                ----------------</span>
-<span class="sd">                0.25  0.25   0.6    Averaged prevalences</span>
+<span class="sd">            Example::</span>
+<span class="sd">            </span>
+<span class="sd">                 {1}   {1-2}  {1-2-3}</span>
+<span class="sd">                 0.3   0.3    0.6      Upper cumulative prevalences (adjusting from left to right)</span>
+<span class="sd">                 0.2   0.2    0.6      Lower cumulative prevalences (adjusting from right to left)</span>
+<span class="sd">                 ----------------  </span>
+<span class="sd">                 0.25  0.25   0.6      Averaged prevalences</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>

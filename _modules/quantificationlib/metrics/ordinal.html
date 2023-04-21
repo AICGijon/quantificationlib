@@ -61,7 +61,7 @@
 
 
 <div class="viewcode-block" id="emd"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd">[docs]</a><span class="k">def</span> <span class="nf">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distances between two sets of prevalences</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distance between two sets of prevalences</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -79,13 +79,33 @@
 
 
 <div class="viewcode-block" id="emd_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score">[docs]</a><span class="k">def</span> <span class="nf">emd_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Scoring metric based on EMD distance</span>
+<span class="sd">    </span>
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Castaño, A., González, P., González, J. A., &amp; Del Coz, J. J. (2022). Matching Distributions Algorithms</span>
+<span class="sd">        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks</span>
+<span class="sd">        and Learning Systems.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true: array-like, shape (n_classes, 1)</span>
+
+<span class="sd">        p_pred: array-like, shape (n_classes, 1)</span>
+
+<span class="sd">        Return</span>
+<span class="sd">        ------</span>
+<span class="sd">        emds: float, the EMD score</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+        
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">left_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p_true</span><span class="p">)</span>
     <span class="n">left_mass</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">right_mass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">p_true</span><span class="p">)</span>
     <span class="n">right_mass</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">max_emd</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">left_mass</span><span class="p">),</span> <span class="n">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">right_mass</span><span class="p">))</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">max_emd</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))))</span> <span class="o">/</span> <span class="n">max_emd</span></div>
+    <span class="n">emds</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_emd</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))))</span> <span class="o">/</span> <span class="n">max_emd</span>
+    <span class="k">return</span> <span class="n">emds</span></div>
 
 
 <div class="viewcode-block" id="emd_distances"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_distances">[docs]</a><span class="k">def</span> <span class="nf">emd_distances</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
@@ -102,6 +122,7 @@
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">        distances : array, shape (n_samples_1, n_samples_2)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># version #1: the most inefficient</span>
     <span class="c1"># return np.sum(np.abs(np.cumsum(A[:, np.newaxis] - B, axis=2)), axis=2)</span>

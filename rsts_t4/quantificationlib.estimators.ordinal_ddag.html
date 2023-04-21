@@ -59,63 +59,55 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">OneVsOneClassifier</span></code></p>
 <p>Decision Directed Acyclic Graph ordinal classifier</p>
 <p>This strategy consists on learning a classifier per each pair of classes, thus it requires to fit
-n_classes * (n_classes - 1) / 2 classifiers. For this reason, this class derives from OneVsOneClassifier and
+<cite>n_classes * (n_classes - 1) / 2</cite> classifiers. For this reason, this class derives from OneVsOneClassifier and
 uses most of its functionalities, mainly to train the binary models.</p>
 <p>However, there are two main differences with respect to OneVsOneClassifier:</p>
-<ol class="arabic">
+<ol class="arabic simple">
 <li><p>This class is used for ordinal classification, it does not make sense to use it for multiclass classification</p></li>
 <li><p>The rule to make predictions is different. Here, the binary classifiers are arranged into a binary tree in
 which the classifier selected at each node is the one that deals with the two more distant remaining
 classes. Thus, the root contains the classifier that decides between the first class of the order and last
-class, and this idea is recursively applied.</p>
-<blockquote>
-<div><p>Example: in a ordinal classification problem with classes ranging from 1-star to 5-star,
-the corresponding DDAG will be</p>
-<blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><p>1|5</p>
-</div></blockquote>
-<p>1|4                                       2|5</p>
-</div></blockquote>
-<p>1|3                 2|4                   2|4                  3|5</p>
-</div></blockquote>
-<p>1|2       2|3       2|3       3|4         2|3       3|4        3|4       4|5</p>
-</div></blockquote>
-<p>1     2   2     3   2     3   3     4     2     3   3     4    3     4   4     5</p>
-</div></blockquote>
-<p>Since some subtrees are shared by different branches, for instance, the subtree labeled as node
-2|4 is shared by the right subtree of 1|4 and the left subtree of 2|5, the tree can be depicted in a more
-compact way:</p>
-<blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><p>1|5</p>
-</div></blockquote>
-<p>1|4             2|5</p>
-</div></blockquote>
-<p>1|3            2|4            3|5</p>
-</div></blockquote>
-<p>1|2          2|3             3|4           4|5</p>
-</div></blockquote>
-<p>1          2              3              4             5</p>
-</div></blockquote>
-<p>in which all internal nodes (2|4, 2|3 and 3|4) and all leaves, except the first one, and the last one
-(2, 3 and 4) are reached from different paths.</p>
-</div></blockquote>
-</li>
+class, and this idea is recursively applied.</p></li>
 </ol>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">In</span> <span class="n">a</span> <span class="n">ordinal</span> <span class="n">classification</span> <span class="n">problem</span> <span class="k">with</span> <span class="n">classes</span> <span class="n">ranging</span> <span class="kn">from</span> <span class="mi">1</span><span class="o">-</span><span class="n">star</span> <span class="n">to</span> <span class="mi">5</span><span class="o">-</span><span class="n">star</span><span class="p">,</span>
+<span class="n">the</span> <span class="n">corresponding</span> <span class="n">DDAG</span> <span class="n">will</span> <span class="n">be</span>
+
+                                          <span class="mi">1</span><span class="o">|</span><span class="mi">5</span>
+
+                     <span class="mi">1</span><span class="o">|</span><span class="mi">4</span>                                       <span class="mi">2</span><span class="o">|</span><span class="mi">5</span>
+
+           <span class="mi">1</span><span class="o">|</span><span class="mi">3</span>                 <span class="mi">2</span><span class="o">|</span><span class="mi">4</span>                   <span class="mi">2</span><span class="o">|</span><span class="mi">4</span>                  <span class="mi">3</span><span class="o">|</span><span class="mi">5</span>
+
+      <span class="mi">1</span><span class="o">|</span><span class="mi">2</span>       <span class="mi">2</span><span class="o">|</span><span class="mi">3</span>       <span class="mi">2</span><span class="o">|</span><span class="mi">3</span>       <span class="mi">3</span><span class="o">|</span><span class="mi">4</span>         <span class="mi">2</span><span class="o">|</span><span class="mi">3</span>       <span class="mi">3</span><span class="o">|</span><span class="mi">4</span>        <span class="mi">3</span><span class="o">|</span><span class="mi">4</span>       <span class="mi">4</span><span class="o">|</span><span class="mi">5</span>
+
+    <span class="mi">1</span>     <span class="mi">2</span>   <span class="mi">2</span>     <span class="mi">3</span>   <span class="mi">2</span>     <span class="mi">3</span>   <span class="mi">3</span>     <span class="mi">4</span>     <span class="mi">2</span>     <span class="mi">3</span>   <span class="mi">3</span>     <span class="mi">4</span>    <span class="mi">3</span>     <span class="mi">4</span>   <span class="mi">4</span>     <span class="mi">5</span>
+
+<span class="n">Since</span> <span class="n">some</span> <span class="n">subtrees</span> <span class="n">are</span> <span class="n">shared</span> <span class="n">by</span> <span class="n">different</span> <span class="n">branches</span><span class="p">,</span> <span class="k">for</span> <span class="n">instance</span><span class="p">,</span> <span class="n">the</span> <span class="n">subtree</span> <span class="n">labeled</span> <span class="k">as</span> <span class="n">node</span>
+<span class="mi">2</span><span class="o">|</span><span class="mi">4</span> <span class="ow">is</span> <span class="n">shared</span> <span class="n">by</span> <span class="n">the</span> <span class="n">right</span> <span class="n">subtree</span> <span class="n">of</span> <span class="mi">1</span><span class="o">|</span><span class="mi">4</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">left</span> <span class="n">subtree</span> <span class="n">of</span> <span class="mi">2</span><span class="o">|</span><span class="mi">5</span><span class="p">,</span> <span class="n">the</span> <span class="n">tree</span> <span class="n">can</span> <span class="n">be</span> <span class="n">depicted</span>
+<span class="ow">in</span> <span class="n">a</span> <span class="n">more</span> <span class="n">compact</span> <span class="n">way</span><span class="p">:</span>
+
+                                          <span class="mi">1</span><span class="o">|</span><span class="mi">5</span>
+
+                                  <span class="mi">1</span><span class="o">|</span><span class="mi">4</span>             <span class="mi">2</span><span class="o">|</span><span class="mi">5</span>
+
+                           <span class="mi">1</span><span class="o">|</span><span class="mi">3</span>            <span class="mi">2</span><span class="o">|</span><span class="mi">4</span>            <span class="mi">3</span><span class="o">|</span><span class="mi">5</span>
+
+                     <span class="mi">1</span><span class="o">|</span><span class="mi">2</span>          <span class="mi">2</span><span class="o">|</span><span class="mi">3</span>             <span class="mi">3</span><span class="o">|</span><span class="mi">4</span>           <span class="mi">4</span><span class="o">|</span><span class="mi">5</span>
+
+                 <span class="mi">1</span>          <span class="mi">2</span>              <span class="mi">3</span>              <span class="mi">4</span>             <span class="mi">5</span>
+
+<span class="ow">in</span> <span class="n">which</span> <span class="nb">all</span> <span class="n">internal</span> <span class="n">nodes</span> <span class="p">(</span><span class="mi">2</span><span class="o">|</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="o">|</span><span class="mi">3</span> <span class="ow">and</span> <span class="mi">3</span><span class="o">|</span><span class="mi">4</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span> <span class="n">leaves</span><span class="p">,</span> <span class="k">except</span> <span class="n">the</span> <span class="n">first</span> <span class="n">one</span><span class="p">,</span> <span class="ow">and</span>
+<span class="n">the</span> <span class="n">last</span> <span class="n">one</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="ow">and</span> <span class="mi">4</span><span class="p">)</span> <span class="n">are</span> <span class="n">reached</span> <span class="kn">from</span> <span class="nn">different</span> <span class="n">paths</span><span class="o">.</span>
+</pre></div>
+</div>
 <p>The class implements two different strategies to compute the probabilities for a given example:</p>
 <dl>
 <dt>‘full_probabilistic’</dt><dd><p>The probabilities computed by each node are propagated through the tree. For those leaves that
 can be reached following different paths (all except the leaves for the first and the last class), the
 probabilities are summed. With this method, all the classes may have a probability greater that 0.</p>
 <p>Example: For a given example, the probability of the left class returned by each model is the following:</p>
-<p>P(1|5) = 0.2
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>P(1|5) = 0.2
 P(1|4) = 0.1
 P(2|5) = 0.1
 P(1|3) = 0.2
@@ -124,62 +116,72 @@ P(3|5) = 0.3
 P(1|2) = 0.3
 P(2|3) = 0.4
 P(3|4) = 0.4
-P(4|5) = 0.3</p>
-<dl>
-<dt>P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =</dt><dd><p>0.2    * 0.1    * 0.2    * 0.3    = 0.0012</p>
-</dd>
-<dt>P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +</dt><dd><p>P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +
-P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +
-(1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =
-0.2        * 0.1        * 0.2        * 0.7        +
-0.2        * 0.1        * 0.8        * 0.4        +
-0.2        * 0.9        * 0.3        * 0.4        +
-0.8        * 0.1        * 0.3        * 0.4        = 0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404</p>
-</dd>
-<dt>P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +</dt><dd><p>P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +
-P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +
-(1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +
-(1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +
-(1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =
-0.2        * 0.1        * 0.8        * 0.6        +
-0.2        * 0.9        * 0.3        * 0.6        +
-0.2        * 0.9        * 0.7        * 0.4        +
-0.8        * 0.1        * 0.3        * 0.6        +
-0.8        * 0.1        * 0.7        * 0.4        +
-0.8        * 0.9        * 0.3        * 0.4        = 0.0096 + 0.0324 + 0.0504 +</p>
-<blockquote>
-<div><p>0.0144 + 0.0224 + 0.0864 = 0.2156</p>
-</div></blockquote>
-</dd>
-<dt>P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +</dt><dd><p>(1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +
-(1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +
-(1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =
-0.2        * 0.9        * 0.7        * 0.6        + 0.0756
-0.8        * 0.1        * 0.7        * 0.6        + 0.0336
-0.8        * 0.9        * 0.3        * 0.6        + 0.1296
-0.8        * 0.9        * 0.7        * 0.3        = 0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900</p>
-</dd>
-<dt>P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =</dt><dd><p>0.8        * 0.9        * 0.7        * 0.7        = 0.3528</p>
-</dd>
-</dl>
-<p>Thus, the probabilities returned by <cite>predict_proba</cite> method would be (0.0012, 0.0404, 02156, 0.3900, 0.3528)</p>
+P(4|5) = 0.3
+
+P(y=1) = P(1|5) * P(1|4) * P(1|3) * P(1|2) =
+         0.2    * 0.1    * 0.2    * 0.3    = 0.0012
+
+P(y=2) = P(1|5)     * P(1|4)     * P(1|3)     * (1-P(1|2)) +
+         P(1|5)     * P(1|4)     * (1-P(1|3)) * P(2|3)     +
+         P(1|5)     * (1-P(1|4)) * P(2|4)     * P(2|3)     +
+         (1-P(1|5)) * P(2|5)     * P(2|4)     * P(2|3)     =
+         0.2        * 0.1        * 0.2        * 0.7        +
+         0.2        * 0.1        * 0.8        * 0.4        +
+         0.2        * 0.9        * 0.3        * 0.4        +
+         0.8        * 0.1        * 0.3        * 0.4        =
+         0.0028 + 0.0064 + 0.0216 + 0.0096 = 0.0404
+
+P(y=3) = P(1|5)     * P(1|4)     * (1-P(1|3)) * (1-P(2|3)) +
+         P(1|5)     * (1-P(1|4)) * P(2|4))    * (1-P(2|3)) +
+         P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * P(3|4)     +
+         (1-P(1|5)) * P(2|5)     * P(2|4))    * (1-P(2|3)) +
+         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * P(3|4)     +
+         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * P(3|4)     =
+         0.2        * 0.1        * 0.8        * 0.6        +
+         0.2        * 0.9        * 0.3        * 0.6        +
+         0.2        * 0.9        * 0.7        * 0.4        +
+         0.8        * 0.1        * 0.3        * 0.6        +
+         0.8        * 0.1        * 0.7        * 0.4        +
+         0.8        * 0.9        * 0.3        * 0.4        =
+         0.0096 + 0.0324 + 0.0504 + 0.0144 + 0.0224 + 0.0864 = 0.2156
+
+P(y=4) = P(1|5)     * (1-P(1|4)) * (1-P(2|4)) * (1-P(3|4)) +
+         (1-P(1|5)) * P(2|5)     * (1-P(2|4)) * (1-P(3|4)) +
+         (1-P(1|5)) * (1-P(2|5)) * P(3|5)     * (1-P(3|4)) +
+         (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * P(4|5)     =
+         0.2        * 0.9        * 0.7        * 0.6        + 0.0756
+         0.8        * 0.1        * 0.7        * 0.6        + 0.0336
+         0.8        * 0.9        * 0.3        * 0.6        + 0.1296
+         0.8        * 0.9        * 0.7        * 0.3        =
+         0.0756 + 0.0336 + 0.1296 + 0.1512 = 0.3900
+
+P(y=5) = (1-P(1|5)) * (1-P(2|5)) * (1-P(3|5)) * (1-P(4|5)) =
+         0.8        * 0.9        * 0.7        * 0.7        = 0.3528
+
+Thus, the probabilities returned by `predict_proba` method would be:
+        (0.0012, 0.0404, 02156, 0.3900, 0.3528)
+</pre></div>
+</div>
 </dd>
 <dt>‘winner_node’</dt><dd><p>Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
 binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
 for the two consecutive classes involved, and zero for the rest of classes.</p>
 <p>Example: For a given example, the probability of the left class returned by each model is the following:</p>
-<p>P(1|5) = 0.2
-P(1|4) = 0.1
-P(2|5) = 0.1
-P(1|3) = 0.2
-P(2|4) = 0.3
-P(3|5) = 0.3
-P(1|2) = 0.3
-P(2|3) = 0.4
-P(3|4) = 0.4
-P(4|5) = 0.3</p>
-<p>Taking binary decisions from the root, we reach the binary classifier 4|5, thus the returned probabilities
-are (0, 0, 0, 0.3, 0.7)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="o">|</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="o">|</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">2</span><span class="o">|</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="o">|</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">2</span><span class="o">|</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">3</span><span class="o">|</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">1</span><span class="o">|</span><span class="mi">2</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">2</span><span class="o">|</span><span class="mi">3</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">3</span><span class="o">|</span><span class="mi">4</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">P</span><span class="p">(</span><span class="mi">4</span><span class="o">|</span><span class="mi">5</span><span class="p">)</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="n">Taking</span> <span class="n">binary</span> <span class="n">decisions</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">root</span><span class="p">,</span> <span class="n">we</span> <span class="n">reach</span> <span class="n">the</span> <span class="n">binary</span> <span class="n">classifier</span> <span class="mi">4</span><span class="o">|</span><span class="mi">5</span><span class="p">,</span> <span class="n">thus</span>
+<span class="n">the</span> <span class="n">returned</span> <span class="n">probabilities</span> <span class="n">are</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd>
 </dl>
 <dl class="field-list simple">
@@ -298,14 +300,16 @@ highest probability</p>
 <span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/ordinal_ddag.html#DDAGClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.ordinal_ddag.DDAGClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class probabilities for each example</p>
 <p>Two different methods are implemented depending on the value of <cite>predict_method</cite> attribute</p>
-<p>‘full_probabilistic’
-The probabilities computed by each node are propagated through the tree. For those leaves that
+<dl class="simple">
+<dt>‘full_probabilistic’</dt><dd><p>The probabilities computed by each node are propagated through the tree. For those leaves that
 can be reached following different paths (all except the leaves for the first and the last class), the
 probabilities are summed. With this method, all the classes may have a probability greater that 0.</p>
-<p>‘winner_node’
-Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
+</dd>
+<dt>‘winner_node’</dt><dd><p>Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
 binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
 for the two consecutive classes involved, and zero for the rest of classes.</p>
+</dd>
+</dl>
 <p>The method uses a recursive auxiliar method to compute the class probabilities</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

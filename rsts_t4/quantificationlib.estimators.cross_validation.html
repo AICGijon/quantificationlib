@@ -60,14 +60,14 @@
 <p>Cross Validation Estimator</p>
 <p>The idea is to have an estimator in which the model is formed by the models of a CV. This object is needed
 to estimate the distribution of the training set and testing sets. It has a <cite>fit</cite> method, that trains
-the models of the CV, and the typical methods <cite>predict</cite> y <cite>predict_proba</cite> to compute the predictions using
+the models of the CV, and the typical methods <cite>predict</cite> and <cite>predict_proba</cite> to compute the predictions using
 such models. This implies that this object can be used by any distribution matching method that requires an
 estimator to represent the distributions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>sklearn</strong> (<em>Mainly the same that cross_validate method in</em>) – </p></li>
-<li><p><strong>estimator</strong> (<em>estimator object implementing 'fit'</em>) – The object to use to fit the data.</p></li>
+<li><p><strong>estimator</strong> (estimator object implementing <cite>fit</cite>) – The object to use to fit the data.</p></li>
 <li><p><strong>groups</strong> (<em>array-like</em><em>, </em><em>with shape</em><em> (</em><em>n_samples</em><em>,</em><em>)</em><em>, </em><em>optional</em>) – Group labels for the samples used while splitting the dataset into train/test set.</p></li>
 <li><p><strong>cv</strong> (<em>int</em><em>, </em><em>cross-validation generator</em><em> or </em><em>an iterable</em><em>, </em><em>optional</em>) – <p>Determines the cross-validation splitting strategy. Possible inputs for cv are:</p>
 <ul>
@@ -85,35 +85,24 @@ estimator to represent the distributions</p>
 <li><p><strong>fit_params</strong> (<em>dict</em><em>, </em><em>optional</em>) – Parameters to pass to the fit method of the estimator.</p></li>
 <li><p><strong>pre_dispatch</strong> (<em>int</em><em>, or </em><em>string</em><em>, </em><em>optional</em>) – <p>Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be
 useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process.
-This parameter can be:
-- None, in which case all the jobs are immediately</p>
-<blockquote>
-<div><p>created and spawned. Use this for lightweight and
-fast-running jobs, to avoid delays due to on-demand
-spawning of the jobs</p>
-</div></blockquote>
+This parameter can be:</p>
 <ul>
-<li><p>An int, giving the exact number of total jobs that are
-spawned</p></li>
-<li><p>A string, giving an expression as a function of n_jobs,
-as in ‘2*n_jobs’</p></li>
+<li><p>None, in which case all the jobs are immediately created and spawned. Use this for lightweight and
+fast-running jobs, to avoid delays due to on-demand spawning of the jobs</p></li>
+<li><p>An int, giving the exact number of total jobs that are spawned</p></li>
+<li><p>A string, giving an expression as a function of n_jobs, as in <cite>2*n_jobs</cite></p></li>
 </ul>
 </p></li>
-<li><p><strong>averaged_predictions</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – If True, <cite>predict`and `predict_proba</cite> methods average the predictions given by <a href="#id3"><span class="problematic" id="id4">estimators_</span></a> for
+<li><p><strong>averaged_predictions</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – If True, <cite>predict</cite> and <cite>predict_proba</cite> methods average the predictions given by <a href="#id3"><span class="problematic" id="id4">estimators_</span></a> for
 each example</p></li>
 <li><p><strong>voting</strong> (<em>str</em><em>, </em><em>{'hard'</em><em>, </em><em>'soft'}</em><em> (</em><em>default='hard'</em><em>)</em>) – Only used when averaged_predictions is True.
-If ‘hard’, <cite>predict`and `predict_proba</cite> methods apply majority rule voting.
+If ‘hard’, <cite>predict</cite> and <cite>predict_proba</cite> methods apply majority rule voting.
 If ‘soft’, predict the class label based on the argmax of the sums of the predicted probabilities,
 which is recommended for an ensemble of well-calibrated classifiers.</p></li>
 <li><p><strong>verbose</strong> (<em>integer</em><em>, </em><em>optional</em><em> (</em><em>default=0</em><em>)</em>) – The verbosity level.</p></li>
 </ul>
 </dd>
 </dl>
-<dl class="py attribute">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">In</span> <span class="pre">addition</span> <span class="pre">to</span> <span class="pre">the</span> <span class="pre">parameters</span> <span class="pre">needed</span> <span class="pre">to</span> <span class="pre">call</span> <span class="pre">`cross_validate``</span> <span class="pre">the</span> <span class="pre">class</span> <span class="pre">has</span> <span class="pre">this</span> <span class="pre">important</span> <span class="pre">attributes</span></span></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.estimator">
 <span class="sig-name descname"><span class="pre">estimator</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimator" title="Permalink to this definition">¶</a></dt>
@@ -225,7 +214,7 @@ The number of estimators is equal to the number of folds times number of repetit
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the models
 It calls <cite>cross_validate</cite> to fit the models and save them in <a href="#id7"><span class="problematic" id="id8">estimators_</span></a> attribute.
-It also stores some attributes needed by <cite>predict</cite> and <cite>predict_proba</cite>, namely, <a href="#id9"><span class="problematic" id="id10">le_</span></a>, <a href="#id11"><span class="problematic" id="id12">classes_</span></a> X_train
+It also stores some attributes needed by <cite>predict</cite> and <cite>predict_proba</cite>, namely, <a href="#id9"><span class="problematic" id="id10">le_</span></a>, <a href="#id11"><span class="problematic" id="id12">classes_</span></a>, X_train
 and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>

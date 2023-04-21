@@ -82,49 +82,29 @@ features (Xs) for quantifiers derived from WithoutClassifiers class and the pred
 quantifiers derived from UsingClassifiers</p></li>
 <li><p><strong>n_bins</strong> (<em>int</em><em>, </em><em>(</em><em>default=100</em><em>)</em>) – Numbers of bins to estimate the distributions of training and testing bags. This is needed for
 distribution_similarity combination strategy.</p></li>
-<li><p><strong>str</strong> (<em>bin_strategy =</em>) – <p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
+<li><p><strong>bin_strategy</strong> (<em>str</em><em>, </em><em>(</em><em>default='equal_width'</em><em>)</em>) – <p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
 bags when the distribution_similarity combination strategy is used. Possible values:</p>
-<blockquote>
-<div><p>’equal_width’: bins of equal length (it could be affected by outliers)
-‘equal_count’: bins of equal counts (considering the examples of all classes)
-‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
-<blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
+<ul>
+<li><p>’equal_width’: bins of equal length (it could be affected by outliers)</p></li>
+<li><p>’equal_count’: bins of equal counts (considering the examples of all classes)</p></li>
+<li><dl>
+<dt>’binormal’: (Only for binary quantification) It is inspired on the method devised by</dt><dd><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
 are computed as follows based on the assumption that the features follow a normal distribution:</p>
 <p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
 <p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
 and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
 the training examples of each class.</p>
-</div></blockquote>
-<dl>
+</dd>
+</dl>
+</li>
+<li><dl>
 <dt>’normal’:  The idea is that each feature follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
 <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
 <p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
 </dd>
 </dl>
-</div></blockquote>
-</p></li>
-<li><p><strong>(</strong><strong>default='equal_width'</strong><strong>)</strong> – <p>Method to compute the boundaries of the bins for to estimate the distributions of training and testing
-bags when the distribution_similarity combination strategy is used. Possible values:</p>
-<blockquote>
-<div><p>’equal_width’: bins of equal length (it could be affected by outliers)
-‘equal_count’: bins of equal counts (considering the examples of all classes)
-‘binormal’: (Only for binary quantification) It is inspired on the method devised by</p>
-<blockquote>
-<div><p>(Tasche, 2019, Eq (A16b)). the cut points, <span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span>,
-are computed as follows based on the assumption that the features follow a normal distribution:</p>
-<p><span class="math notranslate nohighlight">\(c_i = \frac{\sigma^+ + \sigma^{-}}{2} \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \frac{\mu^+ + \mu^{-}}{2} ,  \quad i=1,\ldots,b-1\)</span></p>
-<p>where <span class="math notranslate nohighlight">\(\Phi^{-1}\)</span> is the quantile function of the standard normal distribution, and <span class="math notranslate nohighlight">\(\mu\)</span>
-and <span class="math notranslate nohighlight">\(\sigma\)</span> of the normal distribution are estimated as the average of those values for
-the training examples of each class.</p>
-</div></blockquote>
-<dl>
-<dt>’normal’:  The idea is that each feature follows a normal distribution. <span class="math notranslate nohighlight">\(\mu\)</span> and <span class="math notranslate nohighlight">\(\sigma\)</span> are</dt><dd><p>estimated as the weighted mean and std from the training distribution. The cut points
-<span class="math notranslate nohighlight">\(-\infty &lt; c_1 &lt; \ldots &lt; c_{b-1} &lt; \infty\)</span> are computed as follows:</p>
-<p><span class="math notranslate nohighlight">\(c_i = \sigma^ \ \Phi^{-1}\bigg(\frac{i}{b}\bigg)  + \mu ,  \quad i=1,\ldots,b-1\)</span></p>
-</dd>
-</dl>
-</div></blockquote>
+</li>
+</ul>
 </p></li>
 <li><p><strong>distance_bags</strong> (<em>str</em><em>, </em><em>(</em><em>default='euclidean'</em><em>)</em>) – Distance used to compute distribution similarity</p></li>
 <li><p><strong>percentage_of_selected_models</strong> (<em>float</em><em>, </em><em>value in</em><em> [</em><em>0</em><em>, </em><em>1</em><em>]</em><em>, </em><em>(</em><em>default=0.5</em><em>)</em>) – Percentage of selected models for distribution similarity and prevalence similarity strategies</p></li>
@@ -338,14 +318,11 @@ tasks and is n_classes for multiclass/ordinal problems</p>
 <dd><p>This method does the following tasks:</p>
 <ol class="arabic simple">
 <li><p>It generates the training bags using a Bag_Generator object</p></li>
+<li><p>It fits the quantifiers of the ensemble.</p></li>
 </ol>
-<p>2) It fits the quantifiers of the ensemble.
-In the case of quantifiers derived from the class UsingClassifiers, there are 3 possible ways to do this:
-- train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be</p>
-<blockquote>
-<div><p>passed on ensemble_estimator</p>
-</div></blockquote>
+<p>In the case of quantifiers derived from the class UsingClassifiers, there are 3 possible ways to do this:</p>
 <ul class="simple">
+<li><p>train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be passed on ensemble_estimator</p></li>
 <li><p>train a classifier for the whole training set using an estimator from other class</p></li>
 <li><p>uses the predictions_train given in the predictions_train parameter (these predictions usually are
 obtained applying an estimator over the whole training set like in the previous case)</p></li>

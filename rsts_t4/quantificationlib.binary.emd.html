@@ -168,7 +168,7 @@ testing set and to compute the distribution of the whole testing set</p></li>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
 <a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
 than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> == y.
-<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> i used in <cite>fit</cite>/<cite>predict</cite> method whenever the true labels of the training set are needed,
+<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> is used in <cite>fit</cite>/<cite>predict</cite> method whenever the true labels of the training set are needed,
 instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -282,11 +282,13 @@ labels are put in the same order in <a href="#id27"><span class="problematic" id
 <cite>super().predict()</cite> method.</p>
 <p>After that, the method computes the union distribution, merging training and testing distributions. This
 union is sorted based on the posterior probability of each example.</p>
-<dl class="simple">
-<dt>Finally, the prevalences are computed using golden section search using two functions:</dt><dd><p>-compute_sord_weights: to obtain the mixture depending on the estimated prevalence
--sord: distance funtion to measure how similar the mixture and the testing distributions are</p>
-</dd>
-</dl>
+<p>Finally, the prevalences are computed using golden section search using two functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>compute_sord_weights: to obtain the mixture depending on the estimated prevalence</p></li>
+<li><p>sord: distance funtion to measure how similar the mixture and the testing distributions are</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">

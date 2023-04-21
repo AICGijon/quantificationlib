@@ -64,16 +64,15 @@ ranging from 1-star to 5-star, Frank and Hall (FH) decompositon trains 4 binary 
 <p>To train all these binary classifiers, one needs to convert the original ordinal labels to binary labels
 for each of the binary problems of the Frank and Hall decomposition. FHLabelBinarizer makes this process
 easy using the transform method.</p>
-<blockquote>
-<div><dl class="simple">
-<dt>neg_label<span class="classifier">int (default: 0)</span></dt><dd><p>Value with which negative labels must be encoded.</p>
-</dd>
-<dt>pos_label<span class="classifier">int (default: 1)</span></dt><dd><p>Value with which positive labels must be encoded.</p>
-</dd>
-<dt>sparse_output<span class="classifier">boolean (default: False)</span></dt><dd><p>True if the returned array from transform is desired to be in sparse CSR format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>neg_label</strong> (<em>int</em><em> (</em><em>default: 0</em><em>)</em>) – Value with which negative labels must be encoded.</p></li>
+<li><p><strong>pos_label</strong> (<em>int</em><em> (</em><em>default: 1</em><em>)</em>) – Value with which positive labels must be encoded.</p></li>
+<li><p><strong>sparse_output</strong> (<em>boolean</em><em> (</em><em>default: False</em><em>)</em>) – True if the returned array from transform is desired to be in sparse CSR format.</p></li>
+</ul>
 </dd>
 </dl>
-</div></blockquote>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform">
 <span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FHLabelBinarizer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FHLabelBinarizer.transform" title="Permalink to this definition">¶</a></dt>
@@ -185,8 +184,8 @@ for more details.</p></li>
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_">
 <span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
-estimators_[1] -&gt; 1-2 vs 3-4-5
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5,
+estimators_[1] -&gt; 1-2 vs 3-4-5,
 …</p>
 </dd>
 </dl>
@@ -216,8 +215,8 @@ In Proceedings of the European Conference on Machine Learning. Springer, 145156.
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition</p>
 <dl class="simple">
-<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
-estimators_[1] -&gt; 1-2 vs 3-4-5
+<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5,
+estimators_[1] -&gt; 1-2 vs 3-4-5,
 …</p>
 </dd>
 </dl>
@@ -258,42 +257,43 @@ highest probability</p>
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba">
 <span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class probabilities for each example following the original rule proposed by Frank &amp; Hall</p>
-<blockquote>
-<div><p>If the classes are c_1 to c_k:</p>
-<blockquote>
-<div><p>Pr(y = c_1) = Pr (y &lt;= c_1)
+<p>If the classes are c_1 to c_k:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Pr(y = c_1) = Pr (y &lt;= c_1)
 Pr(y = c_i) = Pr(y &gt; c_i−1)  x (1 − Pr(y &gt; c_i)) ; 1 &lt; i &lt; k
-Pr(y = c_k) = Pr(y &gt; c_k−1)</p>
-<p>Notice that :  :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>sum_{i=1}^{i=k} Pr(c_i)</p>
-</div></blockquote>
-</div></blockquote>
-<p>eq 1`</p>
-<blockquote>
-<div><p>Example with 5 classes</p>
-<blockquote>
-<div><p>We have 4 binary estimators that return two probabilities: the probability of the left group and the
-probability of the right group, denoted as e_i.left and e_i.right respectively, in which i is the
-number of the estimator 1&lt;=i&lt;k</p>
-<p>Estimator 0:    c1  |   c2, c3, c4, c5          e1.left | e1.right
-Estimator 2:    c1, c2  |   c3, c4, c5          e2.left | e2.right
-Estimator 3:    c1, c2, c3  |   c4, c5          e3.left | e3.right
-Estimator 4:    c1, c2, c3  c4  |   c5          e4.left | e4.right</p>
-<p>Pr(y = c_1) = e1.left
-Pr(y = c_2) = e1.right x e2.left
-Pr(y = c_3) = e2.right x e3.left
-Pr(y = c_4) = e3.right x e4.left
-Pr(y = c_5) = e4.right</p>
-</div></blockquote>
-<dl class="simple">
-<dt>X<span class="classifier">(sparse) array-like, shape (n_examples, n_features)</span></dt><dd><p>Data</p>
+Pr(y = c_k) = Pr(y &gt; c_k−1)
+
+Notice that :  sum_{i=1}^{i=k} Pr(c_i) \neq 1
+</pre></div>
+</div>
+<p>Example with 5 classes:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">We</span> <span class="n">have</span> <span class="mi">4</span> <span class="n">binary</span> <span class="n">estimators</span> <span class="n">that</span> <span class="k">return</span> <span class="n">two</span> <span class="n">probabilities</span><span class="p">:</span>
+<span class="n">the</span> <span class="n">probability</span> <span class="n">of</span> <span class="n">the</span> <span class="n">left</span> <span class="n">group</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">probability</span> <span class="n">of</span> <span class="n">the</span> <span class="n">right</span> <span class="n">group</span><span class="p">,</span>
+<span class="n">denoted</span> <span class="k">as</span> <span class="n">e_i</span><span class="o">.</span><span class="n">left</span> <span class="ow">and</span> <span class="n">e_i</span><span class="o">.</span><span class="n">right</span> <span class="n">respectively</span><span class="p">,</span>
+<span class="ow">in</span> <span class="n">which</span> <span class="n">i</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">number</span> <span class="n">of</span> <span class="n">the</span> <span class="n">estimator</span> <span class="mi">1</span><span class="o">&lt;=</span><span class="n">i</span><span class="o">&lt;</span><span class="n">k</span>
+
+<span class="n">Estimator</span> <span class="mi">0</span><span class="p">:</span>    <span class="n">c1</span>  <span class="o">|</span>   <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">c5</span>          <span class="n">e1</span><span class="o">.</span><span class="n">left</span> <span class="o">|</span> <span class="n">e1</span><span class="o">.</span><span class="n">right</span>
+<span class="n">Estimator</span> <span class="mi">2</span><span class="p">:</span>    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span>  <span class="o">|</span>   <span class="n">c3</span><span class="p">,</span> <span class="n">c4</span><span class="p">,</span> <span class="n">c5</span>          <span class="n">e2</span><span class="o">.</span><span class="n">left</span> <span class="o">|</span> <span class="n">e2</span><span class="o">.</span><span class="n">right</span>
+<span class="n">Estimator</span> <span class="mi">3</span><span class="p">:</span>    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span>  <span class="o">|</span>   <span class="n">c4</span><span class="p">,</span> <span class="n">c5</span>          <span class="n">e3</span><span class="o">.</span><span class="n">left</span> <span class="o">|</span> <span class="n">e3</span><span class="o">.</span><span class="n">right</span>
+<span class="n">Estimator</span> <span class="mi">4</span><span class="p">:</span>    <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span>  <span class="n">c4</span>  <span class="o">|</span>   <span class="n">c5</span>          <span class="n">e4</span><span class="o">.</span><span class="n">left</span> <span class="o">|</span> <span class="n">e4</span><span class="o">.</span><span class="n">right</span>
+
+<span class="n">Pr</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">c_1</span><span class="p">)</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">left</span>
+<span class="n">Pr</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">c_2</span><span class="p">)</span> <span class="o">=</span> <span class="n">e1</span><span class="o">.</span><span class="n">right</span> <span class="n">x</span> <span class="n">e2</span><span class="o">.</span><span class="n">left</span>
+<span class="n">Pr</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">c_3</span><span class="p">)</span> <span class="o">=</span> <span class="n">e2</span><span class="o">.</span><span class="n">right</span> <span class="n">x</span> <span class="n">e3</span><span class="o">.</span><span class="n">left</span>
+<span class="n">Pr</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">c_4</span><span class="p">)</span> <span class="o">=</span> <span class="n">e3</span><span class="o">.</span><span class="n">right</span> <span class="n">x</span> <span class="n">e4</span><span class="o">.</span><span class="n">left</span>
+<span class="n">Pr</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="n">c_5</span><span class="p">)</span> <span class="o">=</span> <span class="n">e4</span><span class="o">.</span><span class="n">right</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
 </dd>
 </dl>
-<p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
-<dl class="simple">
-<dt>NotFittedError</dt><dd><p>When the estimators are not fitted yet</p>
-</dd>
-</dl>
-</div></blockquote>
 </dd></dl>
 
 </dd></dl>
@@ -394,8 +394,8 @@ for more details.</p></li>
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimators_">
 <span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
-estimators_[1] -&gt; 1-2 vs 3-4-5
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5,
+estimators_[1] -&gt; 1-2 vs 3-4-5,
 …</p>
 </dd>
 </dl>
@@ -426,8 +426,8 @@ Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallMonotoneClassifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallMonotoneClassifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits the set of estimators for the training set following the Frank and Hall decomposition</p>
 <dl class="simple">
-<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
-estimators_[1] -&gt; 1-2 vs 3-4-5
+<dt>It learns a list of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5,
+estimators_[1] -&gt; 1-2 vs 3-4-5,
 …</p>
 </dd>
 </dl>
@@ -471,10 +471,12 @@ highest probability</p>
 one proposed by Frank &amp; Hall)</p>
 <p>To obtain consistent probabilities, we need to ensure that the aggregated consecutive
 probabilities do not decrease.</p>
-<p class="rubric">Example</p>
-<p>Classifier 1 vs 2-3-4   Pr({1}) = 0.3
-Classifier 1-2 vs 3-4   Pr({1,2}) = 0.2
-Classifier 1-2-3 vs 4   Pr({1,2,3}) = 0.6</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Classifier</span> <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">Classifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">Classifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span>   <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
 <p>This is inconsistent. Following (Destercke and Yang, 2014) the method computes the upper (adjusting from
 left to right) and the lower (from right to left) cumulative probabilities. These sets of values are
 monotonically increasing (from left to right) and monotonically decreasing (from right to left),
@@ -482,32 +484,33 @@ respectively. The average value is assigned to each group and the probability fo
 <blockquote>
 <div><p>Pr({y_k}) = Pr({y_1,…,y_k}) - Pr({y_1,…,y_k-1})</p>
 </div></blockquote>
-<p class="rubric">Example</p>
-<p>{1}   {1-2}  {1-2-3}</p>
-<p>0.3   0.3    0.6    Upper cumulative probabilities (adjusting from left to right)</p>
-<section id="lower-cumulative-probabilities-adjusting-from-right-to-left">
-<h2>0.2   0.2    0.6    Lower cumulative probabilities (adjusting from right to left)<a class="headerlink" href="#lower-cumulative-probabilities-adjusting-from-right-to-left" title="Permalink to this heading">¶</a></h2>
-<p>0.25  0.25   0.6    Averaged probability</p>
-<p>Pr({1}) = 0.25
-Pr({2}) = Pr({1,2}) - Pr({1}) = 0.25 - 0 .25 = 0
-Pr({3}) = Pr({1,2,3}} - Pr({1,2}) = 0.6 - 0.25 = 0.35</p>
-<p>The last class is computed as 1 - the sum of the probabilities for the rest of classes</p>
-<p>Pr({4}) = 1 - Pr({1,2,3}} = 1 - 0.6 = 0.4</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>   <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">}</span>  <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="p">}</span>
+<span class="mf">0.3</span>   <span class="mf">0.3</span>    <span class="mf">0.6</span>    <span class="n">Upper</span> <span class="n">cumulative</span> <span class="n">probabilities</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">left</span> <span class="n">to</span> <span class="n">right</span><span class="p">)</span>
+<span class="mf">0.2</span>   <span class="mf">0.2</span>    <span class="mf">0.6</span>    <span class="n">Lower</span> <span class="n">cumulative</span> <span class="n">probabilities</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">right</span> <span class="n">to</span> <span class="n">left</span><span class="p">)</span>
+<span class="o">----------------</span>
+<span class="mf">0.25</span>  <span class="mf">0.25</span>   <span class="mf">0.6</span>    <span class="n">Averaged</span> <span class="n">probability</span>
+
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">-</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">-</span> <span class="mi">0</span> <span class="mf">.25</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}}</span> <span class="o">-</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">=</span> <span class="mf">0.35</span>
+
+<span class="n">The</span> <span class="n">last</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">computed</span> <span class="k">as</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">the</span> <span class="nb">sum</span> <span class="n">of</span> <span class="n">the</span> <span class="n">probabilities</span> <span class="k">for</span> <span class="n">the</span> <span class="n">rest</span> <span class="n">of</span> <span class="n">classes</span>
+
+<span class="n">Pr</span><span class="p">({</span><span class="mi">4</span><span class="p">})</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}}</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">=</span> <span class="mf">0.4</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">param X<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Data</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
 </dd>
-<dt class="field-even">type X<span class="colon">:</span></dt>
-<dd class="field-even"><p>(sparse) array-like, shape (n_examples, n_features)</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
 </dd>
-<dt class="field-odd">rtype<span class="colon">:</span></dt>
-<dd class="field-odd"><p>An array, shape(n_examples, n_classes) with the class probabilities for each example</p>
-</dd>
-<dt class="field-even">raises NotFittedError<span class="colon">:</span></dt>
-<dd class="field-even"><p>When the estimators are not fitted yet</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
 </dd>
 </dl>
-</section>
 </dd></dl>
 
 </dd></dl>
@@ -527,17 +530,16 @@ This classifier is based on the method proposed by (San Martino, Gao and Sebasti
 build a binary tree with the binary models of the Frank and Hall decomposition, selecting at each point of the
 tree the best possible model according to their quantification performance (applying PCC algorithm with each
 binary classifier and using the KLD as performance measure).</p>
-<p class="rubric">Example</p>
-<p>1-2-3 vs 4-5</p>
-<blockquote>
-<div><blockquote>
-<div><p>1 vs 2-3-4-5                            1-2-3-4 vs 5</p>
-</div></blockquote>
-<dl class="simple">
-<dt>1                1-2 vs 3-4-5           4                5</dt><dd><p>2              3</p>
-</dd>
-</dl>
-</div></blockquote>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span><span class="o">-</span><span class="mi">5</span>
+
+   <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>                            <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span> <span class="n">vs</span> <span class="mi">5</span>
+
+<span class="mi">1</span>                <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>           <span class="mi">4</span>                <span class="mi">5</span>
+
+             <span class="mi">2</span>                 <span class="mi">3</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -629,8 +631,8 @@ as quantifier</p>
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimators_">
 <span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.estimators_" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5
-estimators_[1] -&gt; 1-2 vs 3-4-5
+<dt>List of binary estimators following the same order of the Frank and Hall decomposition:</dt><dd><p>estimators_[0] -&gt; 1 vs 2-3-4-5,
+estimators_[1] -&gt; 1-2 vs 3-4-5,
 …</p>
 </dd>
 </dl>
@@ -712,31 +714,32 @@ highest probability</p>
 <dt class="sig sig-object py" id="quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba">
 <span class="sig-name descname"><span class="pre">predict_proba</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/frank_and_hall.html#FrankAndHallTreeClassifier.predict_proba"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.frank_and_hall.FrankAndHallTreeClassifier.predict_proba" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class probabilities for each example applying the binary tree of models</p>
-<p class="rubric">Example</p>
-<p>1-2-3 vs 4-5</p>
-<blockquote>
-<div><blockquote>
-<div><blockquote>
-<div><p>1 vs 2-3-4-5                            1-2-3-4 vs 5</p>
-</div></blockquote>
-<dl class="simple">
-<dt>1                1-2 vs 3-4-5           4                5</dt><dd><p>2              3</p>
-</dd>
-</dl>
-</div></blockquote>
-<p>Imagine that for a given example the probabily returned by each model are the following (the models
-return the probability of the left group of classes):</p>
-<p>Pr({1,2,3}) = 0.2
-Pr({1}) = 0.9
-Pr({1,2,3,4}) = 0.7
-Pr({1,2}) = 0.4</p>
-<p>with tha values, the probability for each class will be:</p>
-<p>Pr({1}) = Pr({1,2,3}) * Pr({1}) = 0.2 * 0.9 = 0.18
-Pr({2}) = Pr({1,2,3}) * (1-Pr({1})) * Pr({1,2}) = 0.2 * 0.1 * 0.4 = 0.008
-Pr({3}) = Pr({1,2,3}) * (1-Pr({1})) * (1-Pr({1,2})) = 0.2 * 0.1 * 0.6 = 0.012
-Pr({4}) = (1-Pr({1,2,3}) * Pr{1,2,3,4}) = 0.8 * 0.7 = 0.56
-Pr({5}) = (1-Pr({1,2,3}) * (1-Pr{1,2,3,4})) = 0.8 * 0.3 = 0.24</p>
-</div></blockquote>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                            <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span><span class="o">-</span><span class="mi">5</span>
+
+        <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>                            <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span> <span class="n">vs</span> <span class="mi">5</span>
+
+     <span class="mi">1</span>                <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>           <span class="mi">4</span>                <span class="mi">5</span>
+
+                    <span class="mi">2</span>              <span class="mi">3</span>
+
+<span class="n">Imagine</span> <span class="n">that</span> <span class="k">for</span> <span class="n">a</span> <span class="n">given</span> <span class="n">example</span> <span class="n">the</span> <span class="n">probabily</span> <span class="n">returned</span> <span class="n">by</span> <span class="n">each</span> <span class="n">model</span> <span class="n">are</span> <span class="n">the</span> <span class="n">following</span>
+<span class="p">(</span><span class="n">the</span> <span class="n">models</span> <span class="k">return</span> <span class="n">the</span> <span class="n">probability</span> <span class="n">of</span> <span class="n">the</span> <span class="n">left</span> <span class="n">group</span> <span class="n">of</span> <span class="n">classes</span><span class="p">):</span>
+
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.9</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.4</span>
+
+<span class="k">with</span> <span class="n">tha</span> <span class="n">values</span><span class="p">,</span> <span class="n">the</span> <span class="n">probability</span> <span class="k">for</span> <span class="n">each</span> <span class="k">class</span> <span class="nc">will</span> <span class="n">be</span><span class="p">:</span>
+
+<span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">*</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="mf">0.9</span> <span class="o">=</span> <span class="mf">0.18</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">}))</span> <span class="o">*</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="mf">0.4</span> <span class="o">=</span> <span class="mf">0.008</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">}))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">}))</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="mf">0.6</span> <span class="o">=</span> <span class="mf">0.012</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">4</span><span class="p">})</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">*</span> <span class="n">Pr</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="mf">0.7</span> <span class="o">=</span> <span class="mf">0.56</span>
+<span class="n">Pr</span><span class="p">({</span><span class="mi">5</span><span class="p">})</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">Pr</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">}))</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">=</span> <span class="mf">0.24</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>

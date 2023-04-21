@@ -60,7 +60,7 @@
 <p>Binary quantifier based on De-Bias estimate proposed by Friedman</p>
 <p>prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</p>
 <p>where</p>
-<p>Vt =[ 1/<a href="#id3"><span class="problematic" id="id4">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
+<p>Vt =[ 1/<a href="#id1"><span class="problematic" id="id2">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
 <p>This class works in two different ways:</p>
 <ol class="arabic simple">
 <li><p>An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</p></li>
@@ -126,7 +126,7 @@ testing set and to obtain the confusion matrix of the testing set</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id9"><span class="problematic" id="id10">predictions_train_</span></a>/<a href="#id11"><span class="problematic" id="id12">predictions_test_</span></a> contain probabilistic predictions</p>
+<dd><p>This means that <a href="#id7"><span class="problematic" id="id8">predictions_train_</span></a>/<a href="#id9"><span class="problematic" id="id10">predictions_test_</span></a> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -182,7 +182,7 @@ testing set and to obtain the confusion matrix of the testing set</p></li>
 <dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.Vt_">
 <span class="sig-name descname"><span class="pre">Vt_</span></span><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.Vt_" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
-<dt>The value of equation</dt><dd><p>Vt =[ 1/<a href="#id5"><span class="problematic" id="id6">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])</p>
+<dt>The value of equation</dt><dd><p>Vt =[ 1/<a href="#id3"><span class="problematic" id="id4">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])</p>
 </dd>
 </dl>
 <p>applied over the training examples D</p>
@@ -214,10 +214,10 @@ predictions_train/predictions_test are used</p>
 <dt class="sig sig-object py" id="quantificationlib.binary.debias.DeBias.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/binary/debias.html#DeBias.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.binary.debias.DeBias.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id13"><span class="problematic" id="id14">predictions_train_</span></a> (probabilities) if needed. Both operations are
-performed by the <a href="#id1"><span class="problematic" id="id2">`</span></a>fit method of its superclass.</p>
+testing set (if needed), and 2) computes <a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a> (probabilities) if needed. Both operations are
+performed by the <cite>fit</cite> method of its superclass.</p>
 <p>Finally the method computes the value of Vt</p>
-<p>Vt =[ 1/<a href="#id7"><span class="problematic" id="id8">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
+<p>Vt =[ 1/<a href="#id5"><span class="problematic" id="id6">|T|</span></a> sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -246,7 +246,7 @@ performed by the <a href="#id1"><span class="problematic" id="id2">`</span></a>f
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a predict_proba method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id15"><span class="problematic" id="id16">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <a href="#id13"><span class="problematic" id="id14">predictions_test_</span></a> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>

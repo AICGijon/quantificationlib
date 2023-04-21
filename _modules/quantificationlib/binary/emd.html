@@ -115,7 +115,7 @@
 <span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
 <span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
 <span class="sd">            than y. In other cases, y_ext_ == y.</span>
-<span class="sd">            y_ext_ i used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
+<span class="sd">            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
 <span class="sd">            instead of y</span>
 
 <span class="sd">        tol : float</span>
@@ -212,8 +212,9 @@
 <span class="sd">            union is sorted based on the posterior probability of each example.</span>
 
 <span class="sd">            Finally, the prevalences are computed using golden section search using two functions:</span>
-<span class="sd">                -compute_sord_weights: to obtain the mixture depending on the estimated prevalence</span>
-<span class="sd">                -sord: distance funtion to measure how similar the mixture and the testing distributions are</span>
+<span class="sd">            </span>
+<span class="sd">                - compute_sord_weights: to obtain the mixture depending on the estimated prevalence</span>
+<span class="sd">                - sord: distance funtion to measure how similar the mixture and the testing distributions are</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>

@@ -102,12 +102,13 @@
 <span class="sd">            Numbers of bins to estimate the distributions of training and testing bags. This is needed for</span>
 <span class="sd">            distribution_similarity combination strategy.</span>
 
-<span class="sd">        bin_strategy = str, (default=&#39;equal_width&#39;)</span>
+<span class="sd">        bin_strategy : str, (default=&#39;equal_width&#39;)</span>
 <span class="sd">            Method to compute the boundaries of the bins for to estimate the distributions of training and testing</span>
 <span class="sd">            bags when the distribution_similarity combination strategy is used. Possible values:</span>
-<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
-<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
-<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
+
+<span class="sd">            - &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">            - &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">            - &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
 <span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
 
@@ -116,12 +117,11 @@
 <span class="sd">                          where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`</span>
 <span class="sd">                          and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                          the training examples of each class.</span>
+<span class="sd">            - &#39;normal&#39;:  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
+<span class="sd">                         estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                         :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
-<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
-<span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
-
-<span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
+<span class="sd">                         :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
 
 <span class="sd">        distance_bags : str, (default=&#39;euclidean&#39;)</span>
 <span class="sd">            Distance used to compute distribution similarity</span>
@@ -231,9 +231,10 @@
 
 <span class="sd">            1) It generates the training bags using a Bag_Generator object</span>
 <span class="sd">            2) It fits the quantifiers of the ensemble.</span>
+<span class="sd">            </span>
 <span class="sd">            In the case of quantifiers derived from the class UsingClassifiers, there are 3 possible ways to do this:</span>
-<span class="sd">            - train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be</span>
-<span class="sd">              passed on ensemble_estimator</span>
+<span class="sd">            </span>
+<span class="sd">            - train a classifier for each bag. To do this an object from the class EnsembleOfClassifiers must be passed on ensemble_estimator</span>
 <span class="sd">            - train a classifier for the whole training set using an estimator from other class</span>
 <span class="sd">            - uses the predictions_train given in the predictions_train parameter (these predictions usually are</span>
 <span class="sd">              obtained applying an estimator over the whole training set like in the previous case)</span>

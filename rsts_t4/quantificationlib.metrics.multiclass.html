@@ -130,7 +130,7 @@ value (instead of zero), see correction parameter.</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}\)</span></p>
 </div></blockquote>
-<p>being l the number of classes</p>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -160,7 +160,7 @@ value (instead of zero), see correction parameter.</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}\)</span></p>
 </div></blockquote>
-<p>being l the number of classes.</p>
+<p>being <cite>l</cite> the number of classes.</p>
 <p>Also known as discrimination information, relative entropy or normalized cross-entropy
 (see [Esuli and Sebastiani 2010; Forman 2008]).
 KLD is a special case of the family of f-divergences</p>
@@ -188,7 +188,7 @@ KLD is a special case of the family of f-divergences</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |\)</span></p>
 </div></blockquote>
-<p>being l the number of classes</p>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -212,7 +212,7 @@ KLD is a special case of the family of f-divergences</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}\)</span></p>
 </div></blockquote>
-<p>being l the number of classes</p>
+<p>being <cite>l</cite>  the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -236,7 +236,7 @@ KLD is a special case of the family of f-divergences</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |\)</span></p>
 </div></blockquote>
-<p>being l the number of classes</p>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -260,7 +260,7 @@ KLD is a special case of the family of f-divergences</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2\)</span></p>
 </div></blockquote>
-<p>being l the number of classes</p>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -280,13 +280,13 @@ KLD is a special case of the family of f-divergences</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.probsymmetric">
 <span class="sig-name descname"><span class="pre">probsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#probsymmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.probsymmetric" title="Permalink to this definition">¶</a></dt>
-<dd><p>Probabilistic Symmetric</p>
+<dd><p>Probabilistic Symmetric distance</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.topsoe">
 <span class="sig-name descname"><span class="pre">topsoe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#topsoe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.topsoe" title="Permalink to this definition">¶</a></dt>
-<dd><p>Topsoe</p>
+<dd><p>Topsoe distance</p>
 </dd></dl>
 
 </section>

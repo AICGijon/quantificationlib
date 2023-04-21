@@ -183,13 +183,13 @@ instance of the class UsingClassifiers</p></li>
 <dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id2"><span class="problematic" id="id3">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
-CV_estimator) than y. In other cases, <a href="#id4"><span class="problematic" id="id5">y_ext_</span></a> == y.
-<a href="#id6"><span class="problematic" id="id7">y_ext_</span></a> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
+<a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
+CV_estimator) than y. In other cases, <a href="#id3"><span class="problematic" id="id4">y_ext_</span></a> == y.
+<a href="#id5"><span class="problematic" id="id6">y_ext_</span></a> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
 instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id8"><span class="problematic" id="id9">predictions_train_</span></a>), )</p>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id7"><span class="problematic" id="id8">predictions_train_</span></a>), )</p>
 </dd>
 </dl>
 </dd></dl>
@@ -211,39 +211,39 @@ instead of y</p>
 <dd><p>This function checks and corrects the prevalences of a quantifier based on the Frank and Hall decomposition
 that are inconsistent. It is used by FrankAndHallQuantifier.</p>
 <p>To obtain consistent prevalences, we need to ensure that the consecutive probabilities do not decrease.</p>
-<p class="rubric">Example</p>
-<p>Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
-Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
-Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Quantifier</span> <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">Quantifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">Quantifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
 <p>This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
 left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
 monotonically increasing (from left to right) and monotonically decreasing (from right to left),
 respectively. The average value is assigned to each group</p>
-<p class="rubric">Example</p>
-<p>{1}   {1-2}  {1-2-3}</p>
-<p>0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</p>
-<section id="lower-cumulative-prevalences-adjusting-from-right-to-left">
-<h2>0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)<a class="headerlink" href="#lower-cumulative-prevalences-adjusting-from-right-to-left" title="Permalink to this heading">¶</a></h2>
-<p>0.25  0.25   0.6    Averaged prevalences</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>   <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">}</span>  <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="p">}</span>
+<span class="mf">0.3</span>   <span class="mf">0.3</span>    <span class="mf">0.6</span>      <span class="n">Upper</span> <span class="n">cumulative</span> <span class="n">prevalences</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">left</span> <span class="n">to</span> <span class="n">right</span><span class="p">)</span>
+<span class="mf">0.2</span>   <span class="mf">0.2</span>    <span class="mf">0.6</span>      <span class="n">Lower</span> <span class="n">cumulative</span> <span class="n">prevalences</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">right</span> <span class="n">to</span> <span class="n">left</span><span class="p">)</span>
+<span class="o">----------------</span>
+<span class="mf">0.25</span>  <span class="mf">0.25</span>   <span class="mf">0.6</span>      <span class="n">Averaged</span> <span class="n">prevalences</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">param prevalences<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The prevalences of the binary quantifiers of a FrankAndHallQuantifier for a single dataset</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>prevalences</strong> (<em>array</em><em>, </em><em>shape</em><em>(</em><em>n_classes-1</em><em>, </em><em>)</em>) – The prevalences of the binary quantifiers of a FrankAndHallQuantifier for a single dataset</p>
 </dd>
-<dt class="field-even">type prevalences<span class="colon">:</span></dt>
-<dd class="field-even"><p>array, shape(n_classes-1, )</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>prevalences_ok</strong> – The corrected prevalences ensuring that do not decrease (from left to right)</p>
 </dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>prevalences_ok</strong> – The corrected prevalences ensuring that do not decrease (from left to right)</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>array, shape(n_classes-1)</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, shape(n_classes-1)</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
 <p>Sébastien Destercke, Gen Yang. Cautious Ordinal Classification by Binary Decomposition.
 Machine Learning and Knowledge Discovery in Databases - European Conference ECML/PKDD,
 Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
-</section>
 </dd></dl>
 
 <dl class="py method">
@@ -252,7 +252,7 @@ Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
 <dd><p>Fits all the quanfifiers of a FH decomposition</p>
 <p>First, the method fits the estimators (estimator_train and estimator_test) (if needed) using
 the <cite>fit</cite> method of its superclass</p>
-<p>Then, it creates (using <cite>deepcopy</cite>) the set on <a href="#id10"><span class="problematic" id="id11">quantifiers_</span></a> (n_classes-1 quantifiers) and fit them</p>
+<p>Then, it creates (using <cite>deepcopy</cite>) the set on <a href="#id9"><span class="problematic" id="id10">quantifiers_</span></a> (n_classes-1 quantifiers) and fit them</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -270,13 +270,15 @@ the <cite>fit</cite> method of its superclass</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregates the prevalences of the <a href="#id12"><span class="problematic" id="id13">quantifiers_</span></a> to compute the final prediction</p>
+<dd><p>Aggregates the prevalences of the <a href="#id11"><span class="problematic" id="id12">quantifiers_</span></a> to compute the final prediction</p>
 <p>In this kind of decomposition strategy it is important to ensure that the aggregated consecutive
 prevalencences do not decrease:</p>
-<p class="rubric">Example</p>
-<p>Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
-Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
-Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Quantifier</span> <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.3</span>
+<span class="n">Quantifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">Quantifier</span> <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span>   <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.6</span>
+</pre></div>
+</div>
 <p>This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
 left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
 monotonically increasing (from left to right) and monotonically decreasing (from right to left),
@@ -284,41 +286,39 @@ respectively. The average value is assigned to each group and the prevalence for
 <blockquote>
 <div><p>Prevalence({y_k}) = Prevalence({y_1,…,y_k}) - Prevalence({y_1,…,y_k-1})</p>
 </div></blockquote>
-<p class="rubric">Example</p>
-<p>{1}   {1-2}  {1-2-3}</p>
-<p>0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)</p>
-<section id="id1">
-<h2>0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h2>
-<p>0.25  0.25   0.6    Averaged prevalences</p>
-<p>Prevalence({1}) = 0.25
-Prevalence({2}) = Prevalence({1,2}) - Prevalence({1}) = 0.25 - 0 .25 = 0
-Prevalence({3}) = Prevalence({1,2,3}} - Prevalence({1,2}) = 0.6 - 0.25 = 0.35</p>
-<p>The last class is computed as 1 - the sum of prevalences for the rest of classes</p>
-<p>Prevalence({4}) = 1 - Prevalence({1,2,3}} = 1 - 0.6 = 0.4</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="mi">1</span><span class="p">}</span>   <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="p">}</span>  <span class="p">{</span><span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="p">}</span>
+<span class="mf">0.3</span>   <span class="mf">0.3</span>    <span class="mf">0.6</span>    <span class="n">Upper</span> <span class="n">cumulative</span> <span class="n">prevalences</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">left</span> <span class="n">to</span> <span class="n">right</span><span class="p">)</span>
+<span class="mf">0.2</span>   <span class="mf">0.2</span>    <span class="mf">0.6</span>    <span class="n">Lower</span> <span class="n">cumulative</span> <span class="n">prevalences</span> <span class="p">(</span><span class="n">adjusting</span> <span class="kn">from</span> <span class="nn">right</span> <span class="n">to</span> <span class="n">left</span><span class="p">)</span>
+<span class="o">----------------</span>
+<span class="mf">0.25</span>  <span class="mf">0.25</span>   <span class="mf">0.6</span>    <span class="n">Averaged</span> <span class="n">prevalences</span>
+
+<span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">Prevalence</span><span class="p">({</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">-</span> <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.25</span> <span class="o">-</span> <span class="mi">0</span> <span class="mf">.25</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">Prevalence</span><span class="p">({</span><span class="mi">3</span><span class="p">})</span> <span class="o">=</span> <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}}</span> <span class="o">-</span> <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">})</span> <span class="o">=</span> <span class="mf">0.6</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">=</span> <span class="mf">0.35</span>
+
+<span class="n">The</span> <span class="n">last</span> <span class="k">class</span> <span class="nc">is</span> <span class="n">computed</span> <span class="k">as</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">the</span> <span class="nb">sum</span> <span class="n">of</span> <span class="n">prevalences</span> <span class="k">for</span> <span class="n">the</span> <span class="n">rest</span> <span class="n">of</span> <span class="n">classes</span>
+
+<span class="n">Prevalence</span><span class="p">({</span><span class="mi">4</span><span class="p">})</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">Prevalence</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}}</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">0.6</span> <span class="o">=</span> <span class="mf">0.4</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
-<dt class="field-odd">param X<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Data</p>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – Predictions for the testing bag</p></li>
+</ul>
 </dd>
-<dt class="field-even">type X<span class="colon">:</span></dt>
-<dd class="field-even"><p>(sparse) array-like, shape (n_examples, n_features)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
 </dd>
-<dt class="field-odd">param predictions_test<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Predictions for the testing bag</p>
-</dd>
-<dt class="field-even">type predictions_test<span class="colon">:</span></dt>
-<dd class="field-even"><p>ndarray, shape (n_examples, n_classes) (default=None)</p>
-</dd>
-<dt class="field-odd">returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>prevalences</strong> – Contains the predicted prevalence for each class</p>
-</dd>
-<dt class="field-even">rtype<span class="colon">:</span></dt>
-<dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray, shape(n_classes, )</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
 <p>Destercke, S., &amp; Yang, G. (2014, September). Cautious ordinal classification by binary decomposition.
 In Joint European Conference on Machine Learning and Knowledge Discovery in Databases (pp. 323-337).</p>
-</section>
 </dd></dl>
 
 </dd></dl>
