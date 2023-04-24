@@ -82,11 +82,11 @@ testing set and to compute the distribution of the whole testing set</p></li>
 <li><p><strong>n_bins</strong> (<em>int</em>) – Number of bins to compute the PDFs</p></li>
 <li><p><strong>distance</strong> (<em>str</em><em>, </em><em>representing the distance function</em><em> (</em><em>default='HD'</em><em>)</em>) – It is the name of the distance used to compute the difference between the mixture of the training
 distribution and the testing distribution</p></li>
-<li><p><strong>method</strong> (<em>str</em>) – <p>‘full_probabilistic’ predictions for training and testing set contain a probability for each class
-‘winner_node’ this method is only applicable for DDAGClassifier, and predictions contain just the</p>
-<blockquote>
-<div><p>probabilities for the two consecutive classes of the winner node previous to the leaves</p>
-</div></blockquote>
+<li><p><strong>method</strong> (<em>str</em>) – <ul>
+<li><p>‘full_probabilistic’: predictions for training and testing set contain a probability for each class</p></li>
+<li><p>’winner_node’: (this method is only applicable for DDAGClassifier) predictions contain just
+the probabilities for the two consecutive classes of the winner node previous to the leaves</p></li>
+</ul>
 </p></li>
 <li><p><strong>tol</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-05</em><em>)</em>) – The precision of the solution when search is used to compute the prevalence</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
@@ -428,7 +428,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>

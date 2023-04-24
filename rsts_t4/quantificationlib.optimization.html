@@ -69,11 +69,10 @@ estimated prevalence given a testing bag</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>a</strong> (<em>array, shape (n_classes, )</em>) – Term a for solving optimization problems using <cite>quadprog.solve_qp</cite></p></li>
-<li><p><em>See references below for further details</em></p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>a</strong> – Term a for solving optimization problems using <cite>quadprog.solve_qp</cite></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array, shape (n_classes, )</p>
 </dd>
 </dl>
 <p class="rubric">References</p>
@@ -103,7 +102,6 @@ and Systems 99, 1 (2016), 176–186.</p>
 <li><p><strong>G</strong> (<em>array, shape (n_classes - 1, n_classes - 1)</em>)</p></li>
 <li><p><strong>C</strong> (<em>array, shape (n_classes - 1, n_constraints)</em>) – n_constraints will be equal to the number of classes (n_classes)</p></li>
 <li><p><strong>b</strong> (<em>array, shape (n_constraints,)</em>)</p></li>
-<li><p><em>See references below for further details</em></p></li>
 </ul>
 </p>
 </dd>
@@ -119,8 +117,29 @@ and Systems 99, 1 (2016), 176–186.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.compute_l2_param_train">
 <span class="sig-name descname"><span class="pre">compute_l2_param_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_l2_param_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_l2_param_train" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes params related to the train distribution for solving PDF optimization problems using
-L2 loss function</p>
+<dd><p>Computes params related to the train distribution for solving QP using L2 loss function.
+For instance, this library  uses quadprog.solve_qp that solves the following kind of problems:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Minimize</span>     <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="n">x</span><span class="o">^</span><span class="n">T</span> <span class="n">G</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span><span class="o">^</span><span class="n">T</span> <span class="n">x</span>
+<span class="n">Subject</span> <span class="n">to</span>   <span class="n">C</span><span class="o">.</span><span class="n">T</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">b</span>
+
+<span class="n">Thus</span><span class="p">,</span> <span class="n">the</span> <span class="n">values</span> <span class="n">of</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">b</span> <span class="n">must</span> <span class="n">be</span> <span class="n">the</span> <span class="n">following</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">train_distrib</span><span class="o">.</span><span class="n">T</span> <span class="o">*</span> <span class="n">train_distrib</span>
+<span class="n">G</span> <span class="n">shape</span> <span class="p">(</span><span class="n">n_classes</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="p">[[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>  <span class="mi">1</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>  <span class="mi">0</span><span class="p">],</span>
+     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span><span class="o">..</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+     <span class="o">...</span>
+     <span class="p">[</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">..</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">T</span>
+<span class="n">C</span> <span class="n">shape</span> <span class="p">(</span><span class="n">n_classes</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">)</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">b</span> <span class="n">shape</span> <span class="p">(</span><span class="n">n_classes</span><span class="p">,</span> <span class="p">)</span>
+
+<span class="n">This</span> <span class="n">function</span> <span class="n">computes</span> <span class="ow">and</span> <span class="n">returns</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span> <span class="ow">and</span> <span class="n">b</span><span class="o">.</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -131,21 +150,10 @@ L2 loss function</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>G</strong> (<em>array, shape (n_classes, n_classes)</em>)</p></li>
-<li><p><strong>C</strong> (<em>array, shape (n_classes, n_constraints)</em>) – n_constraints will be n_classes + 1  (n_classes constraints to guarantee that prevalences_i&gt;=0, and
-an additional constraints for ensuring that sum(prevalences)==1</p></li>
-<li><p><strong>b</strong> (<em>array, shape (n_constraints,)</em>)</p></li>
-<li><p><em>quadprog.solve_qp solves the following kind of problems</em></p></li>
-<li><p><em>Minimize     1/2 x^T G x  a^T x</em></p></li>
-<li><p><em>Subject to   C.T x &gt;= b</em></p></li>
-<li><p><em>Thus, the values of G, C and b must be the following</em></p></li>
-<li><p><em>G = train_distrib.T train_distrib</em></p></li>
-<li><p><em>C = [[ 1, 1, …,  1],</em> – [ 1, 0, …,  0],
-[ 0, 1, 0,.., 0],
-…
-[ 0, 0, ..,0, 1]].T</p></li>
-<li><p><em>C shape (n_classes+1, n_classes)</em></p></li>
-<li><p><em>b = [1, 0, …, 0]</em></p></li>
-<li><p><em>b shape (n_classes, )</em></p></li>
+<li><p><strong>C</strong> (<em>array, shape (n_classes, n_classes+1)</em>) – The number of columns is equal to the number of the constraints of the optimization
+problem. It must be n_classes + 1: n_classes constraints to guarantee that
+prevalences_i&gt;=0, and an additional constraint for ensuring that sum(prevalences)==1</p></li>
+<li><p><strong>b</strong> (<em>array, shape (n_classes + 1,)</em>) – The size of b corresponds to the number of constraints of the optimization problem.</p></li>
 </ul>
 </p>
 </dd>
@@ -163,10 +171,12 @@ whether a matrix is positive definite or not</p>
 <dd class="field-odd"><p><strong>m</strong> (<em>symmetric matrix</em><em>, </em><em>typically the shape is</em><em> (</em><em>n_classes</em><em>, </em><em>n_classes</em><em>)</em>) – The matrix to be factored. Only the diagonal and upper triangle are used</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>k</strong> (<em>int,</em>) – == 0  m is positive definite and the factorization has been completed
-&gt;  0  the leading minor of order k is not positive definite</p></li>
-<li><p><strong>r</strong> (<em>array, an upper triangular matrix</em>) – When k==0, the factorization is complete and r.T.dot(r) == m
+<dd class="field-even"><p><ul>
+<li><p><strong>k</strong> (<em>int,</em>) – This value is:</p>
+<p>== 0  if m is positive definite and the factorization has been completed</p>
+<p>&gt;  0  when the leading minor of order k is not positive definite</p>
+</li>
+<li><p><strong>r</strong> (<em>array, an upper triangular matrix</em>) – When k==0, the factorization is complete and <cite>r.T.dot(r) == m</cite>.
 The strict lower triangle is unaltered (it is equal to the strict lower triangle of matrix m), so it
 could be different from 0.</p></li>
 </ul>
@@ -198,8 +208,10 @@ returns 0 the matrix is positive definite.</p>
 <p>A Python/Numpy port of John D’Errico’s <cite>nearestSPD</cite> MATLAB code [1], which credits [2].</p>
 <p class="rubric">References</p>
 <p>[1] <a class="reference external" href="https://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd">https://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd</a></p>
-<p>[2] N.J. Higham, “Computing a nearest symmetric positive semidefinite
-matrix” (1988): <a class="reference external" href="https://doi.org/10.1016/0024-3795(88)90223-6">https://doi.org/10.1016/0024-3795(88)90223-6</a></p>
+<dl class="simple">
+<dt>[2] N.J. Higham, “Computing a nearest symmetric positive semidefinite matrix” (1988):</dt><dd><p><a class="reference external" href="https://doi.org/10.1016/0024-3795(88)90223-6">https://doi.org/10.1016/0024-3795(88)90223-6</a></p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -217,8 +229,6 @@ we have to add 1-prevalences.sum() which it is the prevalence of the last class<
 <li><p><strong>C</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>n_constraints</em><em>)</em>) – n_constraints will be n_classes + 1</p></li>
 <li><p><strong>b</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_constraints</em><em>,</em><em>)</em>) – </p></li>
 <li><p><strong>a</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>)</em>) – </p></li>
-<li><p><strong>G</strong> – </p></li>
-<li><p><strong>compute_ed_param_test</strong> (<em>C and b are computed by compute_ed_param_train and a by</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -228,6 +238,8 @@ we have to add 1-prevalences.sum() which it is the prevalence of the last class<
 <dd class="field-odd"><p>array, shape=(n_classes, )</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>G, C and b are computed by <cite>compute_ed_param_train</cite> and a by <cite>compute_ed_param_test</cite></p>
 <p class="rubric">References</p>
 <p>Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,
 Juan José del Coz: An analysis of quantification methods based on matching distributions</p>
@@ -239,7 +251,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_hd">
 <span class="sig-name descname"><span class="pre">solve_hd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ECOS'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_hd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_hd" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves the optimization problem for PDF methods using Hellinger Distance</p>
+<dd><p>Solves the optimization problem for DF methods using Hellinger Distance</p>
 <p>This method just uses cvxpy library</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -251,7 +263,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 the rest testing bags, a Problem object is passed here to allow a warm start. This accelerates the solving
 process.</p></li>
 <li><p><strong>solver</strong> (<em>str</em><em>, </em><em>(</em><em>default='ECOS'</em><em>)</em>) – The solver used to solve the optimization problem. Here ‘ECOS’ is used. If another solver is prefered,
-you may need to install additional libraries</p></li>
+you may need to install additional libraries.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -266,21 +278,26 @@ you may need to install additional libraries</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_l1">
 <span class="sig-name descname"><span class="pre">solve_l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves AC, PAC, PDF and Friedman optimization problems for L1 loss function</p>
-<p>min   <a href="#id1"><span class="problematic" id="id2">|train_distrib * prevalences - test_distrib|</span></a>
-s.t.  prevalences_i &gt;=0</p>
+<dd><p>Solves AC, PAC, DF and Friedman optimization problems for L1 loss function</p>
 <blockquote>
-<div><p>sum prevalences_i = 1</p>
+<div><p>min   <a href="#id1"><span class="problematic" id="id2">|train_distrib * prevalences - test_distrib|</span></a></p>
+<p>s.t.  prevalences_i &gt;=0, sum prevalences_i = 1</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>train_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – Represents the distribution of each class in the training set
-PDF: shape (n_bins * n_classes, n_classes)
-AC, PAC, Friedman: shape (n_classes, n_classes)</p></li>
-<li><p><strong>test_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – Represents the distribution of the testing set
-PDF: shape shape (n_bins * n_classes, 1)
-AC, PAC, Friedman: shape (n_classes, 1)</p></li>
+<li><p><strong>train_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – <p>Represents the distribution of each class in the training set</p>
+<ul>
+<li><p>DF: shape (n_bins * n_classes, n_classes)</p></li>
+<li><p>AC, PAC, Friedman: shape (n_classes, n_classes)</p></li>
+</ul>
+</p></li>
+<li><p><strong>test_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – <p>Represents the distribution of the testing set</p>
+<ul>
+<li><p>DF: shape shape (n_bins * n_classes, 1)</p></li>
+<li><p>AC, PAC, Friedman: shape (n_classes, 1)</p></li>
+</ul>
+</p></li>
 <li><p><strong>n_classes</strong> (<em>int</em>) – Number of classes</p></li>
 <li><p><strong>problem</strong> (<em>a cvxpy Problem object</em><em> (</em><em>default=None</em><em>)</em>) – The first time a problem is solved (this corresponds to the first testing bag) this parameter is None. For
 the rest testing bags, a Problem object is passed here to allow a warm start. This accelerates the solving
@@ -303,37 +320,44 @@ you need to install additional libraries</p></li>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_l2">
 <span class="sig-name descname"><span class="pre">solve_l2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l2" title="Permalink to this definition">¶</a></dt>
-<dd><p>Solves AC, PAC, PDF and Friedman optimization problems for L2 loss function</p>
-<p>min    (test_distrib - train_distrib * prevalences).T (test_distrib - train_distrib * prevalences)
-s.t.   prevalences_i &gt;=0</p>
+<dd><p>Solves AC, PAC, DF and Friedman optimization problems for L2 loss function</p>
 <blockquote>
-<div><p>sum prevalences_i = 1</p>
+<div><p>min    (test_distrib - train_distrib * prevalences).T * (test_distrib - train_distrib * prevalences)</p>
+<p>s.t.   prevalences_i &gt;=0,  sum prevalences_i = 1</p>
 </div></blockquote>
 <p>Expanding the objective function, we obtain:</p>
-<p>prevalences.T train_distrib.T train_distrib prevalences
-- 2 prevalences train_distrib.T test_distrib + test_distrib.T test_distrib</p>
+<blockquote>
+<div><p><cite>prevalences.T * train_distrib.T * train_distrib * prevalences</cite></p>
+<p><cite>- 2 * prevalences * train_distrib.T * test_distrib + test_distrib.T * test_distrib</cite></p>
+</div></blockquote>
 <p>Notice that the last term is constant w.r.t prevalences.</p>
-<p>Let G = 2 train_distrib.T train_distrib  and a = 2 * train_distrib.T test_distrib, we can use directly
+<p>Let <cite>G = 2 * train_distrib.T * train_distrib</cite>  and <cite>a = 2 * train_distrib.T * test_distrib</cite>, we can use directly
 quadprog.solve_qp because it solves the following kind of problems:</p>
-<p>Minimize     1/2 x^T G x - a^T x
-Subject to   C.T x &gt;= b</p>
-<p><cite>solve_l2</cite> just computes the term a, shape (n_classes,1), and then calls quadprog.solve_qp.
-G, C and b were computed by <cite>compute_l2_param_train</cite> before, in the ‘fit’ method` of the PDF/Friedman object.
+<blockquote>
+<div><p>Minimize     1/2 x^T G x - a^T x</p>
+<p>Subject to   C.T x &gt;= b</p>
+</div></blockquote>
+<p><cite>solve_l2</cite> just computes the term a, shape (n_classes,1), and then calls <cite>quadprog.solve_qp</cite>.
+G, C and b were computed by <cite>compute_l2_param_train</cite> before, in the ‘fit’ method` of the DF/Friedman object.
 quadprog is used here because it is faster than cvxpy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>train_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – Represents the distribution of each class in the training set
-PDF: shape (n_bins * n_classes, n_classes)
-AC, PAC Friedman: shape (n_classes, n_classes)</p></li>
-<li><p><strong>test_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – Represents the distribution of the testing set
-PDF: shape shape (n_bins * n_classes, 1)
-AC, PAC, Friedman: shape (n_classes, 1)</p></li>
+<li><p><strong>train_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – <p>Represents the distribution of each class in the training set</p>
+<ul>
+<li><p>DF: shape (n_bins * n_classes, n_classes)</p></li>
+<li><p>AC, PAC Friedman: shape (n_classes, n_classes)</p></li>
+</ul>
+</p></li>
+<li><p><strong>test_distrib</strong> (<em>array</em><em>, </em><em>shape depends on the optimization problem</em>) – <p>Represents the distribution of the testing set</p>
+<ul>
+<li><p>DF: shape shape (n_bins * n_classes, 1)</p></li>
+<li><p>AC, PAC, Friedman: shape (n_classes, 1)</p></li>
+</ul>
+</p></li>
 <li><p><strong>G</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>n_classes</em><em>)</em>) – </p></li>
 <li><p><strong>C</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>n_constraints</em><em>)</em>) – n_constraints will be n_classes + 1</p></li>
 <li><p><strong>b</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_constraints</em><em>,</em><em>)</em>) – </p></li>
-<li><p><strong>G</strong> – </p></li>
-<li><p><strong>method</strong> (<em>C and b are computed by compute_l2_param_train in the 'fit'</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -343,6 +367,8 @@ AC, PAC, Friedman: shape (n_classes, 1)</p></li>
 <dd class="field-odd"><p>array, shape=(n_classes, )</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>G, C and b are computed by <cite>compute_l2_param_train</cite> in the ‘fit’ method</p>
 </dd></dl>
 
 </section>
@@ -425,7 +451,7 @@ AC, PAC, Friedman: shape (n_classes, 1)</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>

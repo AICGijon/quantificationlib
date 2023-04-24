@@ -72,7 +72,7 @@
 <span class="sd">        1) Two estimators are used to classify the examples of the training set and the testing set in order to</span>
 <span class="sd">           compute the confusion matrix of both sets. Estimators can be already trained</span>
 
-<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful</span>
+<span class="sd">        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful</span>
 <span class="sd">           for synthetic/artificial experiments</span>
 
 <span class="sd">        The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**</span>
@@ -180,7 +180,7 @@
 
 <span class="sd">            predictions_train : ndarray, shape (n_examples, ) or (n_examples, n_classes)</span>
 <span class="sd">                Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are</span>
-<span class="sd">                converted to crisp values by `super().fit()</span>
+<span class="sd">                converted to crisp values by `super().fit()`</span>
 
 <span class="sd">            Raises</span>
 <span class="sd">            ------</span>
@@ -219,9 +219,8 @@
 <span class="sd">            After that, the distribution of such predictions are computed and stored in test_distrib_ attribute</span>
 <span class="sd">            Finally, the prevalences are computed solving the following optimization problem:</span>
 
-<span class="sd">                      Min   | train_distrib_ * prevalences -  test_distrib_ |</span>
-<span class="sd">                      s.t.  sum(prevalences) = 1</span>
-<span class="sd">                            prevalecences_i &gt;= 0</span>
+<span class="sd">                      Min   | train_distrib_ * prevalences -  test_distrib_ | </span>
+<span class="sd">                      s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -229,7 +228,7 @@
 <span class="sd">                Testing bag</span>
 
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
-<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba method)</span>
+<span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
 
 <span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
@@ -318,7 +317,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>

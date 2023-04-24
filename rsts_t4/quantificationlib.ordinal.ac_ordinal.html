@@ -64,7 +64,7 @@ confusion matrix) and the prevalences observed in the testing distribution using
 <ol class="arabic simple">
 <li><p>Two estimators are used to classify the examples of the training set and the testing set in order to
 compute the confusion matrix of both sets. Estimators can be already trained</p></li>
-<li><p>You can directly provide the predictions for the examples in the <cite>fit</cite>/<a href="#id1"><span class="problematic" id="id2">`</span></a>predict methods. This is useful
+<li><p>You can directly provide the predictions for the examples in the <cite>fit</cite>/<cite>predict</cite> methods. This is useful
 for synthetic/artificial experiments</p></li>
 </ol>
 <p>The idea in both cases is to guarantee that all methods based on distribution matching are using <strong>exactly</strong>
@@ -141,7 +141,7 @@ set and to obtain their predictions</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.ordinal.ac_ordinal.ACOrdinal.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.ordinal.ac_ordinal.ACOrdinal.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id7"><span class="problematic" id="id8">predictions_test_</span></a> contains crisp predictions</p>
+<dd><p>This means that <a href="#id1"><span class="problematic" id="id2">predictions_test_</span></a> contains crisp predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, False</p>
@@ -164,12 +164,12 @@ set and to obtain their predictions</p></li>
 <dt class="sig sig-object py" id="quantificationlib.ordinal.ac_ordinal.ACOrdinal.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.ordinal.ac_ordinal.ACOrdinal.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id9"><span class="problematic" id="id10">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id11"><span class="problematic" id="id12">y_ext_</span></a> == y.
-<a href="#id13"><span class="problematic" id="id14">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<a href="#id3"><span class="problematic" id="id4">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <a href="#id5"><span class="problematic" id="id6">y_ext_</span></a> == y.
+<a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape(len(<a href="#id9"><span class="problematic" id="id10">predictions_train_</span></a>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -191,7 +191,7 @@ than y. In other cases, <a href="#id11"><span class="problematic" id="id12">y_ex
 <dd><p>The cumulative distribution for each class in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape (<a href="#id17"><span class="problematic" id="id18">n_classes_</span></a>, n_classes)</p>
+<dd class="field-odd"><p>ndarray, shape (<a href="#id11"><span class="problematic" id="id12">n_classes_</span></a>, n_classes)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -202,7 +202,7 @@ than y. In other cases, <a href="#id11"><span class="problematic" id="id12">y_ex
 <dd><p>The cumulative distribution for the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape (<a href="#id19"><span class="problematic" id="id20">n_classes_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape (<a href="#id13"><span class="problematic" id="id14">n_classes_</span></a>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -243,9 +243,9 @@ predictions_train/predictions_test are used</p>
 <dt class="sig sig-object py" id="quantificationlib.ordinal.ac_ordinal.ACOrdinal.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ordinal/ac_ordinal.html#ACOrdinal.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ordinal.ac_ordinal.ACOrdinal.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id21"><span class="problematic" id="id22">predictions_train_</span></a> (crisp values) if needed. Both operations are
+testing set (if needed), and 2) computes <a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a> (crisp values) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
-Finally the method computes the confusion matrix of the training set using <a href="#id23"><span class="problematic" id="id24">predictions_train_</span></a>, and
+Finally the method computes the confusion matrix of the training set using <a href="#id17"><span class="problematic" id="id18">predictions_train_</span></a>, and
 the training distribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -253,7 +253,7 @@ the training distribution</p>
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
 <li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
 <li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>) or </em><em>(</em><em>n_examples</em><em>, </em><em>n_classes</em><em>)</em>) – Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are
-converted to crisp values by <a href="#id3"><span class="problematic" id="id4">`</span></a>super().fit()</p></li>
+converted to crisp values by <cite>super().fit()</cite></p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
@@ -266,23 +266,20 @@ converted to crisp values by <a href="#id3"><span class="problematic" id="id4">`
 <dt class="sig sig-object py" id="quantificationlib.ordinal.ac_ordinal.ACOrdinal.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ordinal/ac_ordinal.html#ACOrdinal.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ordinal.ac_ordinal.ACOrdinal.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id25"><span class="problematic" id="id26">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <a href="#id19"><span class="problematic" id="id20">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
-<p>After that, the distribution of such predictions are computed and stored in <a href="#id27"><span class="problematic" id="id28">test_distrib_</span></a> attribute
+<p>After that, the distribution of such predictions are computed and stored in <a href="#id21"><span class="problematic" id="id22">test_distrib_</span></a> attribute
 Finally, the prevalences are computed solving the following optimization problem:</p>
 <blockquote>
-<div><p>Min   | <a href="#id29"><span class="problematic" id="id30">train_distrib_</span></a> * prevalences -  <a href="#id31"><span class="problematic" id="id32">test_distrib_</span></a> |
-s.t.  sum(prevalences) = 1</p>
-<blockquote>
-<div><p>prevalecences_i &gt;= 0</p>
-</div></blockquote>
+<div><p>Min   | <a href="#id23"><span class="problematic" id="id24">train_distrib_</span></a> * prevalences -  <a href="#id25"><span class="problematic" id="id26">test_distrib_</span></a> |
+s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
-<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <a href="#id5"><span class="problematic" id="id6">`</span></a>predict_proba method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id33"><span class="problematic" id="id34">predictions_test_</span></a> and used.
+<li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
+<p>If predictions_test is not None they are copied on <a href="#id27"><span class="problematic" id="id28">predictions_test_</span></a> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -391,7 +388,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>

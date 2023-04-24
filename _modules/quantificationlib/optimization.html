@@ -64,23 +64,24 @@
 <span class="c1">#  Functions for solving optimization problems using CVXPY, loss functions: L1, HD</span>
 <span class="c1">############</span>
 <div class="viewcode-block" id="solve_l1"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l1">[docs]</a><span class="k">def</span> <span class="nf">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, PDF and Friedman optimization problems for L1 loss function</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, DF and Friedman optimization problems for L1 loss function</span>
 
-<span class="sd">        min   |train_distrib * prevalences - test_distrib|</span>
-<span class="sd">        s.t.  prevalences_i &gt;=0</span>
-<span class="sd">              sum prevalences_i = 1</span>
+<span class="sd">            min   |train_distrib * prevalences - test_distrib|      \n</span>
+<span class="sd">            s.t.  prevalences_i &gt;=0, sum prevalences_i = 1</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        train_distrib : array, shape depends on the optimization problem</span>
 <span class="sd">            Represents the distribution of each class in the training set</span>
-<span class="sd">            PDF: shape (n_bins * n_classes, n_classes)</span>
-<span class="sd">            AC, PAC, Friedman: shape (n_classes, n_classes)</span>
+<span class="sd">            </span>
+<span class="sd">            - DF: shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            - AC, PAC, Friedman: shape (n_classes, n_classes)</span>
 
 <span class="sd">        test_distrib : array, shape depends on the optimization problem</span>
 <span class="sd">            Represents the distribution of the testing set</span>
-<span class="sd">            PDF: shape shape (n_bins * n_classes, 1)</span>
-<span class="sd">            AC, PAC, Friedman: shape (n_classes, 1)</span>
+<span class="sd">            </span>
+<span class="sd">            - DF: shape shape (n_bins * n_classes, 1)</span>
+<span class="sd">            - AC, PAC, Friedman: shape (n_classes, 1)</span>
 
 <span class="sd">        n_classes : int</span>
 <span class="sd">            Number of classes</span>
@@ -128,7 +129,7 @@
 
 
 <div class="viewcode-block" id="solve_hd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_hd">[docs]</a><span class="k">def</span> <span class="nf">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;ECOS&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for PDF methods using Hellinger Distance</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for DF methods using Hellinger Distance</span>
 
 <span class="sd">        This method just uses cvxpy library</span>
 
@@ -150,7 +151,7 @@
 
 <span class="sd">        solver : str, (default=&#39;ECOS&#39;)</span>
 <span class="sd">            The solver used to solve the optimization problem. Here &#39;ECOS&#39; is used. If another solver is prefered,</span>
-<span class="sd">            you may need to install additional libraries</span>
+<span class="sd">            you may need to install additional libraries.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -179,40 +180,41 @@
 <span class="c1">#  Functions for solving optimization problems using QUADPROG (L2 loss function)</span>
 <span class="c1">############</span>
 <div class="viewcode-block" id="solve_l2"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l2">[docs]</a><span class="k">def</span> <span class="nf">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, PDF and Friedman optimization problems for L2 loss function</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, DF and Friedman optimization problems for L2 loss function</span>
 
-<span class="sd">        min    (test_distrib - train_distrib * prevalences).T (test_distrib - train_distrib * prevalences)</span>
-<span class="sd">        s.t.   prevalences_i &gt;=0</span>
-<span class="sd">               sum prevalences_i = 1</span>
+<span class="sd">            min    (test_distrib - train_distrib * prevalences).T * (test_distrib - train_distrib * prevalences) \n</span>
+<span class="sd">            s.t.   prevalences_i &gt;=0,  sum prevalences_i = 1</span>
 
 <span class="sd">        Expanding the objective function, we obtain:</span>
 
-<span class="sd">        prevalences.T train_distrib.T train_distrib prevalences</span>
-<span class="sd">        - 2 prevalences train_distrib.T test_distrib + test_distrib.T test_distrib</span>
+<span class="sd">            `prevalences.T * train_distrib.T * train_distrib * prevalences`                       \n</span>
+<span class="sd">            `- 2 * prevalences * train_distrib.T * test_distrib + test_distrib.T * test_distrib`</span>
 
 <span class="sd">        Notice that the last term is constant w.r.t prevalences.</span>
 
-<span class="sd">        Let G = 2 train_distrib.T train_distrib  and a = 2 * train_distrib.T test_distrib, we can use directly</span>
+<span class="sd">        Let `G = 2 * train_distrib.T * train_distrib`  and `a = 2 * train_distrib.T * test_distrib`, we can use directly</span>
 <span class="sd">        quadprog.solve_qp because it solves the following kind of problems:</span>
 
-<span class="sd">        Minimize     1/2 x^T G x - a^T x</span>
-<span class="sd">        Subject to   C.T x &gt;= b</span>
+<span class="sd">            Minimize     1/2 x^T G x - a^T x    \n</span>
+<span class="sd">            Subject to   C.T x &gt;= b</span>
 
-<span class="sd">        `solve_l2` just computes the term a, shape (n_classes,1), and then calls quadprog.solve_qp.</span>
-<span class="sd">        G, C and b were computed by `compute_l2_param_train` before, in the &#39;fit&#39; method` of the PDF/Friedman object.</span>
+<span class="sd">        `solve_l2` just computes the term a, shape (n_classes,1), and then calls `quadprog.solve_qp`.</span>
+<span class="sd">        G, C and b were computed by `compute_l2_param_train` before, in the &#39;fit&#39; method` of the DF/Friedman object.</span>
 <span class="sd">        quadprog is used here because it is faster than cvxpy.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        train_distrib : array, shape depends on the optimization problem</span>
 <span class="sd">            Represents the distribution of each class in the training set</span>
-<span class="sd">            PDF: shape (n_bins * n_classes, n_classes)</span>
-<span class="sd">            AC, PAC Friedman: shape (n_classes, n_classes)</span>
+
+<span class="sd">            - DF: shape (n_bins * n_classes, n_classes)</span>
+<span class="sd">            - AC, PAC Friedman: shape (n_classes, n_classes)</span>
 
 <span class="sd">        test_distrib : array, shape depends on the optimization problem</span>
 <span class="sd">            Represents the distribution of the testing set</span>
-<span class="sd">            PDF: shape shape (n_bins * n_classes, 1)</span>
-<span class="sd">            AC, PAC, Friedman: shape (n_classes, 1)</span>
+
+<span class="sd">            - DF: shape shape (n_bins * n_classes, 1)</span>
+<span class="sd">            - AC, PAC, Friedman: shape (n_classes, 1)</span>
 
 <span class="sd">        G : array, shape (n_classes, n_classes)</span>
 
@@ -221,12 +223,15 @@
 
 <span class="sd">        b : array, shape (n_constraints,)</span>
 
-<span class="sd">        G, C and b are computed by `compute_l2_param_train` in the &#39;fit&#39; method</span>
-
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        prevalences : array, shape=(n_classes, )</span>
 <span class="sd">           Vector containing the predicted prevalence for each class</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        G, C and b are computed by `compute_l2_param_train` in the &#39;fit&#39; method</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">train_distrib</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">test_distrib</span><span class="p">)</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
@@ -235,8 +240,28 @@
 
 
 <div class="viewcode-block" id="compute_l2_param_train"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_l2_param_train">[docs]</a><span class="k">def</span> <span class="nf">compute_l2_param_train</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving PDF optimization problems using</span>
-<span class="sd">        L2 loss function</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving QP using L2 loss function. </span>
+<span class="sd">        For instance, this library  uses quadprog.solve_qp that solves the following kind of problems::</span>
+
+<span class="sd">            Minimize     1/2 x^T G x - a^T x</span>
+<span class="sd">            Subject to   C.T x &gt;= b</span>
+
+<span class="sd">            Thus, the values of G, C and b must be the following</span>
+
+<span class="sd">            G = train_distrib.T * train_distrib</span>
+<span class="sd">            G shape (n_classes, n_classes)</span>
+
+<span class="sd">            C = [[ 1, 1, ...,  1],</span>
+<span class="sd">                 [ 1, 0, ...,  0],</span>
+<span class="sd">                 [ 0, 1, 0,.., 0],</span>
+<span class="sd">                 ...</span>
+<span class="sd">                 [ 0, 0, ..,0, 1]].T</span>
+<span class="sd">            C shape (n_classes+1, n_classes)</span>
+<span class="sd">            </span>
+<span class="sd">            b = [1, 0, ..., 0]</span>
+<span class="sd">            b shape (n_classes, )        </span>
+
+<span class="sd">            This function computes and returns G, C and b.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -250,28 +275,14 @@
 <span class="sd">        -------</span>
 <span class="sd">        G : array, shape (n_classes, n_classes)</span>
 
-<span class="sd">        C : array, shape (n_classes, n_constraints)</span>
-<span class="sd">            n_constraints will be n_classes + 1  (n_classes constraints to guarantee that prevalences_i&gt;=0, and</span>
-<span class="sd">            an additional constraints for ensuring that sum(prevalences)==1</span>
+<span class="sd">        C : array, shape (n_classes, n_classes+1)</span>
+<span class="sd">            The number of columns is equal to the number of the constraints of the optimization </span>
+<span class="sd">            problem. It must be n_classes + 1: n_classes constraints to guarantee that </span>
+<span class="sd">            prevalences_i&gt;=0, and an additional constraint for ensuring that sum(prevalences)==1</span>
 
-<span class="sd">        b : array, shape (n_constraints,)</span>
+<span class="sd">        b : array, shape (n_classes + 1,)</span>
+<span class="sd">            The size of b corresponds to the number of constraints of the optimization problem.</span>
 
-<span class="sd">        quadprog.solve_qp solves the following kind of problems:</span>
-
-<span class="sd">        Minimize     1/2 x^T G x  a^T x</span>
-<span class="sd">        Subject to   C.T x &gt;= b</span>
-
-<span class="sd">        Thus, the values of G, C and b must be the following</span>
-
-<span class="sd">        G = train_distrib.T train_distrib</span>
-<span class="sd">        C = [[ 1, 1, ...,  1],</span>
-<span class="sd">             [ 1, 0, ...,  0],</span>
-<span class="sd">             [ 0, 1, 0,.., 0],</span>
-<span class="sd">             ...</span>
-<span class="sd">             [ 0, 0, ..,0, 1]].T</span>
-<span class="sd">        C shape (n_classes+1, n_classes)</span>
-<span class="sd">        b = [1, 0, ..., 0]</span>
-<span class="sd">        b shape (n_classes, )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">G</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">train_distrib</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">is_pd</span><span class="p">(</span><span class="n">G</span><span class="p">):</span>
@@ -296,8 +307,8 @@
 <span class="sd">        ----------</span>
 <span class="sd">        [1] https://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd</span>
 
-<span class="sd">        [2] N.J. Higham, &quot;Computing a nearest symmetric positive semidefinite</span>
-<span class="sd">        matrix&quot; (1988): https://doi.org/10.1016/0024-3795(88)90223-6</span>
+<span class="sd">        [2] N.J. Higham, &quot;Computing a nearest symmetric positive semidefinite matrix&quot; (1988):</span>
+<span class="sd">            https://doi.org/10.1016/0024-3795(88)90223-6</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">B</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span> <span class="o">+</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svd</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
@@ -344,12 +355,14 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        k : int,</span>
-<span class="sd">            == 0  m is positive definite and the factorization has been completed</span>
-<span class="sd">            &gt;  0  the leading minor of order k is not positive definite</span>
+<span class="sd">        k : int, </span>
+<span class="sd">            This value is:</span>
+
+<span class="sd">            == 0  if m is positive definite and the factorization has been completed  \n</span>
+<span class="sd">            &gt;  0  when the leading minor of order k is not positive definite</span>
 
 <span class="sd">        r : array, an upper triangular matrix</span>
-<span class="sd">            When k==0, the factorization is complete and r.T.dot(r) == m</span>
+<span class="sd">            When k==0, the factorization is complete and `r.T.dot(r) == m`.</span>
 <span class="sd">            The strict lower triangle is unaltered (it is equal to the strict lower triangle of matrix m), so it</span>
 <span class="sd">            could be different from 0.</span>
 <span class="sd">   &quot;&quot;&quot;</span>
@@ -413,13 +426,15 @@
 
 <span class="sd">        a : array, shape (n_classes, )</span>
 
-<span class="sd">        G, C and b are computed by `compute_ed_param_train` and a by `compute_ed_param_test`</span>
-
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        prevalences : array, shape=(n_classes, )</span>
 <span class="sd">           Vector containing the predicted prevalence for each class</span>
 
+<span class="sd">        Notes</span>
+<span class="sd">        -----   </span>
+<span class="sd">        G, C and b are computed by `compute_ed_param_train` and a by `compute_ed_param_test`</span>
+<span class="sd">        </span>
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
 <span class="sd">        Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,</span>
@@ -463,8 +478,6 @@
 <span class="sd">            n_constraints will be equal to the number of classes (n_classes)</span>
 
 <span class="sd">        b : array, shape (n_constraints,)</span>
-
-<span class="sd">        See references below for further details</span>
 
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
@@ -534,8 +547,7 @@
 <span class="sd">        a : array, shape (n_classes, )</span>
 <span class="sd">            Term a for solving optimization problems using `quadprog.solve_qp`</span>
 
-<span class="sd">        See references below for further details</span>
-
+<span class="sd">   </span>
 <span class="sd">        References</span>
 <span class="sd">        ----------</span>
 <span class="sd">        Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,</span>
@@ -603,7 +615,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>

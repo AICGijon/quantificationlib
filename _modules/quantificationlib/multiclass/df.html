@@ -110,10 +110,11 @@
 
 <span class="sd">        bin_strategy : str (default=&#39;norm&#39;)</span>
 <span class="sd">            Method to compute the boundaries of the bins:</span>
-<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
-<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
-<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
+<span class="sd">                - &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                - &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                - &#39;binormal&#39;: (Only for binary quantification) </span>
+<span class="sd">                          It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). The cut points, </span>
+<span class="sd">                          :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
 
 <span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
@@ -122,11 +123,11 @@
 <span class="sd">                          and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                          the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
-<span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
-<span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
+<span class="sd">                - &#39;normal&#39;: The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
+<span class="sd">                          estimated as the weighted mean and std from the training distribution. The cut points</span>
+<span class="sd">                          :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
-<span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
+<span class="sd">                          :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
 
 <span class="sd">        distance : str, representing the distance function (default=&#39;HD&#39;)</span>
 <span class="sd">            It is the name of the distance used to compute the difference between the mixture of the training</span>
@@ -456,10 +457,11 @@
 
 <span class="sd">        bin_strategy : str (default=&#39;norm&#39;)</span>
 <span class="sd">            Method to compute the boundaries of the bins:</span>
-<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
-<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
-<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
+<span class="sd">                - &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                - &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                - &#39;binormal&#39;: (Only for binary quantification) </span>
+<span class="sd">                          It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). The cut points,</span>
+<span class="sd">                          :math:`-\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
 
 <span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
@@ -468,7 +470,7 @@
 <span class="sd">                          and :math:`\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                          the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
+<span class="sd">                - &#39;normal&#39;: The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
 <span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
 <span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
@@ -703,10 +705,11 @@
 
 <span class="sd">        bin_strategy : str (default=&#39;equal_width&#39;)</span>
 <span class="sd">            Method to compute the boundaries of the bins:</span>
-<span class="sd">                &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
-<span class="sd">                &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
-<span class="sd">                &#39;binormal&#39;: (Only for binary quantification) It is inspired on the method devised by</span>
-<span class="sd">                          (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
+<span class="sd">                - &#39;equal_width&#39;: bins of equal length (it could be affected by outliers)</span>
+<span class="sd">                - &#39;equal_count&#39;: bins of equal counts (considering the examples of all classes)</span>
+<span class="sd">                - &#39;binormal&#39;: (Only for binary quantification) </span>
+<span class="sd">                          It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). The cut points, </span>
+<span class="sd">                          :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty`,</span>
 <span class="sd">                          are computed as follows based on the assumption that the features follow a normal distribution:</span>
 
 <span class="sd">                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`</span>
@@ -715,12 +718,11 @@
 <span class="sd">                          and :math:`\\sigma` of the normal distribution are estimated as the average of those values for</span>
 <span class="sd">                          the training examples of each class.</span>
 
-<span class="sd">                &#39;normal&#39;:  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
+<span class="sd">                - &#39;normal&#39;: The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are</span>
 <span class="sd">                           estimated as the weighted mean and std from the training distribution. The cut points</span>
 <span class="sd">                           :math:`-\\infty &lt; c_1 &lt; \\ldots &lt; c_{b-1} &lt; \\infty` are computed as follows:</span>
 
 <span class="sd">                           :math:`c_i = \\sigma^ \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\mu ,  \\quad i=1,\\ldots,b-1`</span>
-
 
 <span class="sd">        att_range: array-like, (2,1)</span>
 <span class="sd">            Min and Max possible values of the input feature x. These values might not coincide with the actual Min and</span>
@@ -828,7 +830,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
     </div>
   </body>
 </html>
