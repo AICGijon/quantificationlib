@@ -32,20 +32,21 @@ class REG(six.with_metaclass(ABCMeta)):
 
         bin_strategy : str (default='normal')
             Method to compute the boundaries of the bins:
-                'equal_width': bins of equal length (it could be affected by outliers)
-                'equal_count': bins of equal counts (considering the examples of all classes)
-                'binormal': (Only for binary quantification) It is inspired on the method devised by
-                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
+                - 'equal_width': bins of equal length (it could be affected by outliers)
+                - 'equal_count': bins of equal counts (considering the examples of all classes)
+                - 'binormal': (Only for binary quantification) 
+                            It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). the cut points,
+                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
                             are computed as follows based on the assumption that the features follow a normal
                             distribution:
 
-                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
+                            :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
 
                             where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`
                             and :math:`\\sigma` of the normal distribution are estimated as the average of those values for
                             the training examples of each class.
 
-                'normal':  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
+                - 'normal':  The idea is that each feature follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
                            estimated as the weighted mean and std from the training distribution. The cut points
                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty` are computed as follows:
 
@@ -254,20 +255,21 @@ class REGX(WithoutClassifiers, REG):
 
         bin_strategy : str (default='normal')
             Method to compute the boundaries of the bins:
-                'equal_width': bins of equal length (it could be affected by outliers)
-                'equal_count': bins of equal counts (considering the examples of all classes)
-                'binormal': (Only for binary quantification) It is inspired on the method devised by
-                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
+                - 'equal_width': bins of equal length (it could be affected by outliers)
+                - 'equal_count': bins of equal counts (considering the examples of all classes)
+                - 'binormal': (Only for binary quantification) 
+                            It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). the cut points,
+                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
                             are computed as follows based on the assumption that the features follow a normal
                             distribution:
 
-                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
+                            :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
 
                             where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`
                             and :math:`\\sigma` of the normal distribution are estimated as the average of those values for
                             the training examples of each class.
 
-                'normal':  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
+                - 'normal':  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
                            estimated as the weighted mean and std from the training distribution. The cut points
                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty` are computed as follows:
 
@@ -423,20 +425,21 @@ class REGy(UsingClassifiers, REG):
 
         bin_strategy : str (default='normal')
             Method to compute the boundaries of the bins:
-                'equal_width': bins of equal length (it could be affected by outliers)
-                'equal_count': bins of equal counts (considering the examples of all classes)
-                'binormal': (Only for binary quantification) It is inspired on the method devised by
-                            (Tasche, 2019, Eq (A16b)). the cut points, :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
+                - 'equal_width': bins of equal length (it could be affected by outliers)
+                - 'equal_count': bins of equal counts (considering the examples of all classes)
+                - 'binormal': (Only for binary quantification) 
+                            It is inspired on the method devised by (Tasche, 2019, Eq (A16b)). the cut points,
+                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty`,
                             are computed as follows based on the assumption that the features follow a normal
                             distribution:
 
-                          :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
+                            :math:`c_i = \\frac{\\sigma^+ + \\sigma^{-}}{2} \\ \\Phi^{-1}\\bigg(\\frac{i}{b}\\bigg)  + \\frac{\\mu^+ + \\mu^{-}}{2} ,  \\quad i=1,\\ldots,b-1`
 
-                            where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math`\\mu`
+                            where :math:`\\Phi^{-1}` is the quantile function of the standard normal distribution, and :math:`\\mu`
                             and :math:`\\sigma` of the normal distribution are estimated as the average of those values for
                             the training examples of each class.
 
-                'normal':  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
+                - 'normal':  The idea is that each feacture follows a normal distribution. :math:`\\mu` and :math:`\\sigma` are
                            estimated as the weighted mean and std from the training distribution. The cut points
                            :math:`-\\infty < c_1 < \\ldots < c_{b-1} < \\infty` are computed as follows:
 

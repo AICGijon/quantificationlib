@@ -53,9 +53,9 @@ class PDFOrdinaly(UsingClassifiers):
             distribution and the testing distribution
 
         method : str
-            'full_probabilistic' predictions for training and testing set contain a probability for each class
-            'winner_node' this method is only applicable for DDAGClassifier, and predictions contain just the
-                          probabilities for the two consecutive classes of the winner node previous to the leaves
+            - 'full_probabilistic': predictions for training and testing set contain a probability for each class
+            - 'winner_node': (this method is only applicable for DDAGClassifier) predictions contain just
+              the probabilities for the two consecutive classes of the winner node previous to the leaves
 
         tol : float, (default=1e-05)
             The precision of the solution when search is used to compute the prevalence

@@ -28,7 +28,7 @@ class ACOrdinal(UsingClassifiers):
         1) Two estimators are used to classify the examples of the training set and the testing set in order to
            compute the confusion matrix of both sets. Estimators can be already trained
 
-        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful
+        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful
            for synthetic/artificial experiments
 
         The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**
@@ -136,7 +136,7 @@ class ACOrdinal(UsingClassifiers):
 
             predictions_train : ndarray, shape (n_examples, ) or (n_examples, n_classes)
                 Predictions of the examples in the training set. If shape is (n_examples, n_classes) predictions are
-                converted to crisp values by `super().fit()
+                converted to crisp values by `super().fit()`
 
             Raises
             ------
@@ -175,9 +175,8 @@ class ACOrdinal(UsingClassifiers):
             After that, the distribution of such predictions are computed and stored in test_distrib_ attribute
             Finally, the prevalences are computed solving the following optimization problem:
 
-                      Min   | train_distrib_ * prevalences -  test_distrib_ |
-                      s.t.  sum(prevalences) = 1
-                            prevalecences_i >= 0
+                      Min   | train_distrib_ * prevalences -  test_distrib_ | 
+                      s.t.  sum(prevalences) = 1, prevalecences_i >= 0
 
             Parameters
             ----------
@@ -185,7 +184,7 @@ class ACOrdinal(UsingClassifiers):
                 Testing bag
 
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
-                They must be probabilities (the estimator used must have a `predict_proba method)
+                They must be probabilities (the estimator used must have a `predict_proba` method)
 
                 If predictions_test is not None they are copied on predictions_test_ and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`

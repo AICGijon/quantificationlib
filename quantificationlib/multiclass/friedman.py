@@ -24,7 +24,7 @@ class FriedmanME(UsingClassifiers):
         1) Two estimators are used to classify the examples of the training set and the testing set in order to
            compute the (probabilistic) confusion matrix of both sets. Estimators can be already trained
 
-        2) You can directly provide the predictions for the examples in the `fit`/`predict methods. This is useful
+        2) You can directly provide the predictions for the examples in the `fit`/`predict` methods. This is useful
            for synthetic/artificial experiments
 
         The idea in both cases is to guarantee that all methods based on distribution matching are using **exactly**
@@ -149,7 +149,7 @@ class FriedmanME(UsingClassifiers):
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
             testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
-            performed by the `fit method of its superclass.
+            performed by the `fit` method of its superclass.
             Then, the method computes the training distribution of the method ME suggested by Friedman. The distribution
             of a class contains the percentage of the training examples of that class whose probability to belong
             to each class is >= than the prevalence of such class in the training set
@@ -207,7 +207,7 @@ class FriedmanME(UsingClassifiers):
         """ Predict the class distribution of a testing bag
 
             First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
-            `super().predict() method.
+            `super().predict()` method.
 
             After that, the method computes the distribution of the FriedmanME method for the testing bag. That is,
             the percentage of examples in the testing bag whose probability to belong each class is >= than

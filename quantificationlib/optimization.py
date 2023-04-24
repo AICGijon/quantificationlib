@@ -20,23 +20,24 @@ import scipy
 #  Functions for solving optimization problems using CVXPY, loss functions: L1, HD
 ############
 def solve_l1(train_distrib, test_distrib, n_classes, problem=None, solver=None):
-    """ Solves AC, PAC, PDF and Friedman optimization problems for L1 loss function
+    """ Solves AC, PAC, DF and Friedman optimization problems for L1 loss function
 
-        min   |train_distrib * prevalences - test_distrib|
-        s.t.  prevalences_i >=0
-              sum prevalences_i = 1
+            min   |train_distrib * prevalences - test_distrib|      \n
+            s.t.  prevalences_i >=0, sum prevalences_i = 1
 
         Parameters
         ----------
         train_distrib : array, shape depends on the optimization problem
             Represents the distribution of each class in the training set
-            PDF: shape (n_bins * n_classes, n_classes)
-            AC, PAC, Friedman: shape (n_classes, n_classes)
+            
+            - DF: shape (n_bins * n_classes, n_classes)
+            - AC, PAC, Friedman: shape (n_classes, n_classes)
 
         test_distrib : array, shape depends on the optimization problem
             Represents the distribution of the testing set
-            PDF: shape shape (n_bins * n_classes, 1)
-            AC, PAC, Friedman: shape (n_classes, 1)
+            
+            - DF: shape shape (n_bins * n_classes, 1)
+            - AC, PAC, Friedman: shape (n_classes, 1)
 
         n_classes : int
             Number of classes
@@ -84,7 +85,7 @@ def solve_l1(train_distrib, test_distrib, n_classes, problem=None, solver=None):
 
 
 def solve_hd(train_distrib, test_distrib, n_classes, problem=None, solver='ECOS'):
-    """ Solves the optimization problem for PDF methods using Hellinger Distance
+    """ Solves the optimization problem for DF methods using Hellinger Distance
 
         This method just uses cvxpy library
 
@@ -106,7 +107,7 @@ def solve_hd(train_distrib, test_distrib, n_classes, problem=None, solver='ECOS'
 
         solver : str, (default='ECOS')
             The solver used to solve the optimization problem. Here 'ECOS' is used. If another solver is prefered,
-            you may need to install additional libraries
+            you may need to install additional libraries.
 
         Returns
         -------
@@ -135,40 +136,41 @@ def solve_hd(train_distrib, test_distrib, n_classes, problem=None, solver='ECOS'
 #  Functions for solving optimization problems using QUADPROG (L2 loss function)
 ############
 def solve_l2(train_distrib, test_distrib, G, C, b):
-    """ Solves AC, PAC, PDF and Friedman optimization problems for L2 loss function
+    """ Solves AC, PAC, DF and Friedman optimization problems for L2 loss function
 
-        min    (test_distrib - train_distrib * prevalences).T (test_distrib - train_distrib * prevalences)
-        s.t.   prevalences_i >=0
-               sum prevalences_i = 1
+            min    (test_distrib - train_distrib * prevalences).T * (test_distrib - train_distrib * prevalences) \n
+            s.t.   prevalences_i >=0,  sum prevalences_i = 1
 
         Expanding the objective function, we obtain:
 
-        prevalences.T train_distrib.T train_distrib prevalences
-        - 2 prevalences train_distrib.T test_distrib + test_distrib.T test_distrib
+            `prevalences.T * train_distrib.T * train_distrib * prevalences`                       \n
+            `- 2 * prevalences * train_distrib.T * test_distrib + test_distrib.T * test_distrib`
 
         Notice that the last term is constant w.r.t prevalences.
 
-        Let G = 2 train_distrib.T train_distrib  and a = 2 * train_distrib.T test_distrib, we can use directly
+        Let `G = 2 * train_distrib.T * train_distrib`  and `a = 2 * train_distrib.T * test_distrib`, we can use directly
         quadprog.solve_qp because it solves the following kind of problems:
 
-        Minimize     1/2 x^T G x - a^T x
-        Subject to   C.T x >= b
+            Minimize     1/2 x^T G x - a^T x    \n
+            Subject to   C.T x >= b
 
-        `solve_l2` just computes the term a, shape (n_classes,1), and then calls quadprog.solve_qp.
-        G, C and b were computed by `compute_l2_param_train` before, in the 'fit' method` of the PDF/Friedman object.
+        `solve_l2` just computes the term a, shape (n_classes,1), and then calls `quadprog.solve_qp`.
+        G, C and b were computed by `compute_l2_param_train` before, in the 'fit' method` of the DF/Friedman object.
         quadprog is used here because it is faster than cvxpy.
 
         Parameters
         ----------
         train_distrib : array, shape depends on the optimization problem
             Represents the distribution of each class in the training set
-            PDF: shape (n_bins * n_classes, n_classes)
-            AC, PAC Friedman: shape (n_classes, n_classes)
+
+            - DF: shape (n_bins * n_classes, n_classes)
+            - AC, PAC Friedman: shape (n_classes, n_classes)
 
         test_distrib : array, shape depends on the optimization problem
             Represents the distribution of the testing set
-            PDF: shape shape (n_bins * n_classes, 1)
-            AC, PAC, Friedman: shape (n_classes, 1)
+
+            - DF: shape shape (n_bins * n_classes, 1)
+            - AC, PAC, Friedman: shape (n_classes, 1)
 
         G : array, shape (n_classes, n_classes)
 
@@ -177,12 +179,15 @@ def solve_l2(train_distrib, test_distrib, G, C, b):
 
         b : array, shape (n_constraints,)
 
-        G, C and b are computed by `compute_l2_param_train` in the 'fit' method
-
         Returns
         -------
         prevalences : array, shape=(n_classes, )
            Vector containing the predicted prevalence for each class
+
+        Notes
+        -----
+        G, C and b are computed by `compute_l2_param_train` in the 'fit' method
+
     """
     a = 2 * train_distrib.T.dot(test_distrib)
     a = np.squeeze(a)
@@ -191,8 +196,28 @@ def solve_l2(train_distrib, test_distrib, G, C, b):
 
 
 def compute_l2_param_train(train_distrib, classes):
-    """ Computes params related to the train distribution for solving PDF optimization problems using
-        L2 loss function
+    """ Computes params related to the train distribution for solving QP using L2 loss function. 
+        For instance, this library  uses quadprog.solve_qp that solves the following kind of problems::
+
+            Minimize     1/2 x^T G x - a^T x
+            Subject to   C.T x >= b
+
+            Thus, the values of G, C and b must be the following
+
+            G = train_distrib.T * train_distrib
+            G shape (n_classes, n_classes)
+
+            C = [[ 1, 1, ...,  1],
+                 [ 1, 0, ...,  0],
+                 [ 0, 1, 0,.., 0],
+                 ...
+                 [ 0, 0, ..,0, 1]].T
+            C shape (n_classes+1, n_classes)
+            
+            b = [1, 0, ..., 0]
+            b shape (n_classes, )        
+
+            This function computes and returns G, C and b.
 
         Parameters
         ----------
@@ -206,28 +231,14 @@ def compute_l2_param_train(train_distrib, classes):
         -------
         G : array, shape (n_classes, n_classes)
 
-        C : array, shape (n_classes, n_constraints)
-            n_constraints will be n_classes + 1  (n_classes constraints to guarantee that prevalences_i>=0, and
-            an additional constraints for ensuring that sum(prevalences)==1
+        C : array, shape (n_classes, n_classes+1)
+            The number of columns is equal to the number of the constraints of the optimization 
+            problem. It must be n_classes + 1: n_classes constraints to guarantee that 
+            prevalences_i>=0, and an additional constraint for ensuring that sum(prevalences)==1
 
-        b : array, shape (n_constraints,)
+        b : array, shape (n_classes + 1,)
+            The size of b corresponds to the number of constraints of the optimization problem.
 
-        quadprog.solve_qp solves the following kind of problems:
-
-        Minimize     1/2 x^T G x  a^T x
-        Subject to   C.T x >= b
-
-        Thus, the values of G, C and b must be the following
-
-        G = train_distrib.T train_distrib
-        C = [[ 1, 1, ...,  1],
-             [ 1, 0, ...,  0],
-             [ 0, 1, 0,.., 0],
-             ...
-             [ 0, 0, ..,0, 1]].T
-        C shape (n_classes+1, n_classes)
-        b = [1, 0, ..., 0]
-        b shape (n_classes, )
     """
     G = 2 * train_distrib.T.dot(train_distrib)
     if not is_pd(G):
@@ -252,8 +263,8 @@ def nearest_pd(A):
         ----------
         [1] https://www.mathworks.com/matlabcentral/fileexchange/42885-nearestspd
 
-        [2] N.J. Higham, "Computing a nearest symmetric positive semidefinite
-        matrix" (1988): https://doi.org/10.1016/0024-3795(88)90223-6
+        [2] N.J. Higham, "Computing a nearest symmetric positive semidefinite matrix" (1988):
+            https://doi.org/10.1016/0024-3795(88)90223-6
     """
     B = (A + A.T) / 2
     _, s, V = np.linalg.svd(B)
@@ -300,12 +311,14 @@ def dpofa(m):
 
         Returns
         -------
-        k : int,
-            == 0  m is positive definite and the factorization has been completed
-            >  0  the leading minor of order k is not positive definite
+        k : int, 
+            This value is:
+
+            == 0  if m is positive definite and the factorization has been completed  \n
+            >  0  when the leading minor of order k is not positive definite
 
         r : array, an upper triangular matrix
-            When k==0, the factorization is complete and r.T.dot(r) == m
+            When k==0, the factorization is complete and `r.T.dot(r) == m`.
             The strict lower triangle is unaltered (it is equal to the strict lower triangle of matrix m), so it
             could be different from 0.
    """
@@ -369,13 +382,15 @@ def solve_ed(G, a, C, b):
 
         a : array, shape (n_classes, )
 
-        G, C and b are computed by `compute_ed_param_train` and a by `compute_ed_param_test`
-
         Returns
         -------
         prevalences : array, shape=(n_classes, )
            Vector containing the predicted prevalence for each class
 
+        Notes
+        -----   
+        G, C and b are computed by `compute_ed_param_train` and a by `compute_ed_param_test`
+        
         References
         ----------
         Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,
@@ -419,8 +434,6 @@ def compute_ed_param_train(distance_func, train_distrib, classes, n_cls_i):
             n_constraints will be equal to the number of classes (n_classes)
 
         b : array, shape (n_constraints,)
-
-        See references below for further details
 
         References
         ----------
@@ -490,8 +503,7 @@ def compute_ed_param_test(distance_func, train_distrib, test_distrib, K, classes
         a : array, shape (n_classes, )
             Term a for solving optimization problems using `quadprog.solve_qp`
 
-        See references below for further details
-
+   
         References
         ----------
         Alberto Castaño, Laura Morán-Fernández, Jaime Alonso, Verónica Bolón-Canedo, Amparo Alonso-Betanzos,

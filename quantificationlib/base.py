@@ -34,8 +34,8 @@ class WithoutClassifiers(BaseQuantifier):
          verbose : int, optional, (default=0)
              The verbosity level. The default value, zero, means silent mode
 
-         Attributes
-         ----------
+        Attributes
+        ----------
          verbose : int
              The verbosity level
 
@@ -273,7 +273,7 @@ class UsingClassifiers(BaseQuantifier):
             Then, it computes predictions_test_. If predictions_test is not None, predictions_test_ is copied from
             predictions_test (and converted to crisp values, using `__probs2crisp` method when
             probabilistic_predictions attribute is False). If predictions_test is None, predictions_test_ is computed
-            calling the `predict`/`predict_proba method (depending on the value of the attribute
+            calling the `predict`/`predict_proba` method (depending on the value of the attribute
             probabilistic_predictions) of estimator_test.
 
             Parameters
