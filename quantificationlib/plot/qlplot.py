@@ -51,7 +51,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
     ax : Axes
         The axes to draw to
 
-    prevalence_matrix : ndarray, shape(number_of_experiments, number_ of_clases)
+    prevalence_matrix : ndarray, shape(number_of_experiments, number_of_clases)
         Prevalences of the experiments
 
     order: str    

@@ -41,12 +41,11 @@ class OneVsRestQuantifier(UsingClassifiers):
         estimator_test : estimator object, optional, (default=None)
             An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify
             the examples of the testing bag and to obtain their distribution when the base quantifier is an
-            instance of the class UsingClassifiers
+            instance of the class UsingClassifiers. For some experiments both estimators could be the same
 
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------

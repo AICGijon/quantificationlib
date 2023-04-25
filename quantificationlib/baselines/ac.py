@@ -43,7 +43,7 @@ class AC(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict`. It is used to classify the examples of the testing
-            set and to obtain their predictions
+            set and to obtain their predictions. For some experiments both estimators could be the same
 
         distance : str, representing the distance function (default='HD')
             It is the name of the distance used to compute the difference between the mixture of the training
@@ -53,7 +53,6 @@ class AC(UsingClassifiers):
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------
@@ -191,7 +190,7 @@ class AC(UsingClassifiers):
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, CC(X) ) 
+                      Min   distance ( cm_.T * prevalences, CC(X) )                \n
                       s.t.  sum(prevalences) = 1 , prevalecences_i >= 0
 
             in which distance can be 'HD' (defect value), 'L1' or 'L2'
@@ -298,7 +297,8 @@ class PAC(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the
-            testing set and to obtain the confusion matrix of the testing set
+            testing set and to obtain the confusion matrix of the testing set. 
+            For some experiments both estimators could be the same
 
         distance : str, representing the distance function (default='L2')
             It is the name of the distance used to compute the difference between the mixture of the training
@@ -308,7 +308,6 @@ class PAC(UsingClassifiers):
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------
@@ -448,7 +447,7 @@ class PAC(UsingClassifiers):
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, PCC(X) )
+                      Min   distance ( cm_.T * prevalences, PCC(X) )        \n
                       s.t.  sum(prevalences) = 1, prevalecences_i >= 0
 
             in which distance can be 'HD', 'L1' or 'L2' (defect value)

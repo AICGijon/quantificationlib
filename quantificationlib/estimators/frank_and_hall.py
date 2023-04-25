@@ -39,8 +39,7 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
         n_jobs : int or None, optional (default=None)
             The number of jobs to use for the computation.
             ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
+            ``-1`` means using all processors
 
         params_fit : list of dictionaries with parameters for each binary estimator, optional
             Example: 5 classes/4 binary estimators:
@@ -318,8 +317,7 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
         n_jobs : int or None, optional (default=None)
             The number of jobs to use for the computation.
             ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
+            ``-1`` means using all processors
 
         params_fit : list of dictionaries with parameters for each binary estimator, optional
             Example: 5 classes/4 binary estimators:
@@ -594,8 +592,7 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
         n_jobs : int or None, optional (default=None)
             The number of jobs to use for the computation.
             ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
+            ``-1`` means using all processors
 
         performance_measure : a binary quantification performance measure, (default=binary_kld)
             The binary quantification performance measure used to estimate the goodness of each binary classifier used

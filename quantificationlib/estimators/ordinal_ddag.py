@@ -156,16 +156,15 @@ class DDAGClassifier(OneVsOneClassifier):
         n_jobs : int or None, optional (default=None)
             The number of jobs to use for the computation.
             ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
+            ``-1`` means using all processors
 
         predict_method: str, optional (default 'full_probabilistic')
-            'full_probabilistic'
+            - 'full_probabilistic'
             The probabilities computed by each node are propagated through the tree. For those leaves that
             can be reached following different paths (all except the leaves for the first and the last class), the
             probabilities are summed. With this method, all the classes may have a probability greater that 0.
-
-            'winner_node'
+            
+            - 'winner_node'
             Uses the probabilities of binary estimators to descent until the level previous to the leaves (it is like
             binarizing such probabilities to 0,1). Then, the method returns the probalities of such binary estimator
             for the two consecutive classes involved, and zero for the rest of classes.

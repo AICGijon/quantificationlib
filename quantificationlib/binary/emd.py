@@ -34,15 +34,14 @@ class SORDy(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the
-            testing set and to compute the distribution of the whole testing set
+            testing set and to compute the distribution of the whole testing set.
+            For some experiments both estimator_train and estimator_test could be the same
 
         tol : float, (default=1e-05)
             The precision of the solution when search is used to compute the prevalence
 
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
-
-        For some experiments both estimator_train and estimator_test could be the same
 
         Attributes
         ----------
@@ -169,8 +168,8 @@ class SORDy(UsingClassifiers):
 
             Finally, the prevalences are computed using golden section search using two functions:
             
-                - compute_sord_weights: to obtain the mixture depending on the estimated prevalence
-                - sord: distance funtion to measure how similar the mixture and the testing distributions are
+            - compute_sord_weights: to obtain the mixture depending on the estimated prevalence
+            - sord: distance funtion to measure how similar the mixture and the testing distributions are
 
             Parameters
             ----------

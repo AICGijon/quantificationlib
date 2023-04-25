@@ -33,8 +33,7 @@ class EnsembleOfClassifiers(BaseEstimator, ClassifierMixin):
         n_jobs : int or None, optional (default=None)
             The number of jobs to use for the computation.
             ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
-            ``-1`` means using all processors. See :term:`Glossary <n_jobs>`
-            for more details.
+            ``-1`` means using all processors 
 
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
@@ -56,7 +55,7 @@ class EnsembleOfClassifiers(BaseEstimator, ClassifierMixin):
         n_estimators_ : int,
             Number of estimators
 
-        estimators_ : ndarray, shape(n_ensembles,)
+        estimators_ : ndarray, shape(n_ensembles, )
             List of estimators
 
         References

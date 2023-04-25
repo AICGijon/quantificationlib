@@ -40,7 +40,8 @@ class FriedmanME(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the
-            testing set and to obtain the confusion matrix of the testing set
+            testing set and to obtain the confusion matrix of the testing set.
+            For some experiments both estimators could be the same
 
         distance : str, representing the distance function (default='L2')
             It is the name of the distance used to compute the difference between the mixture of the training
@@ -52,7 +53,6 @@ class FriedmanME(UsingClassifiers):
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------

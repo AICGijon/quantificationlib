@@ -424,7 +424,7 @@ class REGy(UsingClassifiers, REG):
             Number of bins to compute the PDF of each distribution
 
         bin_strategy : str (default='normal')
-            Method to compute the boundaries of the bins:
+            Method to compute the boundaries of the bins
                 - 'equal_width': bins of equal length (it could be affected by outliers)
                 - 'equal_count': bins of equal counts (considering the examples of all classes)
                 - 'binormal': (Only for binary quantification) 

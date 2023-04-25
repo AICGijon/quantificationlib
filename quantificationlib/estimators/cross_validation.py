@@ -94,8 +94,9 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
 
         voting : str, {'hard', 'soft'} (default='hard')
             How predictions are aggregated:
-                - 'hard', applying majority rule voting
-                - 'soft', based on the argmax of the sums of the predicted probabilities
+            
+            - 'hard', applying majority rule voting
+            - 'soft', based on the argmax of the sums of the predicted probabilities
 
         le_ : a LabelEncoder fitted object
             Used to compute the class labels
@@ -172,14 +173,14 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
             preds : array-like, shape depends on two factors: the type of the examples (training or testing) and
                     the value of averaged_predictions attribute
 
+                 Crisp predictions for the examples in X
+
                  Training set:
                      - averaged_predictions == True,  shape(n_examples, )
                      - averaged_predictions == False, shape(n_examples * n_reps, )
                  Testing set:
                      - averaged_predictions == True,  shape(n_examples, )
                      - averaged_predictions == False, shape(n_examples * n_reps * n_folds, )
-
-                 Crisp predictions for the examples in X
         """
         if len(self.estimators_) == 0:
             raise NotFittedError('CV_estimator not fitted')
@@ -224,13 +225,13 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
                     the value of averaged_predictions attribute
 
                 Probabilistic predictions for the examples in X.
-                Shape:
-                    Training set:
-                        - averaged_predictions == True,  shape(n_examples, n_classes)
-                        - averaged_predictions == False, shape(n_examples * n_reps, n_classes)
-                    Testing set:
-                        - averaged_predictions == True,  shape(n_examples, n_classes)
-                        - averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)
+                
+                Training set:
+                    - averaged_predictions == True,  shape(n_examples, n_classes)
+                    - averaged_predictions == False, shape(n_examples * n_reps, n_classes)
+                Testing set:
+                    - averaged_predictions == True,  shape(n_examples, n_classes)
+                    - averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)
         """
         if len(self.estimators_) == 0:
             raise NotFittedError('CV_estimator not fitted')

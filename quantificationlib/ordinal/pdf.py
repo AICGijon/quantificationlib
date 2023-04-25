@@ -43,7 +43,8 @@ class PDFOrdinaly(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the
-            testing set and to compute the distribution of the whole testing set
+            testing set and to compute the distribution of the whole testing set.
+            For some experiments both estimator_train and estimator_test could be the same
 
         n_bins : int
             Number of bins to compute the PDFs
@@ -63,7 +64,6 @@ class PDFOrdinaly(UsingClassifiers):
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimator_train and estimator_test could be the same
 
         Attributes
         ----------

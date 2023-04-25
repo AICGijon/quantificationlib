@@ -146,7 +146,7 @@ class CC(UsingClassifiers):
 
 
 class PCC(UsingClassifiers):
-    """ Multiclass Probabilistic Classify And Count method.
+    """ Multiclass Probabilistic Classify And Count method
 
         prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )
 

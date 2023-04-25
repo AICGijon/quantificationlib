@@ -44,12 +44,11 @@ class ACOrdinal(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict`. It is used to classify the examples of the testing
-            set and to obtain their predictions
+            set and to obtain their predictions. For some experiments both estimators could be the same
 
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------

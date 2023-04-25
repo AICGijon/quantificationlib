@@ -155,7 +155,7 @@ def solve_l2(train_distrib, test_distrib, G, C, b):
             Subject to   C.T x >= b
 
         `solve_l2` just computes the term a, shape (n_classes,1), and then calls `quadprog.solve_qp`.
-        G, C and b were computed by `compute_l2_param_train` before, in the 'fit' method` of the DF/Friedman object.
+        G, C and b were computed by `compute_l2_param_train` before, in the `fit` method of the DF/Friedman object.
         quadprog is used here because it is faster than cvxpy.
 
         Parameters

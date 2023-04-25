@@ -90,7 +90,8 @@ class UsingClassifiers(BaseQuantifier):
 
         estimator_test : estimator object, optional, (default=None)
             An estimator object implementing `fit` and one of `predict` or `predict_proba`. It is used to classify
-            the examples of the testing bag and to obtain their distribution
+            the examples of the testing bag and to obtain their distribution.
+            For some experiments both estimators could be the same
 
         needs_predictions_train : bool, (default=True)
             True if the quantifier needs to estimate the training distribution
@@ -102,7 +103,6 @@ class UsingClassifiers(BaseQuantifier):
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
 
-        For some experiments both estimators could be the same
 
         Attributes
         ----------

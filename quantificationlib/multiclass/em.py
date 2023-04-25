@@ -31,7 +31,8 @@ class EM(UsingClassifiers):
 
         estimator_test : estimator object (default=None)
             An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the
-            testing set and to compute the distribution of the whole testing set
+            testing set and to compute the distribution of the whole testing set.
+            For some experiments both estimator_train and estimator_test could be the same
 
         verbose : int, optional, (default=0)
             The verbosity level. The default value, zero, means silent mode
@@ -43,7 +44,6 @@ class EM(UsingClassifiers):
         max_iter: int (default=1000)
             The maximum number of iterations for the loop of the EM algorithm
 
-        For some experiments both estimator_train and estimator_test could be the same
 
         Attributes
         ----------
