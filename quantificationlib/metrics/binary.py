@@ -15,7 +15,7 @@ import numpy as np
 def binary_kld(p_true, p_pred, eps=1e-12):
     """ A binary version of the Kullback - Leiber divergence (KLD)
 
-            :math:`kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))
+            :math:`kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`
 
         Parameters
         ----------

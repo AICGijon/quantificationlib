@@ -181,11 +181,11 @@ class FrankAndHallQuantifier(UsingClassifiers):
             In this kind of decomposition strategy it is important to ensure that the aggregated consecutive
             prevalencences do not decrease:
 
-            Example:
+            Example::
 
-                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
-                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
-                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6
+                 Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
+                 Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
+                 Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6
 
             This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
             left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
@@ -194,15 +194,13 @@ class FrankAndHallQuantifier(UsingClassifiers):
 
                 Prevalence({y_k}) = Prevalence({y_1,...,y_k}) - Prevalence({y_1,...,y_k-1})
 
-            Example:
-
-                {1}   {1-2}  {1-2-3}
-
-                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)
-
-                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)
+            Example::
+            
+                {1}   {1-2}  {1-2-3} 
+                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right) 
+                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left) 
                 ----------------
-                0.25  0.25   0.6    Averaged prevalences
+                0.25  0.25   0.6    Averaged prevalences 
 
                 Prevalence({1}) = 0.25
                 Prevalence({2}) = Prevalence({1,2}) - Prevalence({1}) = 0.25 - 0 .25 = 0
@@ -273,26 +271,24 @@ class FrankAndHallQuantifier(UsingClassifiers):
 
             To obtain consistent prevalences, we need to ensure that the consecutive probabilities do not decrease.
 
-            Example:
+            Example::
 
-                Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
-                Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
-                Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6
+                 Quantifier 1 vs 2-3-4   Prevalence({1}) = 0.3
+                 Quantifier 1-2 vs 3-4   Prevalence({1,2}) = 0.2
+                 Quantifier 1-2-3 vs 4   Prevalence({1,2,3}) = 0.6
 
             This is inconsistent. Following (Destercke, Yang, 2014) the method computes the upper (adjusting from
             left to right) and the lower (from right to left) cumulative prevalences. These sets of values are
             monotonically increasing (from left to right) and monotonically decreasing (from right to left),
             respectively. The average value is assigned to each group
 
-            Example:
-
-                {1}   {1-2}  {1-2-3}
-
-                0.3   0.3    0.6    Upper cumulative prevalences (adjusting from left to right)
-
-                0.2   0.2    0.6    Lower cumulative prevalences (adjusting from right to left)
-                ----------------
-                0.25  0.25   0.6    Averaged prevalences
+            Example::
+            
+                 {1}   {1-2}  {1-2-3}
+                 0.3   0.3    0.6      Upper cumulative prevalences (adjusting from left to right)
+                 0.2   0.2    0.6      Lower cumulative prevalences (adjusting from right to left)
+                 ----------------  
+                 0.25  0.25   0.6      Averaged prevalences
 
             Parameters
             ----------

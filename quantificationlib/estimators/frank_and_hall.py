@@ -69,8 +69,8 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
 
         estimators_ : ndarray, shape(n_classes-1,)
             List of binary estimators following the same order of the Frank and Hall decomposition:
-                estimators_[0] -> 1 vs 2-3-4-5
-                estimators_[1] -> 1-2 vs 3-4-5
+                estimators_[0] -> 1 vs 2-3-4-5, 
+                estimators_[1] -> 1-2 vs 3-4-5, 
                 ...
 
         label_binarizer_ :  FHLabelBinarizer object
@@ -123,8 +123,8 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
         """ Fits the set of estimators for the training set following the Frank and Hall decomposition
 
             It learns a list of binary estimators following the same order of the Frank and Hall decomposition:
-                estimators_[0] -> 1 vs 2-3-4-5
-                estimators_[1] -> 1-2 vs 3-4-5
+                estimators_[0] -> 1 vs 2-3-4-5, 
+                estimators_[1] -> 1-2 vs 3-4-5, 
                 ...
 
             The left group of each classifier ({1}, {1,2}, ...) is the positive class
@@ -194,19 +194,20 @@ class FrankAndHallClassifier(BaseEstimator, ClassifierMixin):
     def predict_proba(self, X):
         """ Predict the class probabilities for each example following the original rule proposed by Frank & Hall
 
-            If the classes are c_1 to c_k:
+            If the classes are c_1 to c_k::
 
                 Pr(y = c_1) = Pr (y <= c_1)
                 Pr(y = c_i) = Pr(y > c_i−1)  x (1 − Pr(y > c_i)) ; 1 < i < k
                 Pr(y = c_k) = Pr(y > c_k−1)
 
-                Notice that :  :math:`sum_{i=1}^{i=k} Pr(c_i) \neq 1`
+                Notice that :  sum_{i=1}^{i=k} Pr(c_i) \\neq 1
 
-            Example with 5 classes
+            Example with 5 classes::
 
-                We have 4 binary estimators that return two probabilities: the probability of the left group and the
-                probability of the right group, denoted as e_i.left and e_i.right respectively, in which i is the
-                number of the estimator 1<=i<k
+                We have 4 binary estimators that return two probabilities: 
+                the probability of the left group and the probability of the right group, 
+                denoted as e_i.left and e_i.right respectively, 
+                in which i is the number of the estimator 1<=i<k
 
                 Estimator 0:	c1  |   c2, c3, c4, c5          e1.left	| e1.right
                 Estimator 2:	c1, c2  |   c3, c4, c5          e2.left	| e2.right
@@ -347,8 +348,8 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
 
         estimators_ : ndarray, shape(n_classes-1,)
             List of binary estimators following the same order of the Frank and Hall decomposition:
-                estimators_[0] -> 1 vs 2-3-4-5
-                estimators_[1] -> 1-2 vs 3-4-5
+                estimators_[0] -> 1 vs 2-3-4-5, 
+                estimators_[1] -> 1-2 vs 3-4-5, 
                 ...
 
         label_binarizer_ :  FHLabelBinarizer object
@@ -368,8 +369,8 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
         """ Fits the set of estimators for the training set following the Frank and Hall decomposition
 
             It learns a list of binary estimators following the same order of the Frank and Hall decomposition:
-                estimators_[0] -> 1 vs 2-3-4-5
-                estimators_[1] -> 1-2 vs 3-4-5
+                estimators_[0] -> 1 vs 2-3-4-5, 
+                estimators_[1] -> 1-2 vs 3-4-5, 
                 ...
 
             The left group of each classifier ({1}, {1,2}, ...) is the positive class
@@ -421,7 +422,7 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
             To obtain consistent probabilities, we need to ensure that the aggregated consecutive
             probabilities do not decrease.
 
-            Example:
+            Example::
 
                 Classifier 1 vs 2-3-4   Pr({1}) = 0.3
                 Classifier 1-2 vs 3-4   Pr({1,2}) = 0.2
@@ -434,12 +435,10 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
 
                 Pr({y_k}) = Pr({y_1,...,y_k}) - Pr({y_1,...,y_k-1})
 
-            Example:
+            Example::
 
                 {1}   {1-2}  {1-2-3}
-
                 0.3   0.3    0.6    Upper cumulative probabilities (adjusting from left to right)
-
                 0.2   0.2    0.6    Lower cumulative probabilities (adjusting from right to left)
                 ----------------
                 0.25  0.25   0.6    Averaged probability
@@ -449,7 +448,7 @@ class FrankAndHallMonotoneClassifier(FrankAndHallClassifier):
                 Pr({3}) = Pr({1,2,3}} - Pr({1,2}) = 0.6 - 0.25 = 0.35
 
                 The last class is computed as 1 - the sum of the probabilities for the rest of classes
-
+                
                 Pr({4}) = 1 - Pr({1,2,3}} = 1 - 0.6 = 0.4
 
             Parameters
@@ -576,11 +575,15 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
         tree the best possible model according to their quantification performance (applying PCC algorithm with each
         binary classifier and using the KLD as performance measure).
 
-        Example:
-                                             1-2-3 vs 4-5
-                         1 vs 2-3-4-5                            1-2-3-4 vs 5
-                      1                1-2 vs 3-4-5           4                5
-                                     2              3
+        Example::
+        
+                                                1-2-3 vs 4-5
+
+                             1 vs 2-3-4-5                            1-2-3-4 vs 5
+
+                          1                1-2 vs 3-4-5           4                5
+                      
+                                       2                 3
 
         Parameters
         ----------
@@ -629,8 +632,8 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
 
         estimators_ : ndarray, shape(n_classes-1,)
             List of binary estimators following the same order of the Frank and Hall decomposition:
-                estimators_[0] -> 1 vs 2-3-4-5
-                estimators_[1] -> 1-2 vs 3-4-5
+                estimators_[0] -> 1 vs 2-3-4-5, 
+                estimators_[1] -> 1-2 vs 3-4-5, 
                 ...
 
         label_binarizer_ :  FHLabelBinarizer object
@@ -709,14 +712,18 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
     def predict_proba(self, X):
         """ Predict the class probabilities for each example applying the binary tree of models
 
-            Example:
+            Example::
+
                                              1-2-3 vs 4-5
+            
                          1 vs 2-3-4-5                            1-2-3-4 vs 5
+            
                       1                1-2 vs 3-4-5           4                5
+ 
                                      2              3
 
-                 Imagine that for a given example the probabily returned by each model are the following (the models
-                 return the probability of the left group of classes):
+                 Imagine that for a given example the probabily returned by each model are the following 
+                 (the models return the probability of the left group of classes):
 
                  Pr({1,2,3}) = 0.2
                  Pr({1}) = 0.9
@@ -954,17 +961,18 @@ class FHLabelBinarizer(LabelBinarizer):
         for each of the binary problems of the Frank and Hall decomposition. FHLabelBinarizer makes this process
         easy using the transform method.
 
-         Parameters
-         ----------
-         neg_label : int (default: 0)
+        Parameters
+        ----------
+        neg_label : int (default: 0)
              Value with which negative labels must be encoded.
 
-         pos_label : int (default: 1)
+        pos_label : int (default: 1)
              Value with which positive labels must be encoded.
 
-         sparse_output : boolean (default: False)
+        sparse_output : boolean (default: False)
              True if the returned array from transform is desired to be in sparse CSR format.
-        """
+
+    """
     def __init__(self, neg_label=0, pos_label=1):
         super(FHLabelBinarizer, self).__init__(neg_label=neg_label, pos_label=pos_label, sparse_output=False)
 

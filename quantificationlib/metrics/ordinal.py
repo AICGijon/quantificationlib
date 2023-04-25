@@ -17,7 +17,7 @@ from quantificationlib.metrics.multiclass import check_prevalences
 
 
 def emd(p_true, p_pred):
-    """ Return the EMD distances between two sets of prevalences
+    """ Return the EMD distance between two sets of prevalences
 
         Parameters
         ----------
@@ -35,13 +35,33 @@ def emd(p_true, p_pred):
 
 
 def emd_score(p_true, p_pred):
+    """ Scoring metric based on EMD distance
+    
+        References
+        ----------
+        Castaño, A., González, P., González, J. A., & Del Coz, J. J. (2022). Matching Distributions Algorithms
+        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks
+        and Learning Systems.
+        
+        Parameters
+        ----------
+        p_true: array-like, shape (n_classes, 1)
+
+        p_pred: array-like, shape (n_classes, 1)
+
+        Return
+        ------
+        emds: float, the EMD score
+    """
+        
     p_true, p_pred = check_prevalences(p_true, p_pred)
     left_mass = np.zeros_like(p_true)
     left_mass[0] = 1
     right_mass = np.zeros_like(p_true)
     right_mass[-1] = 1
     max_emd = max(emd(p_true, left_mass), emd(p_true, right_mass))
-    return (max_emd - np.sum(np.abs(np.cumsum(p_true - p_pred)))) / max_emd
+    emds = (max_emd - np.sum(np.abs(np.cumsum(p_true - p_pred)))) / max_emd
+    return emds
 
 
 def emd_distances(A, B):
@@ -58,6 +78,7 @@ def emd_distances(A, B):
         Return
         ------
         distances : array, shape (n_samples_1, n_samples_2)
+
     """
     # version #1: the most inefficient
     # return np.sum(np.abs(np.cumsum(A[:, np.newaxis] - B, axis=2)), axis=2)

@@ -23,7 +23,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
 
         The idea is to have an estimator in which the model is formed by the models of a CV. This object is needed
         to estimate the distribution of the training set and testing sets. It has a `fit` method, that trains
-        the models of the CV, and the typical methods `predict` y `predict_proba` to compute the predictions using
+        the models of the CV, and the typical methods `predict` and `predict_proba` to compute the predictions using
         such models. This implies that this object can be used by any distribution matching method that requires an
         estimator to represent the distributions
 
@@ -31,7 +31,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
         ----------
         Mainly the same that `cross_validate` method in sklearn:
 
-        estimator : estimator object implementing 'fit'
+        estimator : estimator object implementing `fit`
             The object to use to fit the data.
 
         groups : array-like, with shape (n_samples,), optional
@@ -60,32 +60,28 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
             Controls the number of jobs that get dispatched during parallel execution. Reducing this number can be
             useful to avoid an explosion of memory consumption when more jobs get dispatched than CPUs can process.
             This parameter can be:
-            - None, in which case all the jobs are immediately
-              created and spawned. Use this for lightweight and
-              fast-running jobs, to avoid delays due to on-demand
-              spawning of the jobs
-            - An int, giving the exact number of total jobs that are
-              spawned
-            - A string, giving an expression as a function of n_jobs,
-              as in '2*n_jobs'
+
+            - None, in which case all the jobs are immediately created and spawned. Use this for lightweight and
+              fast-running jobs, to avoid delays due to on-demand spawning of the jobs
+            - An int, giving the exact number of total jobs that are spawned
+            - A string, giving an expression as a function of n_jobs, as in `2*n_jobs`
 
         averaged_predictions : bool, optional (default=True)
-            If True, `predict`and `predict_proba` methods average the predictions given by estimators_ for
+            If True, `predict` and `predict_proba` methods average the predictions given by estimators_ for
             each example
 
         voting : str, {'hard', 'soft'} (default='hard')
             Only used when averaged_predictions is True.
-            If 'hard', `predict`and `predict_proba` methods apply majority rule voting.
+            If 'hard', `predict` and `predict_proba` methods apply majority rule voting.
             If 'soft', predict the class label based on the argmax of the sums of the predicted probabilities,
             which is recommended for an ensemble of well-calibrated classifiers.
 
         verbose : integer, optional (default=0)
             The verbosity level.
 
+           
         Attributes
         ----------
-        In addition to the parameters needed to call `cross_validate`` the class has this important attributes:
-
         estimator : An estimator object
             The estimator to fit each model of the CV
 
@@ -137,7 +133,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
     def fit(self, X, y):
         """ Fit the models
             It calls `cross_validate` to fit the models and save them in estimators_ attribute.
-            It also stores some attributes needed by `predict` and `predict_proba`, namely, le_, classes_ X_train
+            It also stores some attributes needed by `predict` and `predict_proba`, namely, le_, classes_, X_train
             and y_train_
 
             Parameters

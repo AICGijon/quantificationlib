@@ -38,10 +38,11 @@ class PriorShift_BagGenerator(BagGenerator):
         bag_size : int, (default=None)
             Number of examples in each bag
 
-        method : str, (default='Uniform')
+        method : str, (default='Uniform') 
             Method used to generate the distributions. Two methods available:
+            
             - 'Uniform' : the prevalences are uniformly distributed
-            - 'Dirichlet : the prevalences are generated using the Dirichlet distribution
+            - 'Dirichlet' : the prevalences are generated using the Dirichlet distribution
 
         alphas : None, float or array-like, (default=None), shape (n_classes, ) when it is an array
             The parameters for the Dirichlet distribution when the selected method is 'Dirichlet'
@@ -52,7 +53,7 @@ class PriorShift_BagGenerator(BagGenerator):
             is selected
 
         random_state : int, RandomState instance, (default=2032)
-            To generate random numbers
+            To generate random numbers.
             If type(random_state) is int, random_state is the seed used by the random number generator;
             If random_state is a RandomState instance, random_state is the own random number generator;
 
@@ -108,7 +109,7 @@ class PriorShift_BagGenerator(BagGenerator):
 
             Two different methods are implemented:
             - 'Uniform' : the prevalences are uniformly distributed
-            - 'Dirichlet : the prevalences are generated using the Dirichlet distribution
+            - 'Dirichlet' : the prevalences are generated using the Dirichlet distribution
 
             Parameters
             ----------
@@ -326,7 +327,7 @@ class CovariateShift_BagGenerator(BagGenerator):
             Number of examples in each bag
 
         random_state : int, RandomState instance, (default=2032)
-            To generate random numbers
+            To generate random numbers.
             If type(random_state) is int, random_state is the seed used by the random number generator;
             If random_state is a RandomState instance, random_state is the own random number generator;
 
@@ -442,8 +443,9 @@ class PriorAndCovariateShift_BagGenerator(BagGenerator):
 
         method : str, (default='Uniform')
             Method used to generate the distributions. Two methods available:
+            
             - 'Uniform' : the prevalences are uniformly distributed
-            - 'Dirichlet : the prevalences are generated using the Dirichlet distribution
+            - 'Dirichlet' : the prevalences are generated using the Dirichlet distribution
 
         alphas : None, float or array-like, (default=None), shape (n_classes, ) when it is an array
             The parameters for the Dirichlet distribution when the selected method is 'Dirichlet'
@@ -454,7 +456,7 @@ class PriorAndCovariateShift_BagGenerator(BagGenerator):
             is selected
 
         random_state : int, RandomState instance, (default=2032)
-            To generate random numbers
+            To generate random numbers.
             If type(random_state) is int, random_state is the seed used by the random number generator;
             If random_state is a RandomState instance, random_state is the own random number generator;
 
