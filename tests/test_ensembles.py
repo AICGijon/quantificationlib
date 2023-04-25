@@ -52,20 +52,20 @@ def test_ensembles():
     #  HDX
     eoq_hdx = EoQ(base_quantifier=HDX(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
-                    combination_strategy='prevalence_similarity')
+                    combination_strategy='prevalence_similarity', verbose=1)
     eoq_hdx.fit(X_train, y_train)
     #  PAC
     eoq_pac = EoQ(base_quantifier=PAC(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
                     combination_strategy='median',
-                    ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator)
+                    ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator, verbose=1)
     eoq_pac.fit(X_train, y_train)
 
     # EM
     eoq_em = EoQ(base_quantifier=EM(),
                     n_quantifiers=10, bag_generator=bag_generator_eoq,
-                    combination_strategy='mean',
-                    ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator)
+                    combination_strategy='all',
+                    ensemble_estimator_train=ensemble_estimator, ensemble_estimator_test=ensemble_estimator, verbose=1)
     eoq_em.fit(X_train, y_train)
 
     #  Testing bags
@@ -78,7 +78,7 @@ def test_ensembles():
         prev_preds = [
             eoq_hdx.predict(X_test[indexes[:, n_bag], :]),
             eoq_pac.predict(X_test[indexes[:, n_bag], :]),
-            eoq_em.predict(X_test[indexes[:, n_bag], :]),
+            eoq_em.predict(X_test[indexes[:, n_bag], :])['all'],
         ]
 
         for n_method, prev_pred in enumerate(prev_preds):

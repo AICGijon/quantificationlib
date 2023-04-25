@@ -12,6 +12,7 @@ from quantificationlib.decomposition.multiclass import OneVsRestQuantifier
 from quantificationlib.metrics.ordinal import emd, emd_score
 
 from quantificationlib.estimators.frank_and_hall import FrankAndHallClassifier
+from quantificationlib.estimators.frank_and_hall import FrankAndHallMonotoneClassifier
 from quantificationlib.decomposition.ordinal import FrankAndHallQuantifier
 
 from quantificationlib.estimators.cross_validation import CV_estimator
@@ -81,7 +82,7 @@ def test_decomposition_ordinal():
     n_bags=5
     master_seed=2032
 
-    method_name = ['FH-CC', 'FH-AC']
+    method_name = ['FH-CC', 'FH-AC', 'FHM-AC']
 
     results_emd = np.zeros((n_bags, len(method_name)))
     results_emd_score = np.zeros((n_bags, len(method_name)))
@@ -98,13 +99,20 @@ def test_decomposition_ordinal():
     # but they checked whether the estimator is already fitted (by a previous object) or not
     fh = FrankAndHallClassifier(estimator=RandomForestClassifier(n_estimators=100,
                                                                     random_state=master_seed,
-                                                                    class_weight='balanced'), n_jobs=-1)
+                                                                    class_weight='balanced'), n_jobs=-1, verbose=1)
+    fhm = FrankAndHallMonotoneClassifier(estimator=RandomForestClassifier(n_estimators=100,
+                                                                    random_state=master_seed,
+                                                                    class_weight='balanced'), n_jobs=-1, verbose=1)
 
-    #  AC_HD
-    fh_ac = FrankAndHallQuantifier(quantifier=AC(), estimator_train=fh, estimator_test=fh)
+
+    #  AC
+    fh_ac = FrankAndHallQuantifier(quantifier=AC(), estimator_train=fh, estimator_test=fh, verbose=1)
     fh_ac.fit(X_train, y_train)
+    #  AC
+    fhm_ac = FrankAndHallQuantifier(quantifier=AC(), estimator_train=fh, estimator_test=fhm, verbose=1)
+    fhm_ac.fit(X_train, y_train)
     #  CC
-    fh_hdx = FrankAndHallQuantifier(quantifier=HDX(), estimator_train=None, estimator_test=None)
+    fh_hdx = FrankAndHallQuantifier(quantifier=HDX(), estimator_train=None, estimator_test=None, verbose=1)
     fh_hdx.fit(X_train, y_train)
     
 
@@ -116,6 +124,7 @@ def test_decomposition_ordinal():
         prev_preds = [
             fh_hdx.predict(X_test[indexes[:, n_bag], :]),
             fh_ac.predict(X_test[indexes[:, n_bag], :]),
+            fhm_ac.predict(X_test[indexes[:, n_bag], :]),
         ]
 
     for n_method, prev_pred in enumerate(prev_preds):

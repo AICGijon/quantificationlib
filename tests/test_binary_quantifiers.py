@@ -36,7 +36,8 @@ def test_binary_quantifiers():
 
     method_name = ['CC', 'AC', 'PCC', 'PAC', 'EM',
                    'HDX-8b', 'CDFX-100b-L1', 'CDFX-100b-L2',
-                   'HDy-8b', 'PDFy-8b-tipsoe',
+                   'HDy-8b','HDy-8b-equal_with','HDy-8b-binormal','HDy-8b-normal', 
+                   'PDFy-8b-tipsoe',
                    'CDFy-100b-L1', 'CDFy-100b-L2', 'MMy-100', 'SORDy',
                    'DeBias', 'FriedmanME-L1',
                    'EDX', 'EDy', 'CvMy',
@@ -67,11 +68,11 @@ def test_binary_quantifiers():
     pcc = PCC(estimator_test=estimator)
     pcc.fit(X_train, y_train)
     #  PAC
-    pac = PAC(estimator_train=estimator, estimator_test=estimator)
+    pac = PAC(estimator_train=estimator, estimator_test=estimator, verbose=1)
     pac.fit(X_train, y_train)
 
     # EM
-    em = EM(estimator_train=estimator, estimator_test=estimator)
+    em = EM(estimator_train=estimator, estimator_test=estimator, verbose=1)
     em.fit(X_train, y_train)
 
     #  HDX
@@ -79,74 +80,86 @@ def test_binary_quantifiers():
     hdx.fit(X_train, y_train)
 
     #  CDFX-L1
-    cdfx_l1 = DFX(distribution_function='CDF', n_bins=100, distance='L1')
+    cdfx_l1 = DFX(distribution_function='CDF', n_bins=100, distance='L1', verbose=1)
     cdfx_l1.fit(X_train, y_train)
     #  CDFX-L2
-    cdfx_l2 = DFX(distribution_function='CDF', n_bins=100, distance='L2')
+    cdfx_l2 = DFX(distribution_function='CDF', n_bins=100, distance='L2', verbose=1)
     cdfx_l2.fit(X_train, y_train)
 
     #  HDY
-    hdy = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8)
+    hdy = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8, verbose=1)
     hdy.fit(X_train, y_train)
+
+    #  HDY equal count
+    hdy_equal_count = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8, bin_strategy='equal_count', verbose=1)
+    hdy_equal_count.fit(X_train, y_train)
+
+    #  HDY binormal
+    hdy_binormal = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8, bin_strategy='binormal', verbose=1)
+    hdy_binormal.fit(X_train, y_train)
+
+    #  HDY normal
+    hdy_normal = HDy(estimator_train=estimator, estimator_test=estimator, n_bins=8, bin_strategy='normal', verbose=1)
+    hdy_normal.fit(X_train, y_train)
 
     #  PDFY - topsoe
     pdfy_topsoe = DFy(estimator_train=estimator, estimator_test=estimator, distribution_function='PDF',
-                        distance=topsoe, n_bins=8)
+                        distance=topsoe, n_bins=8, verbose=1)
     pdfy_topsoe.fit(X_train, y_train)
 
     #  MMy
-    mmy = MMy(estimator_train=estimator, estimator_test=estimator, n_bins=100)
+    mmy = MMy(estimator_train=estimator, estimator_test=estimator, n_bins=100, verbose=1)
     mmy.fit(X_train, y_train)
 
     #  SORDy
-    sordy = SORDy(estimator_train=estimator, estimator_test=estimator)
+    sordy = SORDy(estimator_train=estimator, estimator_test=estimator, verbose=1)
     sordy.fit(X_train, y_train)
 
     #  CDFy-L1
     cdfy_l1 = DFy(estimator_train=estimator, estimator_test=estimator, distribution_function='CDF',
-                    n_bins=100, distance='L1')
+                    n_bins=100, distance='L1', verbose=1)
     cdfy_l1.fit(X_train, y_train)
     #  CDFy-L2
     cdfy_l2 = DFy(estimator_train=estimator, estimator_test=estimator, distribution_function='CDF',
-                    n_bins=100, distance='L2')
+                    n_bins=100, distance='L2', verbose=1)
     cdfy_l2.fit(X_train, y_train)
 
     #  Friedman DeBias
-    db = DeBias(estimator_train=estimator, estimator_test=estimator)
+    db = DeBias(estimator_train=estimator, estimator_test=estimator, verbose=1)
     db.fit(X_train, y_train)
     #  FriedmanME - L1
-    me_l1 = FriedmanME(estimator_train=estimator, estimator_test=estimator, distance='L1')
+    me_l1 = FriedmanME(estimator_train=estimator, estimator_test=estimator, distance='L1', verbose=1)
     me_l1.fit(X_train, y_train)
 
     #  EDX
-    edx = EDX()
+    edx = EDX(verbose=1)
     edx.fit(X_train, y_train)
     #  EDy
-    edy = EDy(estimator_train=estimator, estimator_test=estimator)
+    edy = EDy(estimator_train=estimator, estimator_test=estimator, verbose=1)
     edy.fit(X_train, y_train)
     #  CvMy
-    cvmy = CvMy(estimator_train=estimator, estimator_test=estimator)
+    cvmy = CvMy(estimator_train=estimator, estimator_test=estimator, verbose=1)
     cvmy.fit(X_train, y_train)
 
     #  QUANTy-L1
-    quanty_l1 = QUANTy(estimator_train=estimator, estimator_test=estimator, n_quantiles=8, distance=l1)
+    quanty_l1 = QUANTy(estimator_train=estimator, estimator_test=estimator, n_quantiles=8, distance=l1, verbose=1)
     quanty_l1.fit(X_train, y_train)
     #  QUANTy-L2
-    quanty_l2 = QUANTy(estimator_train=estimator, estimator_test=estimator, n_quantiles=8, distance=l2)
+    quanty_l2 = QUANTy(estimator_train=estimator, estimator_test=estimator, n_quantiles=8, distance=l2, verbose=1)
     quanty_l2.fit(X_train, y_train)
 
     #  REGX
     bag_generator = PriorShift_BagGenerator(n_bags=1000, bag_size=len(X_train),
                                             min_prevalence=None, random_state=master_seed)
-    regx = REGX(bag_generator=bag_generator, n_bins=8, bin_strategy='equal_width', regression_estimator=None)
+    regx = REGX(bag_generator=bag_generator, n_bins=8, bin_strategy='equal_width', regression_estimator=None, verbose=1)
     regx.fit(X_train, y_train)
     # REGy
     regy = REGy(estimator_train=estimator, estimator_test=estimator, bag_generator=bag_generator,
-                n_bins=8, bin_strategy='equal_width', regression_estimator=None)
+                n_bins=8, bin_strategy='equal_width', regression_estimator=None, verbose=1)
     regy.fit(X_train, y_train)
 
     # PWK
-    knn_q = PWKQuantifier()
+    knn_q = PWKQuantifier(verbose=1)
     knn_q.fit(X_train, y_train)
 
     #  Testing bags
@@ -166,6 +179,9 @@ def test_binary_quantifiers():
             cdfx_l1.predict(X_test[indexes[:, n_bag], :]),
             cdfx_l2.predict(X_test[indexes[:, n_bag], :]),
             hdy.predict(X_test[indexes[:, n_bag], :]),
+            hdy_equal_count.predict(X_test[indexes[:, n_bag], :]),
+            hdy_binormal.predict(X_test[indexes[:, n_bag], :]),
+            hdy_normal.predict(X_test[indexes[:, n_bag], :]),
             pdfy_topsoe.predict(X_test[indexes[:, n_bag], :]),
             mmy.predict(X_test[indexes[:, n_bag], :]),
             sordy.predict(X_test[indexes[:, n_bag], :]),
