@@ -26,19 +26,19 @@ def _sort_rows_bycolumns(m, columns=[0], order='ascending'):
     return m_sorted
 
 
-def _sort_columns_bymeans(m, order='ascending'):
-    """
-    Sort columns of matrix based on the means of its values.
-    Return the new matrix and the index of the columns
-    """
-    means = np.mean(m, axis=0)
-    print("means:",means)
-    idx_means = np.argsort(means)
-    if order=='descending':
-        idx_means = idx_means[::-1]
-    print(idx_means)
-    m_new = m[:, idx_means]
-    return m_new, idx_means
+# def _sort_columns_bymeans(m, order='ascending'):
+#     """
+#     Sort columns of matrix based on the means of its values.
+#     Return the new matrix and the index of the columns
+#     """
+#     means = np.mean(m, axis=0)
+#     print("means:",means)
+#     idx_means = np.argsort(means)
+#     if order=='descending':
+#         idx_means = idx_means[::-1]
+#     print(idx_means)
+#     m_new = m[:, idx_means]
+#     return m_new, idx_means
 
 def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors.TABLEAU_COLORS)):
     """
@@ -62,7 +62,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=list(mcolors
 
     """
 
-    if order!=None:
+    if order is not None:
        prevalence_matrix = _sort_rows_bycolumns(prevalence_matrix, order=order)
 
 
