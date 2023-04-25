@@ -78,10 +78,10 @@ algorithm (instead golden_section_search)</p>
 <li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
 training set and to compute the distribution of each class individually</p></li>
 <li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to compute the distribution of the whole testing set</p></li>
+testing set and to compute the distribution of the whole testing set.
+For some experiments both estimator_train and estimator_test could be the same</p></li>
 <li><p><strong>tol</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-05</em><em>)</em>) – The precision of the solution when search is used to compute the prevalence</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
-<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -283,12 +283,10 @@ labels are put in the same order in <a href="#id27"><span class="problematic" id
 <p>After that, the method computes the union distribution, merging training and testing distributions. This
 union is sorted based on the posterior probability of each example.</p>
 <p>Finally, the prevalences are computed using golden section search using two functions:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li><p>compute_sord_weights: to obtain the mixture depending on the estimated prevalence</p></li>
 <li><p>sord: distance funtion to measure how similar the mixture and the testing distributions are</p></li>
 </ul>
-</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -404,7 +402,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

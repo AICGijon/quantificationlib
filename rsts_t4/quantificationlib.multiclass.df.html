@@ -317,7 +317,8 @@ be shared for several quantifiers of this kind</p>
 <li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
 training set and to compute the distribution of each class individually</p></li>
 <li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to compute the distribution of the whole testing set</p></li>
+testing set and to compute the distribution of the whole testing set.
+For some experiments both estimator_train and estimator_test could be the same</p></li>
 <li><p><strong>distribution_function</strong> (<em>str</em><em>, </em><em>(</em><em>default='PDF'</em><em>)</em>) – Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p></li>
 <li><p><strong>n_bins</strong> (<em>int</em><em>  (</em><em>default=8</em><em>)</em>) – Number of bins to compute the CDFs/PDFs</p></li>
 <li><p><strong>bin_strategy</strong> (<em>str</em><em> (</em><em>default='norm'</em><em>)</em>) – <dl>
@@ -350,7 +351,6 @@ the training examples of each class.</p>
 distribution and the testing distribution</p></li>
 <li><p><strong>tol</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-05</em><em>)</em>) – The precision of the solution when search is used to compute the prevalence</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
-<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -862,7 +862,7 @@ values will be 0 and 1</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

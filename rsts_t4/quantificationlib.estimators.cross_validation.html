@@ -140,13 +140,11 @@ The number of estimators is equal to the number of folds times number of repetit
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.voting">
 <span class="sig-name descname"><span class="pre">voting</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.voting" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="simple">
-<dt>How predictions are aggregated:</dt><dd><ul class="simple">
+<dd><p>How predictions are aggregated:</p>
+<ul class="simple">
 <li><p>‘hard’, applying majority rule voting</p></li>
 <li><p>‘soft’, based on the argmax of the sums of the predicted probabilities</p></li>
 </ul>
-</dd>
-</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>str, {‘hard’, ‘soft’} (default=’hard’)</p>
@@ -236,6 +234,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p><strong>preds</strong> –    the value of averaged_predictions attribute</p>
+<p>Crisp predictions for the examples in X</p>
 <dl class="simple">
 <dt>Training set:</dt><dd><ul class="simple">
 <li><p>averaged_predictions == True,  shape(n_examples, )</p></li>
@@ -248,7 +247,6 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 </ul>
 </dd>
 </dl>
-<p>Crisp predictions for the examples in X</p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -267,10 +265,8 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><p><strong>preds</strong> –     the value of averaged_predictions attribute</p>
-<p>Probabilistic predictions for the examples in X.
-Shape:</p>
-<blockquote>
-<div><dl class="simple">
+<p>Probabilistic predictions for the examples in X.</p>
+<dl class="simple">
 <dt>Training set:</dt><dd><ul class="simple">
 <li><p>averaged_predictions == True,  shape(n_examples, n_classes)</p></li>
 <li><p>averaged_predictions == False, shape(n_examples * n_reps, n_classes)</p></li>
@@ -282,7 +278,6 @@ Shape:</p>
 </ul>
 </dd>
 </dl>
-</div></blockquote>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -379,7 +374,7 @@ Shape:</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

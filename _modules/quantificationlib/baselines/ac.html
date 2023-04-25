@@ -87,7 +87,7 @@
 
 <span class="sd">        estimator_test : estimator object (default=None)</span>
 <span class="sd">            An estimator object implementing `fit` and `predict`. It is used to classify the examples of the testing</span>
-<span class="sd">            set and to obtain their predictions</span>
+<span class="sd">            set and to obtain their predictions. For some experiments both estimators could be the same</span>
 
 <span class="sd">        distance : str, representing the distance function (default=&#39;HD&#39;)</span>
 <span class="sd">            It is the name of the distance used to compute the difference between the mixture of the training</span>
@@ -97,7 +97,6 @@
 <span class="sd">        verbose : int, optional, (default=0)</span>
 <span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
 
-<span class="sd">        For some experiments both estimators could be the same</span>
 
 <span class="sd">        Attributes</span>
 <span class="sd">        ----------</span>
@@ -235,7 +234,7 @@
 <span class="sd">            For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an</span>
 <span class="sd">            optimization problem of this kind:</span>
 
-<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) ) </span>
+<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) )                \n</span>
 <span class="sd">                      s.t.  sum(prevalences) = 1 , prevalecences_i &gt;= 0</span>
 
 <span class="sd">            in which distance can be &#39;HD&#39; (defect value), &#39;L1&#39; or &#39;L2&#39;</span>
@@ -342,7 +341,8 @@
 
 <span class="sd">        estimator_test : estimator object (default=None)</span>
 <span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
-<span class="sd">            testing set and to obtain the confusion matrix of the testing set</span>
+<span class="sd">            testing set and to obtain the confusion matrix of the testing set. </span>
+<span class="sd">            For some experiments both estimators could be the same</span>
 
 <span class="sd">        distance : str, representing the distance function (default=&#39;L2&#39;)</span>
 <span class="sd">            It is the name of the distance used to compute the difference between the mixture of the training</span>
@@ -352,7 +352,6 @@
 <span class="sd">        verbose : int, optional, (default=0)</span>
 <span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
 
-<span class="sd">        For some experiments both estimators could be the same</span>
 
 <span class="sd">        Attributes</span>
 <span class="sd">        ----------</span>
@@ -492,7 +491,7 @@
 <span class="sd">            For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an</span>
 <span class="sd">            optimization problem of this kind:</span>
 
-<span class="sd">                      Min   distance ( cm_.T * prevalences, PCC(X) )</span>
+<span class="sd">                      Min   distance ( cm_.T * prevalences, PCC(X) )        \n</span>
 <span class="sd">                      s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</span>
 
 <span class="sd">            in which distance can be &#39;HD&#39;, &#39;L1&#39; or &#39;L2&#39; (defect value)</span>
@@ -617,7 +616,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

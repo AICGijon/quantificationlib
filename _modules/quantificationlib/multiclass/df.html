@@ -100,7 +100,8 @@
 
 <span class="sd">        estimator_test : estimator object (default=None)</span>
 <span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
-<span class="sd">            testing set and to compute the distribution of the whole testing set</span>
+<span class="sd">            testing set and to compute the distribution of the whole testing set.</span>
+<span class="sd">            For some experiments both estimator_train and estimator_test could be the same</span>
 
 <span class="sd">        distribution_function : str, (default=&#39;PDF&#39;)</span>
 <span class="sd">            Type of distribution function used. Two types are supported &#39;CDF&#39; and &#39;PDF&#39;</span>
@@ -139,7 +140,6 @@
 <span class="sd">        verbose : int, optional, (default=0)</span>
 <span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
 
-<span class="sd">        For some experiments both estimator_train and estimator_test could be the same</span>
 
 <span class="sd">        Attributes</span>
 <span class="sd">        ----------</span>
@@ -830,7 +830,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

@@ -78,15 +78,14 @@
 
 <span class="sd">        estimator_test : estimator object (default=None)</span>
 <span class="sd">            An estimator object implementing `fit` and `predict_proba`. It is used to classify the examples of the</span>
-<span class="sd">            testing set and to compute the distribution of the whole testing set</span>
+<span class="sd">            testing set and to compute the distribution of the whole testing set.</span>
+<span class="sd">            For some experiments both estimator_train and estimator_test could be the same</span>
 
 <span class="sd">        tol : float, (default=1e-05)</span>
 <span class="sd">            The precision of the solution when search is used to compute the prevalence</span>
 
 <span class="sd">        verbose : int, optional, (default=0)</span>
 <span class="sd">            The verbosity level. The default value, zero, means silent mode</span>
-
-<span class="sd">        For some experiments both estimator_train and estimator_test could be the same</span>
 
 <span class="sd">        Attributes</span>
 <span class="sd">        ----------</span>
@@ -213,8 +212,8 @@
 
 <span class="sd">            Finally, the prevalences are computed using golden section search using two functions:</span>
 <span class="sd">            </span>
-<span class="sd">                - compute_sord_weights: to obtain the mixture depending on the estimated prevalence</span>
-<span class="sd">                - sord: distance funtion to measure how similar the mixture and the testing distributions are</span>
+<span class="sd">            - compute_sord_weights: to obtain the mixture depending on the estimated prevalence</span>
+<span class="sd">            - sord: distance funtion to measure how similar the mixture and the testing distributions are</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -313,7 +312,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

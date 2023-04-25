@@ -338,7 +338,7 @@ quadprog.solve_qp because it solves the following kind of problems:</p>
 <p>Subject to   C.T x &gt;= b</p>
 </div></blockquote>
 <p><cite>solve_l2</cite> just computes the term a, shape (n_classes,1), and then calls <cite>quadprog.solve_qp</cite>.
-G, C and b were computed by <cite>compute_l2_param_train</cite> before, in the ‘fit’ method` of the DF/Friedman object.
+G, C and b were computed by <cite>compute_l2_param_train</cite> before, in the <cite>fit</cite> method of the DF/Friedman object.
 quadprog is used here because it is faster than cvxpy.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -451,7 +451,7 @@ quadprog is used here because it is faster than cvxpy.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

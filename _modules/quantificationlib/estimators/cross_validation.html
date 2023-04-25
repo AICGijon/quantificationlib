@@ -138,8 +138,9 @@
 
 <span class="sd">        voting : str, {&#39;hard&#39;, &#39;soft&#39;} (default=&#39;hard&#39;)</span>
 <span class="sd">            How predictions are aggregated:</span>
-<span class="sd">                - &#39;hard&#39;, applying majority rule voting</span>
-<span class="sd">                - &#39;soft&#39;, based on the argmax of the sums of the predicted probabilities</span>
+<span class="sd">            </span>
+<span class="sd">            - &#39;hard&#39;, applying majority rule voting</span>
+<span class="sd">            - &#39;soft&#39;, based on the argmax of the sums of the predicted probabilities</span>
 
 <span class="sd">        le_ : a LabelEncoder fitted object</span>
 <span class="sd">            Used to compute the class labels</span>
@@ -216,14 +217,14 @@
 <span class="sd">            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and</span>
 <span class="sd">                    the value of averaged_predictions attribute</span>
 
+<span class="sd">                 Crisp predictions for the examples in X</span>
+
 <span class="sd">                 Training set:</span>
 <span class="sd">                     - averaged_predictions == True,  shape(n_examples, )</span>
 <span class="sd">                     - averaged_predictions == False, shape(n_examples * n_reps, )</span>
 <span class="sd">                 Testing set:</span>
 <span class="sd">                     - averaged_predictions == True,  shape(n_examples, )</span>
 <span class="sd">                     - averaged_predictions == False, shape(n_examples * n_reps * n_folds, )</span>
-
-<span class="sd">                 Crisp predictions for the examples in X</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s1">&#39;CV_estimator not fitted&#39;</span><span class="p">)</span>
@@ -268,13 +269,13 @@
 <span class="sd">                    the value of averaged_predictions attribute</span>
 
 <span class="sd">                Probabilistic predictions for the examples in X.</span>
-<span class="sd">                Shape:</span>
-<span class="sd">                    Training set:</span>
-<span class="sd">                        - averaged_predictions == True,  shape(n_examples, n_classes)</span>
-<span class="sd">                        - averaged_predictions == False, shape(n_examples * n_reps, n_classes)</span>
-<span class="sd">                    Testing set:</span>
-<span class="sd">                        - averaged_predictions == True,  shape(n_examples, n_classes)</span>
-<span class="sd">                        - averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)</span>
+<span class="sd">                </span>
+<span class="sd">                Training set:</span>
+<span class="sd">                    - averaged_predictions == True,  shape(n_examples, n_classes)</span>
+<span class="sd">                    - averaged_predictions == False, shape(n_examples * n_reps, n_classes)</span>
+<span class="sd">                Testing set:</span>
+<span class="sd">                    - averaged_predictions == True,  shape(n_examples, n_classes)</span>
+<span class="sd">                    - averaged_predictions == False, shape(n_examples * n_reps * n_folds, n_classes)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators_</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotFittedError</span><span class="p">(</span><span class="s1">&#39;CV_estimator not fitted&#39;</span><span class="p">)</span>
@@ -381,7 +382,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

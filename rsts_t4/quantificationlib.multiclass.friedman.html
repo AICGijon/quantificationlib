@@ -75,12 +75,12 @@ for several quantifiers of this kind</p>
 <li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
 training set and to compute the confusion matrix</p></li>
 <li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to obtain the confusion matrix of the testing set</p></li>
+testing set and to obtain the confusion matrix of the testing set.
+For some experiments both estimators could be the same</p></li>
 <li><p><strong>distance</strong> (<em>str</em><em>, </em><em>representing the distance function</em><em> (</em><em>default='L2'</em><em>)</em>) – It is the name of the distance used to compute the difference between the mixture of the training
 distribution and the testing distribution</p></li>
 <li><p><strong>tol</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-05</em><em>)</em>) – The precision of the solution when search is used to compute the prevalence</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
-<li><p><strong>same</strong> (<em>For some experiments both estimators could be the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -440,7 +440,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>

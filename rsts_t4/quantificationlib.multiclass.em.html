@@ -75,12 +75,12 @@ once and can be shared for several quantifiers of this kind</p>
 <li><p><strong>estimator_train</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
 training set and to compute the distribution of each class individually</p></li>
 <li><p><strong>estimator_test</strong> (<em>estimator object</em><em> (</em><em>default=None</em><em>)</em>) – An estimator object implementing <cite>fit</cite> and <cite>predict_proba</cite>. It is used to classify the examples of the
-testing set and to compute the distribution of the whole testing set</p></li>
+testing set and to compute the distribution of the whole testing set.
+For some experiments both estimator_train and estimator_test could be the same</p></li>
 <li><p><strong>verbose</strong> (<em>int</em><em>, </em><em>optional</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – The verbosity level. The default value, zero, means silent mode</p></li>
 <li><p><strong>epsilon</strong> (<em>float</em><em>, </em><em>(</em><em>default=1e-04</em><em>)</em>) – EM algorithm (its loop) stops when the difference between the prevalences of two
 consecutive iterations is lower than epsilon</p></li>
 <li><p><strong>max_iter</strong> (<em>int</em><em> (</em><em>default=1000</em><em>)</em>) – The maximum number of iterations for the loop of the EM algorithm</p></li>
-<li><p><strong>same</strong> (<em>For some experiments both estimator_train and estimator_test could be the</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -377,7 +377,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     </div>
   </body>
 </html>
