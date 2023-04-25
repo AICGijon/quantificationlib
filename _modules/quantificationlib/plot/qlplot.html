@@ -70,19 +70,19 @@
     <span class="k">return</span> <span class="n">m_sorted</span>
 
 
-<span class="k">def</span> <span class="nf">_sort_columns_bymeans</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;ascending&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sort columns of matrix based on the means of its values.</span>
-<span class="sd">    Return the new matrix and the index of the columns</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;means:&quot;</span><span class="p">,</span><span class="n">means</span><span class="p">)</span>
-    <span class="n">idx_means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">means</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">order</span><span class="o">==</span><span class="s1">&#39;descending&#39;</span><span class="p">:</span>
-        <span class="n">idx_means</span> <span class="o">=</span> <span class="n">idx_means</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">idx_means</span><span class="p">)</span>
-    <span class="n">m_new</span> <span class="o">=</span> <span class="n">m</span><span class="p">[:,</span> <span class="n">idx_means</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">m_new</span><span class="p">,</span> <span class="n">idx_means</span>
+<span class="c1"># def _sort_columns_bymeans(m, order=&#39;ascending&#39;):</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     Sort columns of matrix based on the means of its values.</span>
+<span class="c1">#     Return the new matrix and the index of the columns</span>
+<span class="c1">#     &quot;&quot;&quot;</span>
+<span class="c1">#     means = np.mean(m, axis=0)</span>
+<span class="c1">#     print(&quot;means:&quot;,means)</span>
+<span class="c1">#     idx_means = np.argsort(means)</span>
+<span class="c1">#     if order==&#39;descending&#39;:</span>
+<span class="c1">#         idx_means = idx_means[::-1]</span>
+<span class="c1">#     print(idx_means)</span>
+<span class="c1">#     m_new = m[:, idx_means]</span>
+<span class="c1">#     return m_new, idx_means</span>
 
 <div class="viewcode-block" id="plot_line_prevalences"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.plot.html#quantificationlib.plot.qlplot.plot_line_prevalences">[docs]</a><span class="k">def</span> <span class="nf">plot_line_prevalences</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">prevalence_matrix</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">mcolors</span><span class="o">.</span><span class="n">TABLEAU_COLORS</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -106,7 +106,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">order</span><span class="o">!=</span><span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">order</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
        <span class="n">prevalence_matrix</span> <span class="o">=</span> <span class="n">_sort_rows_bycolumns</span><span class="p">(</span><span class="n">prevalence_matrix</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
 
 
