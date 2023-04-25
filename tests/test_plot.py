@@ -14,6 +14,6 @@ bag_generator = PriorShift_BagGenerator(n_bags=50, bag_size=100, min_prevalence=
 
 prev_true, _ = bag_generator.generate_bags(X, y)
 
-plot_line_prevalences(ax, prevalence_matrix=prev_true)
+plot_line_prevalences(ax, prevalence_matrix=prev_true, order='descending')
 
 

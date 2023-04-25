@@ -43,7 +43,7 @@ def test_ordinal_frankhall_quantifiers():
     # but they checked whether the estimator is already fitted (by a previous object) or not
     fh = FrankAndHallTreeClassifier(estimator=RandomForestClassifier(n_estimators=100,
                                                                         random_state=master_seed,
-                                                                        class_weight='balanced'), n_jobs=-1)
+                                                                        class_weight='balanced'), n_jobs=-1, verbose=1)
 
     #  PCC
     pcc = PCC(estimator_test=fh)
@@ -52,31 +52,31 @@ def test_ordinal_frankhall_quantifiers():
     #  OQT
     oqt = OrdinalQuantificationTree(estimator_test=RandomForestClassifier(n_estimators=100,
                                                                             random_state=master_seed,
-                                                                            class_weight='balanced'))
+                                                                            class_weight='balanced', verbose=1))
     oqt.fit(X_train, y_train)
 
     #  AC L2
-    ac_l2 = AC(estimator_train=fh, estimator_test=fh, distance='L2')
+    ac_l2 = AC(estimator_train=fh, estimator_test=fh, distance='L2', verbose=1)
     ac_l2.fit(X_train, y_train)
 
     #  AC ORD
-    ac_ord = ACOrdinal(estimator_train=fh, estimator_test=fh)
+    ac_ord = ACOrdinal(estimator_train=fh, estimator_test=fh, verbose=1)
     ac_ord.fit(X_train, y_train)
 
     #  PAC L2
-    pac_l2 = PAC(estimator_train=fh, estimator_test=fh, distance='L2')
+    pac_l2 = PAC(estimator_train=fh, estimator_test=fh, distance='L2', verbose=1)
     pac_l2.fit(X_train, y_train)
 
     #  EDy
-    edy = EDy(estimator_train=fh, estimator_test=fh, distance=emd_distances)
+    edy = EDy(estimator_train=fh, estimator_test=fh, distance=emd_distances, verbose=1)
     edy.fit(X_train, y_train)
 
     #  PDF L2
-    pdf_l2 = PDFOrdinaly(estimator_train=fh, estimator_test=fh, distance='L2')
+    pdf_l2 = PDFOrdinaly(estimator_train=fh, estimator_test=fh, distance='L2', verbose=1)
     pdf_l2.fit(X_train, y_train)
 
     #  PDF EMD
-    pdf_emd = PDFOrdinaly(estimator_train=fh, estimator_test=fh, distance='EMD')
+    pdf_emd = PDFOrdinaly(estimator_train=fh, estimator_test=fh, method='winner_node', distance='EMD', verbose=1)
     pdf_emd.fit(X_train, y_train)
 
     bag_generator = PriorShift_BagGenerator(n_bags=n_bags, bag_size=len(X_test),
