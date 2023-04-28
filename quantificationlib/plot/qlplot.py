@@ -55,7 +55,7 @@ def plot_line_prevalences(ax, prevalence_matrix, order=None, colors=None):
         Prevalences of the experiments
 
     order: str, optional    
-        To sort matrix based on the first column in order "ascending", "desdending" or none
+        To sort matrix based on the first column in order "ascending", "desdending" or None
        
     colors: list, optional
         List of colors for classes. If None list(mcolors.TABLEAU_COLORS) are used
