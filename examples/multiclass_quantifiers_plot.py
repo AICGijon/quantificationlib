@@ -18,8 +18,11 @@ from quantificationlib.metrics.multiclass import hd, l1, l2, topsoe, mean_absolu
 
 from quantificationlib.data_utils import load_data, normalize
 
-from quantificationlib.plot.qlplot import plot_line_prevalences     ### To plot prevalences
-import matplotlib.pyplot as plt                                     ### To plot prevalences
+import matplotlib.pyplot as plt                                     ### To plot 
+import matplotlib.colors as mcolors
+from quantificationlib.plot.qlplot import plot_line_prevalences     
+from quantificationlib.plot.qlplot import plot_boxes                
+
 
 def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
@@ -55,7 +58,7 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
                                                                       class_weight='balanced'), cv=skf_train)
 
 
-         #  PCC
+        #  PCC
         pcc = PCC(estimator_test=estimator)
         pcc.fit(X_train, y_train)
         #  HDY
@@ -88,20 +91,21 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
             for n_method, prev_pred in enumerate(prev_preds):
                 results[n_rep * n_bags + n_bag, n_method] = mean_absolute_error(prev_true[:, n_bag], prev_pred)
 
-    #  printing and saving results
-    filename = 'results/multiclass-quantifiers-' + estimator_name
-    #  all
-    np.savetxt(filename + '-all-' + str(n_reps) + '-' + str(n_bags), results,
-               fmt='%.5f', delimiter=",", header=','.join(method_name))
-    #  avg
-    file_avg = open(filename + '-avg-' + str(n_reps) + '-' + str(n_bags), 'w')
+    # #  printing and saving results
+    # filename = 'results/multiclass-quantifiers-' + estimator_name
+    # #  all
+    # np.savetxt(filename + '-all-' + str(n_reps) + '-' + str(n_bags), results,
+    #            fmt='%.5f', delimiter=",", header=','.join(method_name))
+    # #  avg
+    # file_avg = open(filename + '-avg-' + str(n_reps) + '-' + str(n_bags), 'w')
     avg = np.mean(results, axis=0)
-    print('\nMAE results')
-    print('-' * 22)
-    for n_method, method in enumerate(method_name):
-        file_avg.write('%-15s%.5f\n' % (method, avg[n_method]))
-        print('%-15s%.5f' % (method, avg[n_method]))
+    # print('\nMAE results')
+    # print('-' * 22)
+    # for n_method, method in enumerate(method_name):
+    #     file_avg.write('%-15s%.5f\n' % (method, avg[n_method]))
+    #     print('%-15s%.5f' % (method, avg[n_method]))
 
+    ### To plot prevalences
     # Create a single row of subplots
     fig, axs = plt.subplots(ncols=len(method_name)+1, figsize=(15, 4))
 
@@ -118,10 +122,33 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
     plt.tight_layout()
     plt.show()
 
+    ### To plot boxplot
+    fig2, axs2 = plt.subplots(ncols=2, figsize=(10,4))
+    plot_boxes(axs2[0], results, vert=None, y_title='MAE', x_title=None,
+               labels=method_name, colors=None) 
+    plot_boxes(axs2[1], results, vert=False, y_title=None, x_title='MAE',
+               labels=method_name, colors=list(mcolors.TABLEAU_COLORS))
+    plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
      #main(dataset='./datasets/multiclass/iris.csv', estimator_name='RF',
      #     n_reps=2, n_bags=100, master_seed=2032)
 
-     main(dataset='./datasets/multiclass/MaternalHealthRisk.csv', estimator_name='RF',
+     #main(dataset='./datasets/multiclass/MaternalHealthRisk.csv', estimator_name='RF',
+     #     n_reps=4, n_bags=50, master_seed=2032)
+     
+     main(dataset='C:\\Users\\jalon\\PycharmProjects\\QLIB_AIC_PLOT\\quantificationlib\\examples\\datasets\\multiclass\\MaternalHealthRisk.csv', estimator_name='RF',
           n_reps=4, n_bags=50, master_seed=2032)
