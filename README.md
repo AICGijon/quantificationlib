@@ -8,10 +8,6 @@
 
 QuantificationLib is an open-source library for quantification learning. 
 
-### Last updates:
-- Adding plots [0.0.7]
-- Initial version of the library released [0.0.6].
-
 ### Installation and documentation
 
 The installation, quick-start guide and documentation are available [here](https://aicgijon.github.io/quantificationlib/).

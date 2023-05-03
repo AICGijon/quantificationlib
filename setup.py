@@ -72,7 +72,7 @@ setup(
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
     url='https://github.com/AICGijon/quantificationlib',  # Optional
-    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.0.7.tar.gz',
+    download_url='https://github.com/AICGijon/quantificationlib/archive/refs/tags/0.1.1.tar.gz',
 
     author='Alberto Castaño, Pablo González, Jaime Alonso, Pablo Pérez, Juan José del Coz',
 
