@@ -30,11 +30,11 @@ extensions = [
     'sphinx.ext.viewcode',      # Add links to highlighted source code
 ]
 
-
 source_suffix = ['.rst', '.md']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -49,11 +49,13 @@ html_theme_options = {
 
 html_show_sourcelink = False
 
+
 # Customlocaltoc must be in _templates
 html_sidebars = { '**': ['custom_localtoc.html', 'mylink.html', 'relations.html', 'sourcelink.html', 'searchbox.html'], }
 
 add_module_names = False
 toc_object_entries_show_parents = 'hide'
+
 
 # -- Options for autodoc ----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#configuration

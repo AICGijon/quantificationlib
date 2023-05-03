@@ -61,32 +61,32 @@ class SORDy(UsingClassifiers):
             It is True because SORD quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-            This means that predictions_train_/predictions_test_ contain probabilistic predictions
+            This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len('predictions_train_', 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit`/`predict` method whenever the true labels of the training set are needed,
             instead of y
 
         tol : float
             The precision of the solution when search is used to compute the solution
 
         train_distrib_ : ndarray, shape (n_examples_train, 1) binary quantification
-            Contains predictions_train_ in ascending order
+            Contains `predictions_train_` in ascending order
 
         train_labels_ : ndarray, shape (n_examples_train, 1) binary quantification
-            Contains the corresponding labels of the examples in train_distrib_ in the same order
+            Contains the corresponding labels of the examples in `train_distrib_` in the same order
 
         union_distrib_ : ndarray, shape (n_examples_train+n_examples_test, 1)
-            Contains the union of predictions_train_ and predictions_test_ in ascending order
+            Contains the union of `predictions_train_` and `predictions_test_` in ascending order
 
         union_labels  :  ndarray, shape (n_examples_train+n_examples_test, 1)
-            Contains the set/or  the label of each prediction  in union_distrib_. If the prediction corresponds to
+            Contains the set/or  the label of each prediction  in `union_distrib_`. If the prediction corresponds to
             a training example, the value is the true class of such example. If the example belongs to the testing
             distribution, the value is NaN
 
@@ -118,10 +118,10 @@ class SORDy(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
-            After that, the method sorts the predictions for the train set into train_distrib_. The actual
-            labels are put in the same order in train_labels_
+            After that, the method sorts the predictions for the train set into `train_distrib_`. The actual
+            labels are put in the same order in `train_labels_`
 
             Parameters
             ----------
@@ -160,7 +160,7 @@ class SORDy(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the method computes the union distribution, merging training and testing distributions. This

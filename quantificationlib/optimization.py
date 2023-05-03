@@ -22,8 +22,8 @@ import scipy
 def solve_l1(train_distrib, test_distrib, n_classes, problem=None, solver=None):
     """ Solves AC, PAC, DF and Friedman optimization problems for L1 loss function
 
-            min   |train_distrib * prevalences - test_distrib|      \n
-            s.t.  prevalences_i >=0, sum prevalences_i = 1
+            `min   |train_distrib * prevalences - test_distrib|`      \n
+            `s.t.  prevalences_i >=0, sum prevalences_i = 1`
 
         Parameters
         ----------

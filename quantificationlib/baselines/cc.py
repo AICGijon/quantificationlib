@@ -17,7 +17,7 @@ from quantificationlib.base import UsingClassifiers
 class CC(UsingClassifiers):
     """ Multiclass Classify And Count method
 
-        prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)
+        `prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)`
 
         This class works in two different ways:
 
@@ -45,7 +45,7 @@ class CC(UsingClassifiers):
             It is False because CC quantifiers do not need to estimate the training distribution
 
         probabilistic_predictions : bool, False
-             This means that predictions_test_ contains crisp predictions
+             This means that `predictions_test_` contains crisp predictions
 
         predictions_test_ : ndarray, shape (n_examples, )
             Crisp predictions of the examples in the testing bag
@@ -102,7 +102,7 @@ class CC(UsingClassifiers):
 
             The prevalence for each class is the proportion of examples predicted as belonging to that class
 
-            prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)
+            `prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)`
 
             Parameters
             ----------
@@ -111,9 +111,9 @@ class CC(UsingClassifiers):
 
             predictions_test : ndarray, shape (n_examples, ) or (n_examples, n_classes) (default=None)
                 They can be crisp values or probabilities. In the latter case, they are converted to crisp values
-                using `__probs2crisps` method
+                using `__probs2crisps` method.
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 
@@ -148,7 +148,7 @@ class CC(UsingClassifiers):
 class PCC(UsingClassifiers):
     """ Multiclass Probabilistic Classify And Count method
 
-        prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )
+        `prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )`
 
         This class works in two different ways:
 
@@ -181,7 +181,7 @@ class PCC(UsingClassifiers):
             It is False because PCC quantifiers do not need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_test_ contains probabilistic predictions
+             This means that `predictions_test_` contains probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
@@ -230,7 +230,7 @@ class PCC(UsingClassifiers):
 
             The prevalence for each class is the average probability for such class
 
-            prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )
+            `prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )`
 
             Parameters
             ----------
@@ -240,7 +240,7 @@ class PCC(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a predict_proba method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

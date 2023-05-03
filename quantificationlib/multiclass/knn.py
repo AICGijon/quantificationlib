@@ -80,9 +80,9 @@ class PWKQuantifier(WithoutClassifiers):
 
     def fit(self, X, y):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (crisp values) if needed. Both operations are
             performed by the `fit` method of its superclass.
-            Finally the method computes the confusion matrix of the training set using predictions_train_
+            Finally the method computes the confusion matrix of the training set using `predictions_train_`
 
             Parameters
             ----------
@@ -119,18 +119,17 @@ class PWKQuantifier(WithoutClassifiers):
 
             The prevalences are computed solving a system of linear scalar equations:
 
-                         cm_.T * prevalences = CC(X)
+                         `cm_.T * prevalences = CC(X)`
 
             For binary problems the system is directly solved using the original AC algorithm proposed by Forman
 
-                        p = (p_0 - fpr ) / ( tpr - fpr)
+                        `p = (p_0 - fpr ) / ( tpr - fpr)`
 
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, CC(X) )
-                      s.t.  sum(prevalences) = 1
-                            prevalecences_i >= 0
+                      `Min   distance ( cm_.T * prevalences, CC(X) )`    \n
+                      `s.t.  sum(prevalences) = 1, prevalecences_i >= 0`
 
             in which distance is 'L1'
 

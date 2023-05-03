@@ -127,11 +127,11 @@ class UsingClassifiers(BaseQuantifier):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_), )
+        y_ext_ : ndarray, shape(len(`predictions_train_`), )
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
             predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying
-            CV_estimator) than y. In other cases, y_ext_ == y.
-            y_ext_ must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,
+            CV_estimator) than y. In other cases, `y_ext_ == y`.
+            `y_ext_` must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,
             instead of y
 
         verbose : int
@@ -139,7 +139,7 @@ class UsingClassifiers(BaseQuantifier):
 
         Notes
         -----
-        Notice that at least one between estimator_train_/predictions_train and estimator_test_/predictions_test
+        Notice that at least one between `estimator_train_/predictions_train` and `estimator_test_/predictions_test`
         must be not None. If both are None a ValueError exception will be raised. If both are not None,
         predictions_train/predictions_test are used
     """
@@ -161,17 +161,17 @@ class UsingClassifiers(BaseQuantifier):
 
     def fit(self, X, y, predictions_train=None):
         """ Fits the estimators (estimator_train and estimator_test) and computes the predictions for the training
-            set (predictions_train_ attribute)
+            set (`predictions_train_` attribute)
 
             First, the method checks that estimator_train and predictions_train are not both None
 
             Then, it fits both estimators if needed. It checks whether the estimators are already trained or not
             by calling the `predict` method.
 
-            The method finally computes predictions_train_ (if needed, attribute needs_predictions_train) using
-            predictions_train or estimator_train. If predictions_train is not None, predictions_train_ is copied from
+            The method finally computes `predictions_train_` (if needed, attribute needs_predictions_train) using
+            predictions_train or estimator_train. If predictions_train is not None, `predictions_train_` is copied from
             predictions_train (and converted to crisp values, using `__probs2crisps` method, when
-            probabilistic_predictions is False). If predictions_train is None, predictions_train_ is computed using
+            probabilistic_predictions is False). If predictions_train is None, `predictions_train_` is computed using
             the `predict`/`predict_proba` method of estimator_train, depending again on the value of
             probabilistic_predictions attribute.
 
@@ -265,14 +265,14 @@ class UsingClassifiers(BaseQuantifier):
         return self
 
     def predict(self, X, predictions_test=None):
-        """ Computes the predictions for the testing set (predictions_test_ attribute)
+        """ Computes the predictions for the testing set (`predictions_test_` attribute)
 
             First, the method checks if at least one between estimator_test and prediction_test is not None,
             otherwise a ValueError exception is raised.
 
-            Then, it computes predictions_test_. If predictions_test is not None, predictions_test_ is copied from
+            Then, it computes `redictions_test_`. If predictions_test is not None, `predictions_test_` is copied from
             predictions_test (and converted to crisp values, using `__probs2crisp` method when
-            probabilistic_predictions attribute is False). If predictions_test is None, predictions_test_ is computed
+            probabilistic_predictions attribute is False). If predictions_test is None, `predictions_test_` is computed
             calling the `predict`/`predict_proba` method (depending on the value of the attribute
             probabilistic_predictions) of estimator_test.
 

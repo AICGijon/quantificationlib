@@ -575,13 +575,13 @@ class FrankAndHallTreeClassifier(FrankAndHallClassifier):
 
         Example::
         
-                                                1-2-3 vs 4-5
+                                                      1-2-3 vs 4-5
 
-                             1 vs 2-3-4-5                            1-2-3-4 vs 5
+                                     1 vs 2-3-4-5                            1-2-3-4 vs 5
 
-                          1                1-2 vs 3-4-5           4                5
+                               1                  1-2 vs 3-4-5           4                5
                       
-                                       2                 3
+                                               2                 3
 
         Parameters
         ----------
@@ -901,7 +901,6 @@ class QTree:
         left: a QTree object (default=None)
             Left subTree of this node
 
-
         right: a QTree object (default=None)
             Right subTree of this node
     """
@@ -988,10 +987,10 @@ class FHLabelBinarizer(LabelBinarizer):
                 decomposition from left to right. For instance, in a 4-class problem, each column corresponds to
                 the following problems:
 
-                1st column: 1 vs 2-3-4
-                2nd column: 1-2 vs 3-4
-                3rd column: 1-2-3 vs 4
-                4ht column: (not really used)
+                    1st column: 1 vs 2-3-4\n
+                    2nd column: 1-2 vs 3-4\n
+                    3rd column: 1-2-3 vs 4\n
+                    4ht column: (not really used)
         """
         y_bin = super().transform(y)
         y_bin_fh = copy(y_bin)

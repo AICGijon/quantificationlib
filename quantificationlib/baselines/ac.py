@@ -66,7 +66,7 @@ class AC(UsingClassifiers):
             It is True because AC quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, False
-             This means that predictions_test_ contains crisp predictions
+             This means that `predictions_test_` contains crisp predictions
 
         distance : str
             A string with the name of the distance function ('HD'/'L1'/'L2')
@@ -80,11 +80,11 @@ class AC(UsingClassifiers):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`. 
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
         cm_ : ndarray, shape (n_classes, n_classes)
             Confusion matrix. The true classes are in the rows and the predicted classes in the columns. So, for
@@ -130,9 +130,9 @@ class AC(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (crisp values) if needed. Both operations are
             performed by the `fit` method of its superclass.
-            Finally the method computes the confusion matrix of the training set using predictions_train_
+            Finally the method computes the confusion matrix of the training set using `predictions_train_`
 
             Parameters
             ----------
@@ -176,22 +176,22 @@ class AC(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the prevalences are computed solving a system of linear scalar equations:
 
-                         cm_.T * prevalences = CC(X)
+                         `cm_.T * prevalences = CC(X)`
 
             For binary problems the system is directly solved using the original AC algorithm proposed by Forman
 
-                        p = (p_0 - fpr ) / ( tpr - fpr)
+                        `p = (p_0 - fpr ) / ( tpr - fpr)`
 
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, CC(X) )                \n
-                      s.t.  sum(prevalences) = 1 , prevalecences_i >= 0
+                      `Min   distance ( cm_.T * prevalences, CC(X) )`                \n
+                      `s.t.  sum(prevalences) = 1 , prevalecences_i >= 0`
 
             in which distance can be 'HD' (defect value), 'L1' or 'L2'
 
@@ -203,7 +203,7 @@ class AC(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 
@@ -330,26 +330,26 @@ class PAC(UsingClassifiers):
             It is True because PAC quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_test_ contains probabilistic predictions
+             This means that `predictions_test_` contains probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`. 
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
 
-        cm_ : ndarray, shape (n_classes, n_classes)
+        `cm_` : ndarray, shape (n_classes, n_classes)
             Confusion matrix
 
-        G_, C_, b_: variables of different kind for defining the optimization problem
+        `G_, C_, b_`: variables of different kind for defining the optimization problem
             These variables are precomputed in the `fit` method and are used for solving the optimization problem
             using `quadprog.solve_qp`. See `compute_l2_param_train` function
 
-        problem_ : a cvxpy Problem object
+        `problem_` : a cvxpy Problem object
             This attribute is set to None in the fit() method. With such model, the first time a testing bag is
             predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
             case of 'L1' and 'HD'). For the rest testing bags, this object is passed to allow a warm start. The
@@ -385,7 +385,7 @@ class PAC(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
             Finally the method computes the (probabilistic) confusion matrix using predictions_train
 
@@ -431,26 +431,26 @@ class PAC(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the prevalences are computed solving a system of linear scalar equations:
 
-                         cm_.T * prevalences = PCC(X)
+                         `cm_.T * prevalences = PCC(X)`
 
             For binary problems the system is directly solved using the original PAC algorithm proposed by Bella et al.
 
-                        p = (p_0 - PA(negatives) ) / ( PA(positives) - PA(negatives) )
+                        `p = (p_0 - PA(negatives) ) / ( PA(positives) - PA(negatives) )`
 
             in which PA stands for probability average.
 
             For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
             optimization problem of this kind:
 
-                      Min   distance ( cm_.T * prevalences, PCC(X) )        \n
-                      s.t.  sum(prevalences) = 1, prevalecences_i >= 0
+                      `Min   distance ( cm_.T * prevalences, PCC(X) )`       \n
+                      `s.t.  sum(prevalences) = 1, prevalecences_i >= 0`
 
-            in which distance can be 'HD', 'L1' or 'L2' (defect value)
+            in which distance can be 'HD', 'L1' or 'L2' (default value)
 
             Parameters
             ----------
@@ -460,7 +460,7 @@ class PAC(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

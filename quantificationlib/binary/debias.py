@@ -17,11 +17,12 @@ from quantificationlib.base import UsingClassifiers
 class DeBias(UsingClassifiers):
     """ Binary quantifier based on De-Bias estimate proposed by Friedman
 
-        prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt
+        `prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt`
 
         where
 
-        Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))
+        `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
+             `/ (prior(positives) * prior(negatives))`
 
         This class works in two different ways:
 
@@ -59,7 +60,7 @@ class DeBias(UsingClassifiers):
             Predictions of the examples in the testing bag
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         needs_predictions_train : bool, True
             It is True because DeBias quantifiers need to estimate the training distribution
@@ -75,7 +76,8 @@ class DeBias(UsingClassifiers):
 
         Vt_ : float
            The value of equation
-                Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])
+                `Vt = [ 1/|T| sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ]`
+                      `/ (train_prevs_[1] * train_prevs_[0])`
            applied over the training examples D
 
         verbose : int
@@ -102,12 +104,13 @@ class DeBias(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
 
             Finally the method computes the value of Vt
 
-            Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))
+            `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
+                     `/ (prior(positives) * prior(negatives))`
 
             Parameters
             ----------
@@ -150,7 +153,7 @@ class DeBias(UsingClassifiers):
 
             The prevalence for the positive class is
 
-            prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt
+            `prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt`
 
             Parameters
             ----------
@@ -160,7 +163,7 @@ class DeBias(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a predict_proba method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

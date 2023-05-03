@@ -76,21 +76,21 @@ class EDy(UsingClassifiers):
             It is True because EDy quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
         train_n_cls_i_ : ndarray, shape(n_classes, 1)
             Number of the examples of each class in the training set. Used to compute average distances
 
-        train_distrib_ : Dict, the keys are the labels of the classes (classes_)
+        train_distrib_ : Dict, the keys are the labels of the classes (`classes_`)
             Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
             problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
@@ -135,11 +135,11 @@ class EDy(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
             After that, the method computes all the elements of the optimization problem that involve just the
             training data:
-            K_, G_, C_ and b_.
+            `K_, G_, C_ and b_`.
 
             Parameters
             ----------
@@ -181,7 +181,7 @@ class EDy(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the method computes a, the only element of the optimization problem that needs the testing
@@ -195,7 +195,7 @@ class EDy(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 
@@ -282,16 +282,16 @@ class CvMy(UsingClassifiers):
             It is True because CvMy quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `predict` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `predict` method whenever the true labels of the training set are needed, instead of y
 
         distance : distance function
             Function used to compute the distance between every pair of examples
@@ -299,7 +299,7 @@ class CvMy(UsingClassifiers):
         train_n_cls_i_ : ndarray, shape(n_classes, 1)
             Number of the examples of each class in the training set. Used to compute average distances
 
-        train_distrib_ : Dict, the keys are the labels of the classes (classes_)
+        train_distrib_ : Dict, the keys are the labels of the classes (`classes_`)
             Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
             problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
@@ -348,9 +348,9 @@ class CvMy(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
-            After that, the method stores the true classes in y_train_ attribute.
+            After that, the method stores the true classes in `y_train_` attribute.
 
             Parameters
             ----------
@@ -375,7 +375,7 @@ class CvMy(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             Then, the method computes all the elements of the optimization problem after computing the combined
@@ -389,7 +389,7 @@ class CvMy(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 
@@ -467,7 +467,7 @@ class EDX(WithoutClassifiers):
         train_n_cls_i_ : ndarray, shape(n_classes, 1)
             Number of the examples of each class in the training set. Used to compute average distances
 
-        train_distrib_ : Dict, the keys are the labels of the classes (classes_)
+        train_distrib_ : Dict, the keys are the labels of the classes (`classes_`)
             Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
             problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
@@ -501,7 +501,7 @@ class EDX(WithoutClassifiers):
 
     def fit(self, X, y):
         """ This method computes all the elements of the optimization that involve just the training data:
-            K_, G_, C_ and b_.
+            `K_, G_, C_ and b_`.
 
             Parameters
             ----------

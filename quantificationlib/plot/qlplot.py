@@ -1,5 +1,5 @@
 """
-Visualization related functions. 
+Visualization related functions
 """
 
 # Authors: Alberto Castaño <bertocast@gmail.com>

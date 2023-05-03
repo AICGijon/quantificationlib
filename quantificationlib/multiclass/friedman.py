@@ -72,7 +72,7 @@ class FriedmanME(UsingClassifiers):
             It is True because FriedmanME quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         distance : A distance function (default=l2)
             The name of the distance function used
@@ -83,11 +83,11 @@ class FriedmanME(UsingClassifiers):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
         train_prevs_ : ndarray, shape (n_classes, )
             Prevalence of each class in the training set
@@ -97,7 +97,7 @@ class FriedmanME(UsingClassifiers):
             percentage of examples of each class whose probability to belong to the row class is >= than
             the prevalence of the row class in the training set
 
-        test_distrib_ : ndarray, shape (n_classes_, 1)
+        test_distrib_ : ndarray, shape (`n_classes_`, 1)
             Percentage of examples in the testing bag whose probability to belong each class is >= than
             the prevalence of that class in the training set
 
@@ -148,7 +148,7 @@ class FriedmanME(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
             Then, the method computes the training distribution of the method ME suggested by Friedman. The distribution
             of a class contains the percentage of the training examples of that class whose probability to belong
@@ -206,7 +206,7 @@ class FriedmanME(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the method computes the distribution of the FriedmanME method for the testing bag. That is,
@@ -223,7 +223,7 @@ class FriedmanME(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

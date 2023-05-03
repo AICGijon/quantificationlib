@@ -203,9 +203,9 @@ class EoQ(WithoutClassifiers):
             y : array-like, shape (n_examples, )
                 True classes
 
-            predictions_train : ndarray, optional, shape(n_examples, 1) crisp or shape (n_examples, n_classes) (probs
-                                with a regular estimator) or shape(n_examples, n_estimators, n_classes) with an
-                                instance of EnsembleOfClassifiers
+            predictions_train : ndarray, optional
+                shape(n_examples, 1) crisp, or shape (n_examples, n_classes) (probs with a regular estimator), 
+                or shape(n_examples, n_estimators, n_classes) with an instance of EnsembleOfClassifiers. 
                 Predictions of the examples in the training set
 
             prevalences : array-like, shape (n_classes, n_bags)
@@ -413,9 +413,10 @@ class EoQ(WithoutClassifiers):
 
             Returns
             -------
-            prevalences: ndarray, shape(n_classes, ) if an individual combination strategy is selected or
-                         a dictionary with the predictions for all strategies if 'all' is selected
-                Each value contains the predicted prevalence for the corresponding class
+            prevalences: ndarray, shape(n_classes, ) or dict
+                Each value contains the predicted prevalence for the corresponding class.
+                shape(n_classes, ) if an individual combination strategy is selected or
+                a dictionary with the predictions for all strategies if 'all' is selected.
         """
         if isinstance(self.base_quantifier, UsingClassifiers) and (self.ensemble_estimator_test is None and
                                                                    predictions_test is None):

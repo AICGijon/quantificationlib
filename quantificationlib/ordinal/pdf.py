@@ -83,7 +83,7 @@ class PDFOrdinaly(UsingClassifiers):
             It is True because PDFy quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         distance : str or a distance function
             A string with the name of the distance function ('HD'/'L1'/'L2') or a distance function
@@ -94,19 +94,19 @@ class PDFOrdinaly(UsingClassifiers):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
         n_bins : int (default=8)
             The number of bins to compute the PDFs
 
-        train_distrib_ : ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * n_classes_, n_classes) multiclass
+        train_distrib_ : ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * `n_classes_`, n_classes) multiclass
             The PDF for each class in the training set
 
-        test_distrib_ : ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * n_classes_, 1) multiclass
+        test_distrib_ : ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * `n_classes_`, 1) multiclass
             The PDF for the testing bag
 
         G_, C_, b_: variables of different kind for defining the optimization problem
@@ -152,7 +152,7 @@ class PDFOrdinaly(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
             After that, the method computes the pdfs for all the classes in the training set
 
@@ -213,7 +213,7 @@ class PDFOrdinaly(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the method computes the PDF for the testing bag.
@@ -229,7 +229,7 @@ class PDFOrdinaly(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

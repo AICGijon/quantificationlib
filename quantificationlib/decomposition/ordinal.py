@@ -76,11 +76,11 @@ class FrankAndHallQuantifier(UsingClassifiers):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_), )
+        y_ext_ : ndarray, shape(len(`predictions_train_`), )
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying
-            CV_estimator) than y. In other cases, y_ext_ == y.
-            y_ext_ must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying
+            CV_estimator) than y. In other cases, `y_ext_ == y`.
+            `y_ext_` must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,
             instead of y
 
         verbose : int
@@ -101,7 +101,7 @@ class FrankAndHallQuantifier(UsingClassifiers):
             First, the method fits the estimators (estimator_train and estimator_test) (if needed) using
             the `fit` method of its superclass
 
-            Then, it creates (using `deepcopy`) the set on quantifiers_ (n_classes-1 quantifiers) and fit them
+            Then, it creates (using `deepcopy`) the set on `quantifiers_` (n_classes-1 quantifiers) and fit them
 
             Parameters
             ----------
@@ -175,7 +175,7 @@ class FrankAndHallQuantifier(UsingClassifiers):
         return self
 
     def predict(self, X, predictions_test=None):
-        """ Aggregates the prevalences of the quantifiers_ to compute the final prediction
+        """ Aggregates the prevalences of the `quantifiers_` to compute the final prediction
 
             In this kind of decomposition strategy it is important to ensure that the aggregated consecutive
             prevalencences do not decrease:

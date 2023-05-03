@@ -126,8 +126,8 @@ class EnsembleOfClassifiers(BaseEstimator, ClassifierMixin):
 
             Returns
             -------
-            An array, shape(n_examples, n_estimators) with the predicted class for each example with each estimator
-
+            preds : array-like, shape(n_examples, n_estimators) 
+                  The predicted class for each example with each estimator
             Raises
             ------
             NotFittedError
@@ -155,8 +155,8 @@ class EnsembleOfClassifiers(BaseEstimator, ClassifierMixin):
 
             Returns
             -------
-            An array, shape(n_examples, n_estimators, n_classes) with the predicted class for each example with each
-            estimator
+            preds : array-like, shape(n_examples, n_estimators) 
+                  The posterior probability for each example and for each class with each estimator
 
             Raises
             ------

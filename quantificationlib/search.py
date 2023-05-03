@@ -325,10 +325,10 @@ def compute_sord_weights(prevalence=None, union_labels=None, classes=None):
         -------
         weights : array, same shape of union_labels
            The weight of each example, that is equal to:
-
-           negative class = (1-prevalence)*1/|D^-|
-           positive class = prevalence*1/|D^+|
-           testing examples  = - 1 / |T|
+           
+             `negative class = (1-prevalence)*1/|D^-|`  \n
+             `positive class = prevalence*1/|D^+|`      \n
+             `testing examples  = - 1 / |T|`
 
         References
         ----------
@@ -350,30 +350,30 @@ def sord(weights, union_distrib):
         examples (that depends on the prevalence used to compute the mixture of the training distribution).
         This methods correspond to the implementation of Algorithm 1 in (Maletzke et al. 2019)
 
-            Parameters
-            ----------
-            weights : array, shape (n_examples_train+n_examples_test, 1)  (same shape of union_labels)
+        Parameters
+        ----------
+        weights : array, shape (n_examples_train+n_examples_test, 1)  (same shape of union_labels)
                The weight of each example, that is equal to:
+                 `negative class = (1-prevalence)*1/|D^-|`    \n
+                 `positive class = prevalence*1/|D^+|`        \n
+                 `testing examples  = - 1 / |T|`
 
-               negative class = (1-prevalence)*1/|D^-|
-               positive class = prevalence*1/|D^+|
-               testing examples  = - 1 / |T|
-
-            union_labels  :  ndarray, shape (n_examples_train+n_examples_test, 1)
+        union_labels  :  ndarray, shape (n_examples_train+n_examples_test, 1)
                 Contains the set/or  the label of each prediction. If the prediction corresponds to
                 a training example, the value is the true class of such example. If the example belongs to the testing
                 distribution, the value is NaN
 
-            Returns
-            -------
-            total_cost : float
+        Returns
+        -------
+        total_cost : float
                 SORD distance
 
-            References
-            ----------
-            André Maletzke, Denis dos Reis, Everton Cherman, and Gustavo Batista: Dys: A framework for mixture models
-            in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.
-        """
+        References
+        ----------
+        André Maletzke, Denis dos Reis, Everton Cherman, and Gustavo Batista: Dys: A framework for mixture models
+        in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.
+    """
+    
     total_cost = 0
     cum_weights = weights[0]
     for i in range(1, len(weights)):

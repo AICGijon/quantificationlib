@@ -124,7 +124,7 @@ class REG(six.with_metaclass(ABCMeta)):
         """ Create a training set for REG objects. Each example corresponds to a histogram of a bag
             of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because
             it is formed by concatenating the histogram for each input feature. This method computes the values
-            for dataX_, dataY_ and bincuts_ attributes
+            for `dataX_`, `dataY_` and `bincuts_ attributes`
 
             Parameters
             ----------
@@ -167,7 +167,7 @@ class REG(six.with_metaclass(ABCMeta)):
                     np.histogram(X[indexes[:, nbag], att], bins=self.bincuts_[att, :])[0] / n_examples
 
     def fit_regressor(self):
-        """ This method trains the regressor model using dataX_ and dataY_
+        """ This method trains the regressor model using `dataX_` and `dataY_`
          """
         #  checking if it is a binary problem
         if self.n_classes_ == 2:
@@ -469,7 +469,7 @@ class REGy(UsingClassifiers, REG):
             It is True because PDFy quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, True
-             This means that predictions_train_/predictions_test_ contain probabilistic predictions
+             This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         n_bins : int
             Number of bins to compute the PDF of each distribution
@@ -587,7 +587,7 @@ class REGy(UsingClassifiers, REG):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

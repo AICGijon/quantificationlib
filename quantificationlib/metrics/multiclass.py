@@ -205,7 +205,7 @@ def hd(p_true, p_pred):
 
 
 def bray_curtis(p_true, p_pred):
-    """Bray-Curtis dissimilarity.
+    """ Bray-Curtis dissimilarity
 
         Parameters
         ----------
@@ -214,6 +214,11 @@ def bray_curtis(p_true, p_pred):
 
         p_pred : array_like, shape=(n_classes)
             Predicted prevalences. In case of binary quantification, this parameter could be a single float value.
+        
+        Returns
+        -------
+        BCD : float
+            The Bray-Curtis dissimilarity
         """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(np.abs(p_true - p_pred)) / np.sum(p_true + p_pred)
@@ -221,6 +226,23 @@ def bray_curtis(p_true, p_pred):
 
 def topsoe(p_true, p_pred, epsilon=1e-20):
     """ Topsoe distance
+
+        Parameters
+        ----------
+        p_true : array_like, shape=(n_classes)
+            True prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        p_pred : array_like, shape=(n_classes)
+            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.
+        
+        epsilon: float, optional
+            To avoid divison by 0
+        
+        Returns
+        -------
+        TD : float
+            The Topsoe distance
+            
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = np.sum(p_true*np.log((2*p_true+epsilon)/(p_true+p_pred+epsilon)) +
@@ -230,6 +252,22 @@ def topsoe(p_true, p_pred, epsilon=1e-20):
 
 def jensenshannon(p_true, p_pred, epsilon=1e-20):
     """ Jensen-Shannon divergence (a=1/2)
+
+        Parameters
+        ----------
+        p_true : array_like, shape=(n_classes)
+            True prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        p_pred : array_like, shape=(n_classes)
+            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        epsilon: float, optional
+            To avoid divison by 0
+
+        Returns
+        -------
+        JSD : float
+           The Jensen-Shannon divergence
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = np.sum(p_true*np.log(p_true+epsilon)+p_pred*np.log(p_pred+epsilon)-
@@ -239,16 +277,47 @@ def jensenshannon(p_true, p_pred, epsilon=1e-20):
 
 def probsymmetric(p_true, p_pred, epsilon=1e-20):
     """ Probabilistic Symmetric distance
+
+        Parameters
+        ----------
+        p_true : array_like, shape=(n_classes)
+            True prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        p_pred : array_like, shape=(n_classes)
+            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        epsilon: float, optional
+            To avoid divison by 0
+
+        Returns
+        -------
+        PSD : float
+            The Probabilistic Symmetric distance
     """
+        
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = 2*np.sum((p_true-p_pred)**2 / (p_pred+p_true+epsilon))
     return dist
 
 
-def brier_multi(targets, probs):
+def brier_multi(p_true, p_pred):
     """ Brier score (classification) for multiclass problems
+
+        Parameters
+        ----------
+        p_true : array_like, shape=(n_classes)
+            True prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        p_pred : array_like, shape=(n_classes)
+            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.
+
+        Returns
+        -------
+        BS : float
+            The Brier score
+       
     """
-    return np.mean(np.sum((probs - targets)**2, axis=1))
+    return np.mean(np.sum((p_pred - p_true)**2, axis=1))
 
 
 def geometric_mean(y_true, y_pred, correction=0.0):

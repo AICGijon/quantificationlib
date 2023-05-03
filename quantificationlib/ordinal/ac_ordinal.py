@@ -68,24 +68,24 @@ class ACOrdinal(UsingClassifiers):
             It is True because AC quantifiers need to estimate the training distribution
 
         probabilistic_predictions : bool, False
-             This means that predictions_test_ contains crisp predictions
+             This means that `predictions_test_` contains crisp predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
         cm_ : ndarray, shape (n_classes, n_classes)
             Confusion matrix
 
-        train_distrib_ : ndarray, shape (n_classes_, n_classes)
+        train_distrib_ : ndarray, shape (`n_classes_`, n_classes)
             The cumulative distribution for each class in the training set
 
-        test_distrib_ : ndarray, shape (n_classes_, 1)
+        test_distrib_ : ndarray, shape (`n_classes_`, 1)
             The cumulative distribution for the testing bag
 
         problem_ : a cvxpy Problem object
@@ -120,9 +120,9 @@ class ACOrdinal(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (crisp values) if needed. Both operations are
             performed by the `fit` method of its superclass.
-            Finally the method computes the confusion matrix of the training set using predictions_train_, and
+            Finally the method computes the confusion matrix of the training set using `predictions_train_`, and
             the training distribution
 
             Parameters
@@ -168,13 +168,13 @@ class ACOrdinal(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
-            After that, the distribution of such predictions are computed and stored in test_distrib_ attribute
+            After that, the distribution of such predictions are computed and stored in `test_distrib_` attribute
             Finally, the prevalences are computed solving the following optimization problem:
 
-                      Min   | train_distrib_ * prevalences -  test_distrib_ | 
+                      Min   | `train_distrib_` * prevalences -  `test_distrib_` |  \n
                       s.t.  sum(prevalences) = 1, prevalecences_i >= 0
 
             Parameters
@@ -185,7 +185,7 @@ class ACOrdinal(UsingClassifiers):
             predictions_test : ndarray, shape (n_examples, n_classes) (default=None)
                 They must be probabilities (the estimator used must have a `predict_proba` method)
 
-                If predictions_test is not None they are copied on predictions_test_ and used.
+                If predictions_test is not None they are copied on `predictions_test_` and used.
                 If predictions_test is None, predictions for the testing examples are computed using the `predict`
                 method of estimator_test (it must be an actual estimator)
 

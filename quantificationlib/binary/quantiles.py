@@ -83,16 +83,16 @@ class QUANTy(UsingClassifiers):
             It is True because QUANTy quantifiers need to estimate the training distribution
             
         probabilistic_predictions : bool, True
-            This means that predictions_train_/predictions_test_ contain probabilistic predictions
+            This means that `predictions_train_/predictions_test_` contain probabilistic predictions
 
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len(predictions_train_, 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-            than y. In other cases, y_ext_ == y.
-            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+            than y. In other cases, `y_ext_ == y`.
+            `y_ext_` is used in `fit`/`predict` method whenever the true labels of the training set are needed,
             instead of y
 
         n_quantiles : int (default=8)
@@ -105,10 +105,10 @@ class QUANTy(UsingClassifiers):
             The precision of the solution when search is used to compute the solution
 
         train_distrib_ : ndarray, shape (n_examples, 1) binary quantification
-            Contains predictions_train_ in ascending order
+            Contains `predictions_train_` in ascending order
 
         train_labels_ : ndarray, shape (n_examples, 1) binary quantification
-            Contains the corresponding labels of the examples in train_distrib_ in the same order
+            Contains the corresponding labels of the examples in `train_distrib_` in the same order
 
         test_distrib_ : ndarray, shape (n_quantiles, 1)
             Contains the quantiles of the test distribution
@@ -141,7 +141,7 @@ class QUANTy(UsingClassifiers):
 
     def fit(self, X, y, predictions_train=None):
         """ This method performs the following operations: 1) fits the estimators for the training set and the
-            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are
+            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are
             performed by the `fit` method of its superclass.
             After that, the method orders the predictions for the train set. The actual quantiles are computed by
             a mixture function because it depends on the class prevalence
@@ -185,7 +185,7 @@ class QUANTy(UsingClassifiers):
     def predict(self, X, predictions_test=None):
         """ Predict the class distribution of a testing bag
 
-            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by
+            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by
             `super().predict()` method.
 
             After that, the method computes the quantiles for the testing bag sorting the testing examples according

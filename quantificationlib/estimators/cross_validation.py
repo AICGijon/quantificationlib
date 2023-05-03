@@ -67,7 +67,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
             - A string, giving an expression as a function of n_jobs, as in `2*n_jobs`
 
         averaged_predictions : bool, optional (default=True)
-            If True, `predict` and `predict_proba` methods average the predictions given by estimators_ for
+            If True, `predict` and `predict_proba` methods average the predictions given by `estimators_` for
             each example
 
         voting : str, {'hard', 'soft'} (default='hard')
@@ -86,11 +86,11 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
             The estimator to fit each model of the CV
 
         estimators_ : list of trained estimators
-            The list of estimators trained by `fit`method.
+            The list of estimators trained by `fit` method.
             The number of estimators is equal to the number of folds times number of repetitions
 
         averaged_predictions : bool
-            Determines whether the predictions for each example given by estimators_ are averaged or not
+            Determines whether the predictions for each example given by `estimators_` are averaged or not
 
         voting : str, {'hard', 'soft'} (default='hard')
             How predictions are aggregated:
@@ -133,9 +133,9 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
 
     def fit(self, X, y):
         """ Fit the models
-            It calls `cross_validate` to fit the models and save them in estimators_ attribute.
-            It also stores some attributes needed by `predict` and `predict_proba`, namely, le_, classes_, X_train
-            and y_train_
+            It calls `cross_validate` to fit the models and save them in `estimators_` attribute.
+            It also stores some attributes needed by `predict` and `predict_proba`, namely, `le_`, `classes_`, `X_train`
+            and `y_train_`
 
             Parameters
             ----------
@@ -170,9 +170,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
 
             Returns
             -------
-            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and
-                    the value of averaged_predictions attribute
-
+            preds : array-like, shape depends on type of the examples and the value of averaged_predictions
                  Crisp predictions for the examples in X
 
                  Training set:
@@ -221,8 +219,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
 
             Returns
             -------
-            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and
-                    the value of averaged_predictions attribute
+            preds : array-like, shape depends on type of the examples and the value of averaged_predictions
 
                 Probabilistic predictions for the examples in X.
                 
