@@ -127,16 +127,16 @@
 <span class="sd">            It is True because QUANTy quantifiers need to estimate the training distribution</span>
 <span class="sd">            </span>
 <span class="sd">        probabilistic_predictions : bool, True</span>
-<span class="sd">            This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+<span class="sd">            This means that `predictions_train_/predictions_test_` contain probabilistic predictions</span>
 
 <span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
 <span class="sd">            Class labels</span>
 
-<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_, 1)</span>
+<span class="sd">        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)</span>
 <span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
-<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
-<span class="sd">            than y. In other cases, y_ext_ == y.</span>
-<span class="sd">            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
+<span class="sd">            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
+<span class="sd">            than y. In other cases, `y_ext_ == y`.</span>
+<span class="sd">            `y_ext_` is used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
 <span class="sd">            instead of y</span>
 
 <span class="sd">        n_quantiles : int (default=8)</span>
@@ -149,10 +149,10 @@
 <span class="sd">            The precision of the solution when search is used to compute the solution</span>
 
 <span class="sd">        train_distrib_ : ndarray, shape (n_examples, 1) binary quantification</span>
-<span class="sd">            Contains predictions_train_ in ascending order</span>
+<span class="sd">            Contains `predictions_train_` in ascending order</span>
 
 <span class="sd">        train_labels_ : ndarray, shape (n_examples, 1) binary quantification</span>
-<span class="sd">            Contains the corresponding labels of the examples in train_distrib_ in the same order</span>
+<span class="sd">            Contains the corresponding labels of the examples in `train_distrib_` in the same order</span>
 
 <span class="sd">        test_distrib_ : ndarray, shape (n_quantiles, 1)</span>
 <span class="sd">            Contains the quantiles of the test distribution</span>
@@ -185,7 +185,7 @@
 
 <div class="viewcode-block" id="QUANTy.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.quantiles.html#quantificationlib.binary.quantiles.QUANTy.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
-<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are</span>
 <span class="sd">            performed by the `fit` method of its superclass.</span>
 <span class="sd">            After that, the method orders the predictions for the train set. The actual quantiles are computed by</span>
 <span class="sd">            a mixture function because it depends on the class prevalence</span>
@@ -229,7 +229,7 @@
 <div class="viewcode-block" id="QUANTy.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.quantiles.html#quantificationlib.binary.quantiles.QUANTy.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
 
-<span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
+<span class="sd">            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by</span>
 <span class="sd">            `super().predict()` method.</span>
 
 <span class="sd">            After that, the method computes the quantiles for the testing bag sorting the testing examples according</span>
@@ -331,7 +331,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

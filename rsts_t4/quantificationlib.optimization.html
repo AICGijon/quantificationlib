@@ -280,8 +280,8 @@ you may need to install additional libraries.</p></li>
 <span class="sig-name descname"><span class="pre">solve_l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l1" title="Permalink to this definition">¶</a></dt>
 <dd><p>Solves AC, PAC, DF and Friedman optimization problems for L1 loss function</p>
 <blockquote>
-<div><p>min   <a href="#id1"><span class="problematic" id="id2">|train_distrib * prevalences - test_distrib|</span></a></p>
-<p>s.t.  prevalences_i &gt;=0, sum prevalences_i = 1</p>
+<div><p><cite>min   |train_distrib * prevalences - test_distrib|</cite></p>
+<p><cite>s.t.  prevalences_i &gt;=0, sum prevalences_i = 1</cite></p>
 </div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -451,7 +451,7 @@ quadprog is used here because it is faster than cvxpy.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

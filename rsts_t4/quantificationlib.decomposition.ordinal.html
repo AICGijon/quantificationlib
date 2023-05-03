@@ -182,13 +182,13 @@ instance of the class UsingClassifiers. For some experiments both estimators cou
 <dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
-CV_estimator) than y. In other cases, <a href="#id3"><span class="problematic" id="id4">y_ext_</span></a> == y.
-<a href="#id5"><span class="problematic" id="id6">y_ext_</span></a> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
+<cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
+CV_estimator) than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
 instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id7"><span class="problematic" id="id8">predictions_train_</span></a>), )</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>), )</p>
 </dd>
 </dl>
 </dd></dl>
@@ -251,7 +251,7 @@ Sep 2014, Nancy, France. pp.323 - 337, 2014,</p>
 <dd><p>Fits all the quanfifiers of a FH decomposition</p>
 <p>First, the method fits the estimators (estimator_train and estimator_test) (if needed) using
 the <cite>fit</cite> method of its superclass</p>
-<p>Then, it creates (using <cite>deepcopy</cite>) the set on <a href="#id9"><span class="problematic" id="id10">quantifiers_</span></a> (n_classes-1 quantifiers) and fit them</p>
+<p>Then, it creates (using <cite>deepcopy</cite>) the set on <cite>quantifiers_</cite> (n_classes-1 quantifiers) and fit them</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -269,7 +269,7 @@ the <cite>fit</cite> method of its superclass</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/decomposition/ordinal.html#FrankAndHallQuantifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.decomposition.ordinal.FrankAndHallQuantifier.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Aggregates the prevalences of the <a href="#id11"><span class="problematic" id="id12">quantifiers_</span></a> to compute the final prediction</p>
+<dd><p>Aggregates the prevalences of the <cite>quantifiers_</cite> to compute the final prediction</p>
 <p>In this kind of decomposition strategy it is important to ensure that the aggregated consecutive
 prevalencences do not decrease:</p>
 <p>Example:</p>
@@ -410,7 +410,7 @@ In Joint European Conference on Machine Learning and Knowledge Discovery in Data
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

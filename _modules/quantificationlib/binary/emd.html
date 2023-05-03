@@ -105,32 +105,32 @@
 <span class="sd">            It is True because SORD quantifiers need to estimate the training distribution</span>
 
 <span class="sd">        probabilistic_predictions : bool, True</span>
-<span class="sd">            This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+<span class="sd">            This means that `predictions_train_/predictions_test_` contain probabilistic predictions</span>
 
 <span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
 <span class="sd">            Class labels</span>
 
-<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_, 1)</span>
+<span class="sd">        y_ext_ : ndarray, shape(len(&#39;predictions_train_&#39;, 1)</span>
 <span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
-<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
-<span class="sd">            than y. In other cases, y_ext_ == y.</span>
-<span class="sd">            y_ext_ is used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
+<span class="sd">            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
+<span class="sd">            than y. In other cases, `y_ext_ == y`.</span>
+<span class="sd">            `y_ext_` is used in `fit`/`predict` method whenever the true labels of the training set are needed,</span>
 <span class="sd">            instead of y</span>
 
 <span class="sd">        tol : float</span>
 <span class="sd">            The precision of the solution when search is used to compute the solution</span>
 
 <span class="sd">        train_distrib_ : ndarray, shape (n_examples_train, 1) binary quantification</span>
-<span class="sd">            Contains predictions_train_ in ascending order</span>
+<span class="sd">            Contains `predictions_train_` in ascending order</span>
 
 <span class="sd">        train_labels_ : ndarray, shape (n_examples_train, 1) binary quantification</span>
-<span class="sd">            Contains the corresponding labels of the examples in train_distrib_ in the same order</span>
+<span class="sd">            Contains the corresponding labels of the examples in `train_distrib_` in the same order</span>
 
 <span class="sd">        union_distrib_ : ndarray, shape (n_examples_train+n_examples_test, 1)</span>
-<span class="sd">            Contains the union of predictions_train_ and predictions_test_ in ascending order</span>
+<span class="sd">            Contains the union of `predictions_train_` and `predictions_test_` in ascending order</span>
 
 <span class="sd">        union_labels  :  ndarray, shape (n_examples_train+n_examples_test, 1)</span>
-<span class="sd">            Contains the set/or  the label of each prediction  in union_distrib_. If the prediction corresponds to</span>
+<span class="sd">            Contains the set/or  the label of each prediction  in `union_distrib_`. If the prediction corresponds to</span>
 <span class="sd">            a training example, the value is the true class of such example. If the example belongs to the testing</span>
 <span class="sd">            distribution, the value is NaN</span>
 
@@ -162,10 +162,10 @@
 
 <div class="viewcode-block" id="SORDy.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.emd.html#quantificationlib.binary.emd.SORDy.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
-<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are</span>
 <span class="sd">            performed by the `fit` method of its superclass.</span>
-<span class="sd">            After that, the method sorts the predictions for the train set into train_distrib_. The actual</span>
-<span class="sd">            labels are put in the same order in train_labels_</span>
+<span class="sd">            After that, the method sorts the predictions for the train set into `train_distrib_`. The actual</span>
+<span class="sd">            labels are put in the same order in `train_labels_`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -204,7 +204,7 @@
 <div class="viewcode-block" id="SORDy.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.emd.html#quantificationlib.binary.emd.SORDy.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
 
-<span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
+<span class="sd">            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by</span>
 <span class="sd">            `super().predict()` method.</span>
 
 <span class="sd">            After that, the method computes the union distribution, merging training and testing distributions. This</span>
@@ -312,7 +312,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

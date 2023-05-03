@@ -112,24 +112,24 @@
 <span class="sd">            It is True because AC quantifiers need to estimate the training distribution</span>
 
 <span class="sd">        probabilistic_predictions : bool, False</span>
-<span class="sd">             This means that predictions_test_ contains crisp predictions</span>
+<span class="sd">             This means that `predictions_test_` contains crisp predictions</span>
 
 <span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
 <span class="sd">            Class labels</span>
 
-<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_, 1)</span>
+<span class="sd">        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)</span>
 <span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
-<span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
-<span class="sd">            than y. In other cases, y_ext_ == y.</span>
-<span class="sd">            y_ext_ i used in `fit` method whenever the true labels of the training set are needed, instead of y</span>
+<span class="sd">            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)</span>
+<span class="sd">            than y. In other cases, `y_ext_ == y`.</span>
+<span class="sd">            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y</span>
 
 <span class="sd">        cm_ : ndarray, shape (n_classes, n_classes)</span>
 <span class="sd">            Confusion matrix</span>
 
-<span class="sd">        train_distrib_ : ndarray, shape (n_classes_, n_classes)</span>
+<span class="sd">        train_distrib_ : ndarray, shape (`n_classes_`, n_classes)</span>
 <span class="sd">            The cumulative distribution for each class in the training set</span>
 
-<span class="sd">        test_distrib_ : ndarray, shape (n_classes_, 1)</span>
+<span class="sd">        test_distrib_ : ndarray, shape (`n_classes_`, 1)</span>
 <span class="sd">            The cumulative distribution for the testing bag</span>
 
 <span class="sd">        problem_ : a cvxpy Problem object</span>
@@ -164,9 +164,9 @@
 
 <div class="viewcode-block" id="ACOrdinal.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.ordinal.ac_ordinal.html#quantificationlib.ordinal.ac_ordinal.ACOrdinal.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
-<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are</span>
+<span class="sd">            testing set (if needed), and 2) computes `predictions_train_` (crisp values) if needed. Both operations are</span>
 <span class="sd">            performed by the `fit` method of its superclass.</span>
-<span class="sd">            Finally the method computes the confusion matrix of the training set using predictions_train_, and</span>
+<span class="sd">            Finally the method computes the confusion matrix of the training set using `predictions_train_`, and</span>
 <span class="sd">            the training distribution</span>
 
 <span class="sd">            Parameters</span>
@@ -212,13 +212,13 @@
 <div class="viewcode-block" id="ACOrdinal.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.ordinal.ac_ordinal.html#quantificationlib.ordinal.ac_ordinal.ACOrdinal.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Predict the class distribution of a testing bag</span>
 
-<span class="sd">            First, predictions_test_ are computed (if needed, when predictions_test parameter is None) by</span>
+<span class="sd">            First, `predictions_test_` are computed (if needed, when predictions_test parameter is None) by</span>
 <span class="sd">            `super().predict()` method.</span>
 
-<span class="sd">            After that, the distribution of such predictions are computed and stored in test_distrib_ attribute</span>
+<span class="sd">            After that, the distribution of such predictions are computed and stored in `test_distrib_` attribute</span>
 <span class="sd">            Finally, the prevalences are computed solving the following optimization problem:</span>
 
-<span class="sd">                      Min   | train_distrib_ * prevalences -  test_distrib_ | </span>
+<span class="sd">                      Min   | `train_distrib_` * prevalences -  `test_distrib_` |  \n</span>
 <span class="sd">                      s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</span>
 
 <span class="sd">            Parameters</span>
@@ -229,7 +229,7 @@
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
 <span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
 
-<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is not None they are copied on `predictions_test_` and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
 <span class="sd">                method of estimator_test (it must be an actual estimator)</span>
 
@@ -316,7 +316,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

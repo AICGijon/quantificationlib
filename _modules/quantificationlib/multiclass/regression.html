@@ -168,7 +168,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a training set for REG objects. Each example corresponds to a histogram of a bag</span>
 <span class="sd">            of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because</span>
 <span class="sd">            it is formed by concatenating the histogram for each input feature. This method computes the values</span>
-<span class="sd">            for dataX_, dataY_ and bincuts_ attributes</span>
+<span class="sd">            for `dataX_`, `dataY_` and `bincuts_ attributes`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -211,7 +211,7 @@
                     <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">nbag</span><span class="p">],</span> <span class="n">att</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_examples</span></div>
 
 <div class="viewcode-block" id="REG.fit_regressor"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.fit_regressor">[docs]</a>    <span class="k">def</span> <span class="nf">fit_regressor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method trains the regressor model using dataX_ and dataY_</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; This method trains the regressor model using `dataX_` and `dataY_`</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="c1">#  checking if it is a binary problem</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
@@ -513,7 +513,7 @@
 <span class="sd">            It is True because PDFy quantifiers need to estimate the training distribution</span>
 
 <span class="sd">        probabilistic_predictions : bool, True</span>
-<span class="sd">             This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+<span class="sd">             This means that `predictions_train_/predictions_test_` contain probabilistic predictions</span>
 
 <span class="sd">        n_bins : int</span>
 <span class="sd">            Number of bins to compute the PDF of each distribution</span>
@@ -631,7 +631,7 @@
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
 <span class="sd">                They must be probabilities (the estimator used must have a `predict_proba` method)</span>
 
-<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is not None they are copied on `predictions_test_` and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
 <span class="sd">                method of estimator_test (it must be an actual estimator)</span>
 
@@ -714,7 +714,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

@@ -61,11 +61,12 @@
 <div class="viewcode-block" id="DeBias"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.debias.html#quantificationlib.binary.debias.DeBias">[docs]</a><span class="k">class</span> <span class="nc">DeBias</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Binary quantifier based on De-Bias estimate proposed by Friedman</span>
 
-<span class="sd">        prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</span>
+<span class="sd">        `prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt`</span>
 
 <span class="sd">        where</span>
 
-<span class="sd">        Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</span>
+<span class="sd">        `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`</span>
+<span class="sd">             `/ (prior(positives) * prior(negatives))`</span>
 
 <span class="sd">        This class works in two different ways:</span>
 
@@ -103,7 +104,7 @@
 <span class="sd">            Predictions of the examples in the testing bag</span>
 
 <span class="sd">        probabilistic_predictions : bool, True</span>
-<span class="sd">             This means that predictions_train_/predictions_test_ contain probabilistic predictions</span>
+<span class="sd">             This means that `predictions_train_/predictions_test_` contain probabilistic predictions</span>
 
 <span class="sd">        needs_predictions_train : bool, True</span>
 <span class="sd">            It is True because DeBias quantifiers need to estimate the training distribution</span>
@@ -119,7 +120,8 @@
 
 <span class="sd">        Vt_ : float</span>
 <span class="sd">           The value of equation</span>
-<span class="sd">                Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ] / (train_prevs_[1] * train_prevs_[0])</span>
+<span class="sd">                `Vt = [ 1/|T| sum_{x in D} (P(h(x)==+1|x) - train_prevs_[1])^2 ]`</span>
+<span class="sd">                      `/ (train_prevs_[1] * train_prevs_[0])`</span>
 <span class="sd">           applied over the training examples D</span>
 
 <span class="sd">        verbose : int</span>
@@ -146,12 +148,13 @@
 
 <div class="viewcode-block" id="DeBias.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.binary.debias.html#quantificationlib.binary.debias.DeBias.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
-<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (probabilities) if needed. Both operations are</span>
+<span class="sd">            testing set (if needed), and 2) computes `predictions_train_` (probabilities) if needed. Both operations are</span>
 <span class="sd">            performed by the `fit` method of its superclass.</span>
 
 <span class="sd">            Finally the method computes the value of Vt</span>
 
-<span class="sd">            Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ] / (prior(positives) * prior(negatives))</span>
+<span class="sd">            `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`</span>
+<span class="sd">                     `/ (prior(positives) * prior(negatives))`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -194,7 +197,7 @@
 
 <span class="sd">            The prevalence for the positive class is</span>
 
-<span class="sd">            prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt</span>
+<span class="sd">            `prevalence (positives) = prior(positives)  + ( prevalence_PCC - prior(positives) ) / Vt`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -204,7 +207,7 @@
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
 <span class="sd">                They must be probabilities (the estimator used must have a predict_proba method)</span>
 
-<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is not None they are copied on `predictions_test_` and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
 <span class="sd">                method of estimator_test (it must be an actual estimator)</span>
 
@@ -283,7 +286,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

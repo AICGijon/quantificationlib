@@ -136,9 +136,9 @@ for prevalence estimation in binary problems. Pattern Recognition, 46(2), 472-48
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a> (crisp values) if needed. Both operations are
+testing set (if needed), and 2) computes <cite>predictions_train_</cite> (crisp values) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
-Finally the method computes the confusion matrix of the training set using <a href="#id3"><span class="problematic" id="id4">predictions_train_</span></a></p>
+Finally the method computes the confusion matrix of the training set using <cite>predictions_train_</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -155,20 +155,17 @@ Finally the method computes the confusion matrix of the training set using <a hr
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>The prevalences are computed solving a system of linear scalar equations:</p>
 <blockquote>
-<div><p><a href="#id5"><span class="problematic" id="id6">cm_</span></a>.T * prevalences = CC(X)</p>
+<div><p><cite>cm_.T * prevalences = CC(X)</cite></p>
 </div></blockquote>
 <p>For binary problems the system is directly solved using the original AC algorithm proposed by Forman</p>
 <blockquote>
-<div><p>p = (p_0 - fpr ) / ( tpr - fpr)</p>
+<div><p><cite>p = (p_0 - fpr ) / ( tpr - fpr)</cite></p>
 </div></blockquote>
 <p>For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an
 optimization problem of this kind:</p>
 <blockquote>
-<div><p>Min   distance ( <a href="#id7"><span class="problematic" id="id8">cm_</span></a>.T * prevalences, CC(X) )
-s.t.  sum(prevalences) = 1</p>
-<blockquote>
-<div><p>prevalecences_i &gt;= 0</p>
-</div></blockquote>
+<div><p><cite>Min   distance ( cm_.T * prevalences, CC(X) )</cite></p>
+<p><cite>s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0</cite></p>
 </div></blockquote>
 <p>in which distance is ‘L1’</p>
 <dl class="field-list simple">
@@ -266,7 +263,7 @@ s.t.  sum(prevalences) = 1</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

@@ -93,7 +93,7 @@ fast-running jobs, to avoid delays due to on-demand spawning of the jobs</p></li
 <li><p>A string, giving an expression as a function of n_jobs, as in <cite>2*n_jobs</cite></p></li>
 </ul>
 </p></li>
-<li><p><strong>averaged_predictions</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – If True, <cite>predict</cite> and <cite>predict_proba</cite> methods average the predictions given by <a href="#id3"><span class="problematic" id="id4">estimators_</span></a> for
+<li><p><strong>averaged_predictions</strong> (<em>bool</em><em>, </em><em>optional</em><em> (</em><em>default=True</em><em>)</em>) – If True, <cite>predict</cite> and <cite>predict_proba</cite> methods average the predictions given by <cite>estimators_</cite> for
 each example</p></li>
 <li><p><strong>voting</strong> (<em>str</em><em>, </em><em>{'hard'</em><em>, </em><em>'soft'}</em><em> (</em><em>default='hard'</em><em>)</em>) – Only used when averaged_predictions is True.
 If ‘hard’, <cite>predict</cite> and <cite>predict_proba</cite> methods apply majority rule voting.
@@ -117,7 +117,7 @@ which is recommended for an ensemble of well-calibrated classifiers.</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.estimators_">
 <span class="sig-name descname"><span class="pre">estimators_</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.estimators_" title="Permalink to this definition">¶</a></dt>
-<dd><p>The list of estimators trained by <a href="#id1"><span class="problematic" id="id2">`</span></a>fit`method.
+<dd><p>The list of estimators trained by <cite>fit</cite> method.
 The number of estimators is equal to the number of folds times number of repetitions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -129,7 +129,7 @@ The number of estimators is equal to the number of folds times number of repetit
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.averaged_predictions">
 <span class="sig-name descname"><span class="pre">averaged_predictions</span></span><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.averaged_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>Determines whether the predictions for each example given by <a href="#id5"><span class="problematic" id="id6">estimators_</span></a> are averaged or not</p>
+<dd><p>Determines whether the predictions for each example given by <cite>estimators_</cite> are averaged or not</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
@@ -211,9 +211,9 @@ The number of estimators is equal to the number of folds times number of repetit
 <dt class="sig sig-object py" id="quantificationlib.estimators.cross_validation.CV_estimator.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/estimators/cross_validation.html#CV_estimator.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.estimators.cross_validation.CV_estimator.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fit the models
-It calls <cite>cross_validate</cite> to fit the models and save them in <a href="#id7"><span class="problematic" id="id8">estimators_</span></a> attribute.
-It also stores some attributes needed by <cite>predict</cite> and <cite>predict_proba</cite>, namely, <a href="#id9"><span class="problematic" id="id10">le_</span></a>, <a href="#id11"><span class="problematic" id="id12">classes_</span></a>, X_train
-and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
+It calls <cite>cross_validate</cite> to fit the models and save them in <cite>estimators_</cite> attribute.
+It also stores some attributes needed by <cite>predict</cite> and <cite>predict_proba</cite>, namely, <cite>le_</cite>, <cite>classes_</cite>, <cite>X_train</cite>
+and <cite>y_train_</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -233,8 +233,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 <dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>preds</strong> –    the value of averaged_predictions attribute</p>
-<p>Crisp predictions for the examples in X</p>
+<dd class="field-even"><p><p><strong>preds</strong> – Crisp predictions for the examples in X</p>
 <dl class="simple">
 <dt>Training set:</dt><dd><ul class="simple">
 <li><p>averaged_predictions == True,  shape(n_examples, )</p></li>
@@ -250,7 +249,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>array-like, shape depends on two factors: the type of the examples (training or testing) and</p>
+<dd class="field-odd"><p>array-like, shape depends on type of the examples and the value of averaged_predictions</p>
 </dd>
 </dl>
 </dd></dl>
@@ -264,8 +263,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 <dd class="field-odd"><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Test ata</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>preds</strong> –     the value of averaged_predictions attribute</p>
-<p>Probabilistic predictions for the examples in X.</p>
+<dd class="field-even"><p><p><strong>preds</strong> – Probabilistic predictions for the examples in X.</p>
 <dl class="simple">
 <dt>Training set:</dt><dd><ul class="simple">
 <li><p>averaged_predictions == True,  shape(n_examples, n_classes)</p></li>
@@ -281,7 +279,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>array-like, shape depends on two factors: the type of the examples (training or testing) and</p>
+<dd class="field-odd"><p>array-like, shape depends on type of the examples and the value of averaged_predictions</p>
 </dd>
 </dl>
 </dd></dl>
@@ -374,7 +372,7 @@ and <a href="#id13"><span class="problematic" id="id14">y_train_</span></a></p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

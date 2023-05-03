@@ -144,7 +144,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a>/<a href="#id3"><span class="problematic" id="id4">predictions_test_</span></a> contain probabilistic predictions</p>
+<dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -167,12 +167,12 @@ For some experiments both estimator_train and estimator_test could be the same</
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> == y.
-<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> i used in <cite>predict</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> is used in <cite>predict</cite> method whenever the true labels of the training set are needed, instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -206,7 +206,7 @@ than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id13"><span class="problematic" id="id14">classes_</span></a>)</p>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<cite>classes_</cite>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -278,9 +278,9 @@ Juan José del Coz: An analysis of quantification methods based on matching dist
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a> (probabilities) if needed. Both operations are
+testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
-After that, the method stores the true classes in <a href="#id17"><span class="problematic" id="id18">y_train_</span></a> attribute.</p>
+After that, the method stores the true classes in <cite>y_train_</cite> attribute.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -299,7 +299,7 @@ After that, the method stores the true classes in <a href="#id17"><span class="p
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id19"><span class="problematic" id="id20">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
 <p>Then, the method computes all the elements of the optimization problem after computing the combined
 ranking of the predictions for the training examples and the testing examples using <cite>rankdata</cite> function</p>
@@ -308,7 +308,7 @@ ranking of the predictions for the training examples and the testing examples us
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id21"><span class="problematic" id="id22">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <cite>predictions_test_</cite> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -381,7 +381,7 @@ method of estimator_test (it must be an actual estimator)</p>
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id23"><span class="problematic" id="id24">classes_</span></a>)</p>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<cite>classes_</cite>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -428,7 +428,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method computes all the elements of the optimization that involve just the training data:
-<a href="#id25"><span class="problematic" id="id26">K_</span></a>, <a href="#id27"><span class="problematic" id="id28">G_</span></a>, <a href="#id29"><span class="problematic" id="id30">C_</span></a> and <a href="#id31"><span class="problematic" id="id32">b_</span></a>.</p>
+<cite>K_, G_, C_ and b_</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -551,7 +551,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id33"><span class="problematic" id="id34">predictions_train_</span></a>/<a href="#id35"><span class="problematic" id="id36">predictions_test_</span></a> contain probabilistic predictions</p>
+<dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -574,12 +574,12 @@ For some experiments both estimator_train and estimator_test could be the same</
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id37"><span class="problematic" id="id38">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id39"><span class="problematic" id="id40">y_ext_</span></a> == y.
-<a href="#id41"><span class="problematic" id="id42">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> is used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id43"><span class="problematic" id="id44">predictions_train_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -602,7 +602,7 @@ than y. In other cases, <a href="#id39"><span class="problematic" id="id40">y_ex
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<a href="#id45"><span class="problematic" id="id46">classes_</span></a>)</p>
+<dd class="field-odd"><p>Dict, the keys are the labels of the classes (<cite>classes_</cite>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -663,11 +663,11 @@ Juan José del Coz: An analysis of quantification methods based on matching dist
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id47"><span class="problematic" id="id48">predictions_train_</span></a> (probabilities) if needed. Both operations are
+testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
 After that, the method computes all the elements of the optimization problem that involve just the
 training data:
-<a href="#id49"><span class="problematic" id="id50">K_</span></a>, <a href="#id51"><span class="problematic" id="id52">G_</span></a>, <a href="#id53"><span class="problematic" id="id54">C_</span></a> and <a href="#id55"><span class="problematic" id="id56">b_</span></a>.</p>
+<cite>K_, G_, C_ and b_</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -686,7 +686,7 @@ training data:
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id57"><span class="problematic" id="id58">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
 <p>After that, the method computes a, the only element of the optimization problem that needs the testing
 data</p>
@@ -695,7 +695,7 @@ data</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id59"><span class="problematic" id="id60">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <cite>predictions_test_</cite> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -835,7 +835,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

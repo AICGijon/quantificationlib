@@ -152,7 +152,7 @@ the probabilities for the two consecutive classes of the winner node previous to
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.ordinal.pdf.PDFOrdinaly.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.ordinal.pdf.PDFOrdinaly.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a>/<a href="#id3"><span class="problematic" id="id4">predictions_test_</span></a> contain probabilistic predictions</p>
+<dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -197,12 +197,12 @@ the probabilities for the two consecutive classes of the winner node previous to
 <dt class="sig sig-object py" id="quantificationlib.ordinal.pdf.PDFOrdinaly.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.ordinal.pdf.PDFOrdinaly.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> == y.
-<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> i used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
+<cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> is used in <cite>fit</cite> method whenever the true labels of the training set are needed, instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -224,7 +224,7 @@ than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_
 <dd><p>The PDF for each class in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * <a href="#id13"><span class="problematic" id="id14">n_classes_</span></a>, n_classes) multiclass</p>
+<dd class="field-odd"><p>ndarray, shape (n_bins * 1, n_classes) binary or (n_bins * <cite>n_classes_</cite>, n_classes) multiclass</p>
 </dd>
 </dl>
 </dd></dl>
@@ -235,7 +235,7 @@ than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_
 <dd><p>The PDF for the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * <a href="#id15"><span class="problematic" id="id16">n_classes_</span></a>, 1) multiclass</p>
+<dd class="field-odd"><p>ndarray, shape (n_bins * 1, 1) binary quantification or (n_bins * <cite>n_classes_</cite>, 1) multiclass</p>
 </dd>
 </dl>
 </dd></dl>
@@ -286,7 +286,7 @@ predictions_train/predictions_test are used</p>
 <dt class="sig sig-object py" id="quantificationlib.ordinal.pdf.PDFOrdinaly.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ordinal/pdf.html#PDFOrdinaly.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ordinal.pdf.PDFOrdinaly.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id17"><span class="problematic" id="id18">predictions_train_</span></a> (probabilities) if needed. Both operations are
+testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
 After that, the method computes the pdfs for all the classes in the training set</p>
 <dl class="field-list simple">
@@ -307,7 +307,7 @@ After that, the method computes the pdfs for all the classes in the training set
 <dt class="sig sig-object py" id="quantificationlib.ordinal.pdf.PDFOrdinaly.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/ordinal/pdf.html#PDFOrdinaly.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.ordinal.pdf.PDFOrdinaly.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id19"><span class="problematic" id="id20">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
 <p>After that, the method computes the PDF for the testing bag.</p>
 <p>Finally, the prevalences are computed using the corresponding function according to the value of
@@ -317,7 +317,7 @@ distance attribute</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Testing bag</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a <cite>predict_proba</cite> method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id21"><span class="problematic" id="id22">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <cite>predictions_test_</cite> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -428,7 +428,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

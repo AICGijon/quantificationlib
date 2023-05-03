@@ -85,10 +85,12 @@ easy using the transform method.</p>
 <dd class="field-even"><p><p><strong>y_bin_fh</strong> – Each column contains the binary labels for the consecutive binary problems of a Frank and Hall
 decomposition from left to right. For instance, in a 4-class problem, each column corresponds to
 the following problems:</p>
-<p>1st column: 1 vs 2-3-4
-2nd column: 1-2 vs 3-4
-3rd column: 1-2-3 vs 4
-4ht column: (not really used)</p>
+<blockquote>
+<div><p>1st column: 1 vs 2-3-4</p>
+<p>2nd column: 1-2 vs 3-4</p>
+<p>3rd column: 1-2-3 vs 4</p>
+<p>4ht column: (not really used)</p>
+</div></blockquote>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -529,13 +531,13 @@ build a binary tree with the binary models of the Frank and Hall decomposition, 
 tree the best possible model according to their quantification performance (applying PCC algorithm with each
 binary classifier and using the KLD as performance measure).</p>
 <p>Example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span><span class="o">-</span><span class="mi">5</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                       <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span> <span class="n">vs</span> <span class="mi">4</span><span class="o">-</span><span class="mi">5</span>
 
-   <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>                            <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span> <span class="n">vs</span> <span class="mi">5</span>
+      <span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>                            <span class="mi">1</span><span class="o">-</span><span class="mi">2</span><span class="o">-</span><span class="mi">3</span><span class="o">-</span><span class="mi">4</span> <span class="n">vs</span> <span class="mi">5</span>
 
-<span class="mi">1</span>                <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>           <span class="mi">4</span>                <span class="mi">5</span>
+<span class="mi">1</span>                  <span class="mi">1</span><span class="o">-</span><span class="mi">2</span> <span class="n">vs</span> <span class="mi">3</span><span class="o">-</span><span class="mi">4</span><span class="o">-</span><span class="mi">5</span>           <span class="mi">4</span>                <span class="mi">5</span>
 
-             <span class="mi">2</span>                 <span class="mi">3</span>
+                <span class="mi">2</span>                 <span class="mi">3</span>
 </pre></div>
 </div>
 <dl class="field-list simple">
@@ -764,11 +766,8 @@ highest probability</p>
 <li><p><strong>pos_estimator</strong> (<em>int</em><em>, </em><em>(</em><em>default=0</em><em>)</em>) – Index of the estimator in the order defined by the Frank and Hall decomposition: 1 vs 2-3-4-5, 1-2 vs 3-4-5
 and so on.</p></li>
 <li><p><strong>left</strong> (<em>a QTree object</em><em> (</em><em>default=None</em><em>)</em>) – Left subTree of this node</p></li>
+<li><p><strong>right</strong> (<em>a QTree object</em><em> (</em><em>default=None</em><em>)</em>) – Right subTree of this node</p></li>
 </ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>right: a QTree object (default=None)</dt><dd><p>Right subTree of this node</p>
 </dd>
 </dl>
 <dl class="py method">
@@ -899,7 +898,7 @@ and so on.</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

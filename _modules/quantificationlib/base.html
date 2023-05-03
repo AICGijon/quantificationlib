@@ -171,11 +171,11 @@
 <span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
 <span class="sd">            Class labels</span>
 
-<span class="sd">        y_ext_ : ndarray, shape(len(predictions_train_), )</span>
+<span class="sd">        y_ext_ : ndarray, shape(len(`predictions_train_`), )</span>
 <span class="sd">            Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,</span>
 <span class="sd">            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying</span>
-<span class="sd">            CV_estimator) than y. In other cases, y_ext_ == y.</span>
-<span class="sd">            y_ext_ must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,</span>
+<span class="sd">            CV_estimator) than y. In other cases, `y_ext_ == y`.</span>
+<span class="sd">            `y_ext_` must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,</span>
 <span class="sd">            instead of y</span>
 
 <span class="sd">        verbose : int</span>
@@ -183,7 +183,7 @@
 
 <span class="sd">        Notes</span>
 <span class="sd">        -----</span>
-<span class="sd">        Notice that at least one between estimator_train_/predictions_train and estimator_test_/predictions_test</span>
+<span class="sd">        Notice that at least one between `estimator_train_/predictions_train` and `estimator_test_/predictions_test`</span>
 <span class="sd">        must be not None. If both are None a ValueError exception will be raised. If both are not None,</span>
 <span class="sd">        predictions_train/predictions_test are used</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -205,17 +205,17 @@
 
 <div class="viewcode-block" id="UsingClassifiers.fit"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.UsingClassifiers.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Fits the estimators (estimator_train and estimator_test) and computes the predictions for the training</span>
-<span class="sd">            set (predictions_train_ attribute)</span>
+<span class="sd">            set (`predictions_train_` attribute)</span>
 
 <span class="sd">            First, the method checks that estimator_train and predictions_train are not both None</span>
 
 <span class="sd">            Then, it fits both estimators if needed. It checks whether the estimators are already trained or not</span>
 <span class="sd">            by calling the `predict` method.</span>
 
-<span class="sd">            The method finally computes predictions_train_ (if needed, attribute needs_predictions_train) using</span>
-<span class="sd">            predictions_train or estimator_train. If predictions_train is not None, predictions_train_ is copied from</span>
+<span class="sd">            The method finally computes `predictions_train_` (if needed, attribute needs_predictions_train) using</span>
+<span class="sd">            predictions_train or estimator_train. If predictions_train is not None, `predictions_train_` is copied from</span>
 <span class="sd">            predictions_train (and converted to crisp values, using `__probs2crisps` method, when</span>
-<span class="sd">            probabilistic_predictions is False). If predictions_train is None, predictions_train_ is computed using</span>
+<span class="sd">            probabilistic_predictions is False). If predictions_train is None, `predictions_train_` is computed using</span>
 <span class="sd">            the `predict`/`predict_proba` method of estimator_train, depending again on the value of</span>
 <span class="sd">            probabilistic_predictions attribute.</span>
 
@@ -309,14 +309,14 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 <div class="viewcode-block" id="UsingClassifiers.predict"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.base.html#quantificationlib.base.UsingClassifiers.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes the predictions for the testing set (predictions_test_ attribute)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Computes the predictions for the testing set (`predictions_test_` attribute)</span>
 
 <span class="sd">            First, the method checks if at least one between estimator_test and prediction_test is not None,</span>
 <span class="sd">            otherwise a ValueError exception is raised.</span>
 
-<span class="sd">            Then, it computes predictions_test_. If predictions_test is not None, predictions_test_ is copied from</span>
+<span class="sd">            Then, it computes `redictions_test_`. If predictions_test is not None, `predictions_test_` is copied from</span>
 <span class="sd">            predictions_test (and converted to crisp values, using `__probs2crisp` method when</span>
-<span class="sd">            probabilistic_predictions attribute is False). If predictions_test is None, predictions_test_ is computed</span>
+<span class="sd">            probabilistic_predictions attribute is False). If predictions_test is None, `predictions_test_` is computed</span>
 <span class="sd">            calling the `predict`/`predict_proba` method (depending on the value of the attribute</span>
 <span class="sd">            probabilistic_predictions) of estimator_test.</span>
 
@@ -438,7 +438,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

@@ -173,12 +173,12 @@ some need crisp predictions (e.g. CC) and other methods require probabilistic pr
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.base.UsingClassifiers.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
 <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying
-CV_estimator) than y. In other cases, <a href="#id3"><span class="problematic" id="id4">y_ext_</span></a> == y.
-<a href="#id5"><span class="problematic" id="id6">y_ext_</span></a> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
+CV_estimator) than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> must be used in <cite>fit</cite>/<cite>predict</cite> methods whenever the true labels of the training set are needed,
 instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id7"><span class="problematic" id="id8">predictions_train_</span></a>), )</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>), )</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,21 +195,21 @@ instead of y</p>
 </dd></dl>
 
 <p class="rubric">Notes</p>
-<p>Notice that at least one between <a href="#id9"><span class="problematic" id="id10">estimator_train_</span></a>/predictions_train and <a href="#id11"><span class="problematic" id="id12">estimator_test_</span></a>/predictions_test
+<p>Notice that at least one between <cite>estimator_train_/predictions_train</cite> and <cite>estimator_test_/predictions_test</cite>
 must be not None. If both are None a ValueError exception will be raised. If both are not None,
 predictions_train/predictions_test are used</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.base.UsingClassifiers.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/base.html#UsingClassifiers.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.base.UsingClassifiers.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>Fits the estimators (estimator_train and estimator_test) and computes the predictions for the training
-set (<a href="#id13"><span class="problematic" id="id14">predictions_train_</span></a> attribute)</p>
+set (<cite>predictions_train_</cite> attribute)</p>
 <p>First, the method checks that estimator_train and predictions_train are not both None</p>
 <p>Then, it fits both estimators if needed. It checks whether the estimators are already trained or not
 by calling the <cite>predict</cite> method.</p>
-<p>The method finally computes <a href="#id15"><span class="problematic" id="id16">predictions_train_</span></a> (if needed, attribute needs_predictions_train) using
-predictions_train or estimator_train. If predictions_train is not None, <a href="#id17"><span class="problematic" id="id18">predictions_train_</span></a> is copied from
+<p>The method finally computes <cite>predictions_train_</cite> (if needed, attribute needs_predictions_train) using
+predictions_train or estimator_train. If predictions_train is not None, <cite>predictions_train_</cite> is copied from
 predictions_train (and converted to crisp values, using <cite>__probs2crisps</cite> method, when
-probabilistic_predictions is False). If predictions_train is None, <a href="#id19"><span class="problematic" id="id20">predictions_train_</span></a> is computed using
+probabilistic_predictions is False). If predictions_train is None, <cite>predictions_train_</cite> is computed using
 the <cite>predict</cite>/<cite>predict_proba</cite> method of estimator_train, depending again on the value of
 probabilistic_predictions attribute.</p>
 <dl class="field-list simple">
@@ -229,12 +229,12 @@ probabilistic_predictions attribute.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.base.UsingClassifiers.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/base.html#UsingClassifiers.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.base.UsingClassifiers.predict" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the predictions for the testing set (<a href="#id21"><span class="problematic" id="id22">predictions_test_</span></a> attribute)</p>
+<dd><p>Computes the predictions for the testing set (<cite>predictions_test_</cite> attribute)</p>
 <p>First, the method checks if at least one between estimator_test and prediction_test is not None,
 otherwise a ValueError exception is raised.</p>
-<p>Then, it computes <a href="#id23"><span class="problematic" id="id24">predictions_test_</span></a>. If predictions_test is not None, <a href="#id25"><span class="problematic" id="id26">predictions_test_</span></a> is copied from
+<p>Then, it computes <cite>redictions_test_</cite>. If predictions_test is not None, <cite>predictions_test_</cite> is copied from
 predictions_test (and converted to crisp values, using <cite>__probs2crisp</cite> method when
-probabilistic_predictions attribute is False). If predictions_test is None, <a href="#id27"><span class="problematic" id="id28">predictions_test_</span></a> is computed
+probabilistic_predictions attribute is False). If predictions_test is None, <cite>predictions_test_</cite> is computed
 calling the <cite>predict</cite>/<cite>predict_proba</cite> method (depending on the value of the attribute
 probabilistic_predictions) of estimator_test.</p>
 <dl class="field-list simple">
@@ -392,7 +392,7 @@ probabilistic_predictions) of estimator_test.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

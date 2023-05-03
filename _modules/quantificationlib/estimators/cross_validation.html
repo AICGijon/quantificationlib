@@ -111,7 +111,7 @@
 <span class="sd">            - A string, giving an expression as a function of n_jobs, as in `2*n_jobs`</span>
 
 <span class="sd">        averaged_predictions : bool, optional (default=True)</span>
-<span class="sd">            If True, `predict` and `predict_proba` methods average the predictions given by estimators_ for</span>
+<span class="sd">            If True, `predict` and `predict_proba` methods average the predictions given by `estimators_` for</span>
 <span class="sd">            each example</span>
 
 <span class="sd">        voting : str, {&#39;hard&#39;, &#39;soft&#39;} (default=&#39;hard&#39;)</span>
@@ -130,11 +130,11 @@
 <span class="sd">            The estimator to fit each model of the CV</span>
 
 <span class="sd">        estimators_ : list of trained estimators</span>
-<span class="sd">            The list of estimators trained by `fit`method.</span>
+<span class="sd">            The list of estimators trained by `fit` method.</span>
 <span class="sd">            The number of estimators is equal to the number of folds times number of repetitions</span>
 
 <span class="sd">        averaged_predictions : bool</span>
-<span class="sd">            Determines whether the predictions for each example given by estimators_ are averaged or not</span>
+<span class="sd">            Determines whether the predictions for each example given by `estimators_` are averaged or not</span>
 
 <span class="sd">        voting : str, {&#39;hard&#39;, &#39;soft&#39;} (default=&#39;hard&#39;)</span>
 <span class="sd">            How predictions are aggregated:</span>
@@ -177,9 +177,9 @@
 
 <div class="viewcode-block" id="CV_estimator.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Fit the models</span>
-<span class="sd">            It calls `cross_validate` to fit the models and save them in estimators_ attribute.</span>
-<span class="sd">            It also stores some attributes needed by `predict` and `predict_proba`, namely, le_, classes_, X_train</span>
-<span class="sd">            and y_train_</span>
+<span class="sd">            It calls `cross_validate` to fit the models and save them in `estimators_` attribute.</span>
+<span class="sd">            It also stores some attributes needed by `predict` and `predict_proba`, namely, `le_`, `classes_`, `X_train`</span>
+<span class="sd">            and `y_train_`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -214,9 +214,7 @@
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
-<span class="sd">            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and</span>
-<span class="sd">                    the value of averaged_predictions attribute</span>
-
+<span class="sd">            preds : array-like, shape depends on type of the examples and the value of averaged_predictions</span>
 <span class="sd">                 Crisp predictions for the examples in X</span>
 
 <span class="sd">                 Training set:</span>
@@ -265,8 +263,7 @@
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
-<span class="sd">            preds : array-like, shape depends on two factors: the type of the examples (training or testing) and</span>
-<span class="sd">                    the value of averaged_predictions attribute</span>
+<span class="sd">            preds : array-like, shape depends on type of the examples and the value of averaged_predictions</span>
 
 <span class="sd">                Probabilistic predictions for the examples in X.</span>
 <span class="sd">                </span>
@@ -382,7 +379,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

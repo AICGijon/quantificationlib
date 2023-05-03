@@ -93,10 +93,13 @@ distribution, the value is NaN</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><p><strong>weights</strong> – The weight of each example, that is equal to:</p>
-<p>negative class = (1-prevalence)*1/<a href="#id1"><span class="problematic" id="id2">|D^-|</span></a>
-positive class = prevalence*1/<a href="#id3"><span class="problematic" id="id4">|D^+|</span></a>
-testing examples  = - 1 / <a href="#id5"><span class="problematic" id="id6">|T|</span></a></p>
+<dd class="field-even"><p><p><strong>weights</strong> –</p>
+<p>The weight of each example, that is equal to:</p>
+<blockquote>
+<div><p><cite>negative class = (1-prevalence)*1/|D^-|</cite></p>
+<p><cite>positive class = prevalence*1/|D^+|</cite></p>
+<p><cite>testing examples  = - 1 / |T|</cite></p>
+</div></blockquote>
 </p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
@@ -203,25 +206,31 @@ compute quantiles (for quantiles-based classes). See the help of this two functi
 <dd><p>Computes the SORD distance for SORDy algorithm for a given union_distribution and the weights of the
 examples (that depends on the prevalence used to compute the mixture of the training distribution).
 This methods correspond to the implementation of Algorithm 1 in (Maletzke et al. 2019)</p>
-<blockquote>
-<div><dl>
-<dt>weights<span class="classifier">array, shape (n_examples_train+n_examples_test, 1)  (same shape of union_labels)</span></dt><dd><p>The weight of each example, that is equal to:</p>
-<p>negative class = (1-prevalence)*1/<a href="#id7"><span class="problematic" id="id8">|D^-|</span></a>
-positive class = prevalence*1/<a href="#id9"><span class="problematic" id="id10">|D^+|</span></a>
-testing examples  = - 1 / <a href="#id11"><span class="problematic" id="id12">|T|</span></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>array</em><em>, </em><em>shape</em><em> (</em><em>n_examples_train+n_examples_test</em><em>, </em><em>1</em><em>)  </em><em>(</em><em>same shape</em><em> of </em><em>union_labels</em><em>)</em>) – <dl>
+<dt>The weight of each example, that is equal to:</dt><dd><p><cite>negative class = (1-prevalence)*1/|D^-|</cite></p>
+<p><cite>positive class = prevalence*1/|D^+|</cite></p>
+<p><cite>testing examples  = - 1 / |T|</cite></p>
 </dd>
-<dt>union_labels<span class="classifier">ndarray, shape (n_examples_train+n_examples_test, 1)</span></dt><dd><p>Contains the set/or  the label of each prediction. If the prediction corresponds to
+</dl>
+</p></li>
+<li><p><strong>union_labels</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples_train+n_examples_test</em><em>, </em><em>1</em><em>)</em>) – Contains the set/or  the label of each prediction. If the prediction corresponds to
 a training example, the value is the true class of such example. If the example belongs to the testing
-distribution, the value is NaN</p>
+distribution, the value is NaN</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>total_cost</strong> – SORD distance</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
 </dd>
 </dl>
-<dl class="simple">
-<dt>total_cost<span class="classifier">float</span></dt><dd><p>SORD distance</p>
-</dd>
-</dl>
+<p class="rubric">References</p>
 <p>André Maletzke, Denis dos Reis, Everton Cherman, and Gustavo Batista: Dys: A framework for mixture models
 in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.</p>
-</div></blockquote>
 </dd></dl>
 
 </section>
@@ -292,7 +301,7 @@ in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

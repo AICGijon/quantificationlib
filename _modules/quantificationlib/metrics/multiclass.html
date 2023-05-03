@@ -249,7 +249,7 @@
 
 
 <div class="viewcode-block" id="bray_curtis"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis">[docs]</a><span class="k">def</span> <span class="nf">bray_curtis</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Bray-Curtis dissimilarity.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Bray-Curtis dissimilarity</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -258,6 +258,11 @@
 
 <span class="sd">        p_pred : array_like, shape=(n_classes)</span>
 <span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BCD : float</span>
+<span class="sd">            The Bray-Curtis dissimilarity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">p_pred</span><span class="p">)</span></div>
@@ -265,6 +270,23 @@
 
 <div class="viewcode-block" id="topsoe"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a><span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe distance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape=(n_classes)</span>
+<span class="sd">            True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        p_pred : array_like, shape=(n_classes)</span>
+<span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+<span class="sd">        </span>
+<span class="sd">        epsilon: float, optional</span>
+<span class="sd">            To avoid divison by 0</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        TD : float</span>
+<span class="sd">            The Topsoe distance</span>
+<span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="mi">2</span><span class="o">*</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span> <span class="o">+</span>
@@ -274,6 +296,22 @@
 
 <div class="viewcode-block" id="jensenshannon"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon">[docs]</a><span class="k">def</span> <span class="nf">jensenshannon</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Jensen-Shannon divergence (a=1/2)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape=(n_classes)</span>
+<span class="sd">            True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        p_pred : array_like, shape=(n_classes)</span>
+<span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        epsilon: float, optional</span>
+<span class="sd">            To avoid divison by 0</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        JSD : float</span>
+<span class="sd">           The Jensen-Shannon divergence</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">+</span><span class="n">p_pred</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_pred</span><span class="o">+</span><span class="n">epsilon</span><span class="p">)</span><span class="o">-</span>
@@ -283,16 +321,47 @@
 
 <div class="viewcode-block" id="probsymmetric"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a><span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric distance</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape=(n_classes)</span>
+<span class="sd">            True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        p_pred : array_like, shape=(n_classes)</span>
+<span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        epsilon: float, optional</span>
+<span class="sd">            To avoid divison by 0</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        PSD : float</span>
+<span class="sd">            The Probabilistic Symmetric distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+        
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span><span class="o">-</span><span class="n">p_pred</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span><span class="o">+</span><span class="n">p_true</span><span class="o">+</span><span class="n">epsilon</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="brier_multi"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a><span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">probs</span><span class="p">):</span>
+<div class="viewcode-block" id="brier_multi"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a><span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Brier score (classification) for multiclass problems</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        p_true : array_like, shape=(n_classes)</span>
+<span class="sd">            True prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        p_pred : array_like, shape=(n_classes)</span>
+<span class="sd">            Predicted prevalences. In case of binary quantification, this parameter could be a single float value.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        BS : float</span>
+<span class="sd">            The Brier score</span>
+<span class="sd">       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">probs</span> <span class="o">-</span> <span class="n">targets</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="geometric_mean"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.geometric_mean">[docs]</a><span class="k">def</span> <span class="nf">geometric_mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
@@ -478,7 +547,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

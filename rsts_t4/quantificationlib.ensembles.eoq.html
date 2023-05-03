@@ -332,12 +332,9 @@ obtained applying an estimator over the whole training set like in the previous 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
 <li><p><strong>y</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>)</em>) – True classes</p></li>
-<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>optional</em><em>, </em><em>shape</em><em>(</em><em>n_examples</em><em>, </em><em>1</em><em>) </em><em>crisp</em><em> or </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>probs</em>) – <dl class="simple">
-<dt>with a regular estimator) or shape(n_examples, n_estimators, n_classes) with an</dt><dd><p>instance of EnsembleOfClassifiers</p>
-</dd>
-</dl>
-<p>Predictions of the examples in the training set</p>
-</p></li>
+<li><p><strong>predictions_train</strong> (<em>ndarray</em><em>, </em><em>optional</em>) – shape(n_examples, 1) crisp, or shape (n_examples, n_classes) (probs with a regular estimator),
+or shape(n_examples, n_estimators, n_classes) with an instance of EnsembleOfClassifiers.
+Predictions of the examples in the training set</p></li>
 <li><p><strong>prevalences</strong> (<em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_classes</em><em>, </em><em>n_bags</em><em>)</em>) – i-th row contains the true prevalences of each bag</p></li>
 <li><p><strong>indexes</strong> (<em>array-line</em><em>, </em><em>shape</em><em> (</em><em>bag_size</em><em>, </em><em>n_bags</em><em>)</em>) – i-th column contains the indexes of the examples for i-th bag</p></li>
 </ul>
@@ -356,11 +353,12 @@ obtained applying an estimator over the whole training set like in the previous 
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>prevalences</strong> –          a dictionary with the predictions for all strategies if ‘all’ is selected
-Each value contains the predicted prevalence for the corresponding class</p>
+<dd class="field-even"><p><strong>prevalences</strong> – Each value contains the predicted prevalence for the corresponding class.
+shape(n_classes, ) if an individual combination strategy is selected or
+a dictionary with the predictions for all strategies if ‘all’ is selected.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(n_classes, ) if an individual combination strategy is selected or</p>
+<dd class="field-odd"><p>ndarray, shape(n_classes, ) or dict</p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,7 +458,7 @@ Each value contains the predicted prevalence for the corresponding class</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

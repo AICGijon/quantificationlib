@@ -247,9 +247,9 @@
 <span class="sd">            y : array-like, shape (n_examples, )</span>
 <span class="sd">                True classes</span>
 
-<span class="sd">            predictions_train : ndarray, optional, shape(n_examples, 1) crisp or shape (n_examples, n_classes) (probs</span>
-<span class="sd">                                with a regular estimator) or shape(n_examples, n_estimators, n_classes) with an</span>
-<span class="sd">                                instance of EnsembleOfClassifiers</span>
+<span class="sd">            predictions_train : ndarray, optional</span>
+<span class="sd">                shape(n_examples, 1) crisp, or shape (n_examples, n_classes) (probs with a regular estimator), </span>
+<span class="sd">                or shape(n_examples, n_estimators, n_classes) with an instance of EnsembleOfClassifiers. </span>
 <span class="sd">                Predictions of the examples in the training set</span>
 
 <span class="sd">            prevalences : array-like, shape (n_classes, n_bags)</span>
@@ -457,9 +457,10 @@
 
 <span class="sd">            Returns</span>
 <span class="sd">            -------</span>
-<span class="sd">            prevalences: ndarray, shape(n_classes, ) if an individual combination strategy is selected or</span>
-<span class="sd">                         a dictionary with the predictions for all strategies if &#39;all&#39; is selected</span>
-<span class="sd">                Each value contains the predicted prevalence for the corresponding class</span>
+<span class="sd">            prevalences: ndarray, shape(n_classes, ) or dict</span>
+<span class="sd">                Each value contains the predicted prevalence for the corresponding class.</span>
+<span class="sd">                shape(n_classes, ) if an individual combination strategy is selected or</span>
+<span class="sd">                a dictionary with the predictions for all strategies if &#39;all&#39; is selected.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_quantifier</span><span class="p">,</span> <span class="n">UsingClassifiers</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ensemble_estimator_test</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span>
                                                                    <span class="n">predictions_test</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
@@ -623,7 +624,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

@@ -58,7 +58,7 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/cc.html#CC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.cc.CC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Multiclass Classify And Count method</p>
-<p>prevalence (class_i) = (1/<a href="#id1"><span class="problematic" id="id2">|Test|</span></a>) *  sum_{x in Test} I ( h(x) == class_i)</p>
+<p><cite>prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</cite></p>
 <p>This class works in two different ways:</p>
 <ol class="arabic simple">
 <li><p>An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</p></li>
@@ -108,7 +108,7 @@ for synthetic/artificial experiments</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.baselines.cc.CC.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.baselines.cc.CC.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id5"><span class="problematic" id="id6">predictions_test_</span></a> contains crisp predictions</p>
+<dd><p>This means that <cite>predictions_test_</cite> contains crisp predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, False</p>
@@ -199,14 +199,14 @@ not calling the predict method</p>
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/cc.html#CC.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.cc.CC.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>The prevalence for each class is the proportion of examples predicted as belonging to that class</p>
-<p>prevalence (class_i) = (1/<a href="#id3"><span class="problematic" id="id4">|Test|</span></a>) *  sum_{x in Test} I ( h(x) == class_i)</p>
+<p><cite>prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>) or </em><em>(</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They can be crisp values or probabilities. In the latter case, they are converted to crisp values
-using <cite>__probs2crisps</cite> method</p>
-<p>If predictions_test is not None they are copied on <a href="#id7"><span class="problematic" id="id8">predictions_test_</span></a> and used.
+using <cite>__probs2crisps</cite> method.</p>
+<p>If predictions_test is not None they are copied on <cite>predictions_test_</cite> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -231,7 +231,7 @@ method of estimator_test (it must be an actual estimator)</p>
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PCC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/cc.html#PCC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.cc.PCC" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Multiclass Probabilistic Classify And Count method</p>
-<p>prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</p>
+<p><cite>prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</cite></p>
 <p>This class works in two different ways:</p>
 <ol class="arabic simple">
 <li><p>An estimator is used to classify the examples of the testing bag (the estimator can be already trained)</p></li>
@@ -302,7 +302,7 @@ for synthetic/artificial experiments</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.baselines.cc.PCC.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.baselines.cc.PCC.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id9"><span class="problematic" id="id10">predictions_test_</span></a> contains probabilistic predictions</p>
+<dd><p>This means that <cite>predictions_test_</cite> contains probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -371,13 +371,13 @@ not calling the predict method</p>
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/baselines/cc.html#PCC.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.baselines.cc.PCC.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>The prevalence for each class is the average probability for such class</p>
-<p>prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</p>
+<p><cite>prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p></li>
 <li><p><strong>predictions_test</strong> (<em>ndarray</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_classes</em><em>) </em><em>(</em><em>default=None</em><em>)</em>) – <p>They must be probabilities (the estimator used must have a predict_proba method)</p>
-<p>If predictions_test is not None they are copied on <a href="#id11"><span class="problematic" id="id12">predictions_test_</span></a> and used.
+<p>If predictions_test is not None they are copied on <cite>predictions_test_</cite> and used.
 If predictions_test is None, predictions for the testing examples are computed using the <cite>predict</cite>
 method of estimator_test (it must be an actual estimator)</p>
 </p></li>
@@ -496,7 +496,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

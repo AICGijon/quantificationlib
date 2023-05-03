@@ -168,11 +168,14 @@ for quantification tasks. Information Fusion, 45, 1-15.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>An array, shape(n_examples, n_estimators) with the predicted class for each example with each estimator</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>preds</strong> – The predicted class for each example with each estimator</p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_examples, n_estimators)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
 </dd>
 </dl>
 </dd></dl>
@@ -186,14 +189,13 @@ for quantification tasks. Information Fusion, 45, 1-15.</p>
 <dd class="field-odd"><p><strong>X</strong> (<em>(</em><em>sparse</em><em>) </em><em>array-like</em><em>, </em><em>shape</em><em> (</em><em>n_examples</em><em>, </em><em>n_features</em><em>)</em>) – Data</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><em>An array, shape(n_examples, n_estimators, n_classes) with the predicted class for each example with each</em></p></li>
-<li><p><em>estimator</em></p></li>
-</ul>
-</p>
+<dd class="field-even"><p><strong>preds</strong> – The posterior probability for each example and for each class with each estimator</p>
 </dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>array-like, shape(n_examples, n_estimators)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NotFittedError</strong> – When the estimators are not fitted yet</p>
 </dd>
 </dl>
 </dd></dl>
@@ -283,7 +285,7 @@ for quantification tasks. Information Fusion, 45, 1-15.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

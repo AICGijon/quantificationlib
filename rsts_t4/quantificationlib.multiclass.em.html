@@ -142,7 +142,7 @@ consecutive iterations is lower than epsilon</p></li>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.em.EM.probabilistic_predictions">
 <span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.em.EM.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
-<dd><p>This means that <a href="#id1"><span class="problematic" id="id2">predictions_train_</span></a>/<a href="#id3"><span class="problematic" id="id4">predictions_test_</span></a> contain probabilistic predictions</p>
+<dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool, True</p>
@@ -165,13 +165,13 @@ consecutive iterations is lower than epsilon</p></li>
 <dt class="sig sig-object py" id="quantificationlib.multiclass.em.EM.y_ext_">
 <span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.em.EM.y_ext_" title="Permalink to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-<a href="#id5"><span class="problematic" id="id6">predictions_train_</span></a> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
-than y. In other cases, <a href="#id7"><span class="problematic" id="id8">y_ext_</span></a> == y.
-<a href="#id9"><span class="problematic" id="id10">y_ext_</span></a> i used in <cite>fit</cite>/<cite>predict</cite> method whenever the true labels of the training set are needed,
+<cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
+than y. In other cases, <cite>y_ext_ == y</cite>.
+<cite>y_ext_</cite> is used in <cite>fit</cite>/<cite>predict</cite> method whenever the true labels of the training set are needed,
 instead of y</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray, shape(len(<a href="#id11"><span class="problematic" id="id12">predictions_train_</span></a>, 1)</p>
+<dd class="field-odd"><p>ndarray, shape(len(<cite>predictions_train_</cite>, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -232,7 +232,7 @@ probabilities: a simple procedure. Neural computation, 14(1) (2002), 21-41.</p>
 <dt class="sig sig-object py" id="quantificationlib.multiclass.em.EM.fit">
 <span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/em.html#EM.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.em.EM.fit" title="Permalink to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
-testing set (if needed), and 2) computes <a href="#id13"><span class="problematic" id="id14">predictions_train_</span></a> (probabilities) if needed. Both operations are
+testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.</p>
 <p>After that, the method just computes the prevalences in the training set</p>
 <dl class="field-list simple">
@@ -253,7 +253,7 @@ performed by the <cite>fit</cite> method of its superclass.</p>
 <dt class="sig sig-object py" id="quantificationlib.multiclass.em.EM.predict">
 <span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/em.html#EM.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.em.EM.predict" title="Permalink to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
-<p>First, <a href="#id15"><span class="problematic" id="id16">predictions_test_</span></a> are computed (if needed, when predictions_test parameter is None) by
+<p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
 <p>After that, the method applies EM algorithm. In the E step the new posterior are computed based on the
 estimated prevalences</p>
@@ -377,7 +377,7 @@ method of estimator_test (it must be an actual estimator)</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

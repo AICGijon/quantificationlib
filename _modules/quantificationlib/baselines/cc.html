@@ -61,7 +61,7 @@
 <div class="viewcode-block" id="CC"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.CC">[docs]</a><span class="k">class</span> <span class="nc">CC</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass Classify And Count method</span>
 
-<span class="sd">        prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</span>
+<span class="sd">        `prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)`</span>
 
 <span class="sd">        This class works in two different ways:</span>
 
@@ -89,7 +89,7 @@
 <span class="sd">            It is False because CC quantifiers do not need to estimate the training distribution</span>
 
 <span class="sd">        probabilistic_predictions : bool, False</span>
-<span class="sd">             This means that predictions_test_ contains crisp predictions</span>
+<span class="sd">             This means that `predictions_test_` contains crisp predictions</span>
 
 <span class="sd">        predictions_test_ : ndarray, shape (n_examples, )</span>
 <span class="sd">            Crisp predictions of the examples in the testing bag</span>
@@ -146,7 +146,7 @@
 
 <span class="sd">            The prevalence for each class is the proportion of examples predicted as belonging to that class</span>
 
-<span class="sd">            prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)</span>
+<span class="sd">            `prevalence (class_i) = (1/|Test|) *  sum_{x in Test} I ( h(x) == class_i)`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -155,9 +155,9 @@
 
 <span class="sd">            predictions_test : ndarray, shape (n_examples, ) or (n_examples, n_classes) (default=None)</span>
 <span class="sd">                They can be crisp values or probabilities. In the latter case, they are converted to crisp values</span>
-<span class="sd">                using `__probs2crisps` method</span>
+<span class="sd">                using `__probs2crisps` method.</span>
 
-<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is not None they are copied on `predictions_test_` and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
 <span class="sd">                method of estimator_test (it must be an actual estimator)</span>
 
@@ -192,7 +192,7 @@
 <div class="viewcode-block" id="PCC"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.baselines.cc.html#quantificationlib.baselines.cc.PCC">[docs]</a><span class="k">class</span> <span class="nc">PCC</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Multiclass Probabilistic Classify And Count method</span>
 
-<span class="sd">        prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</span>
+<span class="sd">        `prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )`</span>
 
 <span class="sd">        This class works in two different ways:</span>
 
@@ -225,7 +225,7 @@
 <span class="sd">            It is False because PCC quantifiers do not need to estimate the training distribution</span>
 
 <span class="sd">        probabilistic_predictions : bool, True</span>
-<span class="sd">             This means that predictions_test_ contains probabilistic predictions</span>
+<span class="sd">             This means that `predictions_test_` contains probabilistic predictions</span>
 
 <span class="sd">        classes_ : ndarray, shape (n_classes, )</span>
 <span class="sd">            Class labels</span>
@@ -274,7 +274,7 @@
 
 <span class="sd">            The prevalence for each class is the average probability for such class</span>
 
-<span class="sd">            prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )</span>
+<span class="sd">            `prevalence (class_i) = sum_{x in T} P( h(x) == class_i | x )`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -284,7 +284,7 @@
 <span class="sd">            predictions_test : ndarray, shape (n_examples, n_classes) (default=None)</span>
 <span class="sd">                They must be probabilities (the estimator used must have a predict_proba method)</span>
 
-<span class="sd">                If predictions_test is not None they are copied on predictions_test_ and used.</span>
+<span class="sd">                If predictions_test is not None they are copied on `predictions_test_` and used.</span>
 <span class="sd">                If predictions_test is None, predictions for the testing examples are computed using the `predict`</span>
 <span class="sd">                method of estimator_test (it must be an actual estimator)</span>
 
@@ -357,7 +357,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>

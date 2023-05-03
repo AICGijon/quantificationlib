@@ -124,9 +124,9 @@
 
 <div class="viewcode-block" id="PWKQuantifier.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.knn.html#quantificationlib.multiclass.knn.PWKQuantifier.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method performs the following operations: 1) fits the estimators for the training set and the</span>
-<span class="sd">            testing set (if needed), and 2) computes predictions_train_ (crisp values) if needed. Both operations are</span>
+<span class="sd">            testing set (if needed), and 2) computes `predictions_train_` (crisp values) if needed. Both operations are</span>
 <span class="sd">            performed by the `fit` method of its superclass.</span>
-<span class="sd">            Finally the method computes the confusion matrix of the training set using predictions_train_</span>
+<span class="sd">            Finally the method computes the confusion matrix of the training set using `predictions_train_`</span>
 
 <span class="sd">            Parameters</span>
 <span class="sd">            ----------</span>
@@ -163,18 +163,17 @@
 
 <span class="sd">            The prevalences are computed solving a system of linear scalar equations:</span>
 
-<span class="sd">                         cm_.T * prevalences = CC(X)</span>
+<span class="sd">                         `cm_.T * prevalences = CC(X)`</span>
 
 <span class="sd">            For binary problems the system is directly solved using the original AC algorithm proposed by Forman</span>
 
-<span class="sd">                        p = (p_0 - fpr ) / ( tpr - fpr)</span>
+<span class="sd">                        `p = (p_0 - fpr ) / ( tpr - fpr)`</span>
 
 <span class="sd">            For multiclass problems, the system may not have a solution. Thus, instead we propose to solve an</span>
 <span class="sd">            optimization problem of this kind:</span>
 
-<span class="sd">                      Min   distance ( cm_.T * prevalences, CC(X) )</span>
-<span class="sd">                      s.t.  sum(prevalences) = 1</span>
-<span class="sd">                            prevalecences_i &gt;= 0</span>
+<span class="sd">                      `Min   distance ( cm_.T * prevalences, CC(X) )`    \n</span>
+<span class="sd">                      `s.t.  sum(prevalences) = 1, prevalecences_i &gt;= 0`</span>
 
 <span class="sd">            in which distance is &#39;L1&#39;</span>
 
@@ -272,7 +271,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
     </div>
   </body>
 </html>
