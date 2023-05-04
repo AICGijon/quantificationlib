@@ -385,15 +385,14 @@
 <span class="sd">            than y. In other cases, `y_ext_ == y`. </span>
 <span class="sd">            `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y</span>
 
-
-<span class="sd">        `cm_` : ndarray, shape (n_classes, n_classes)</span>
+<span class="sd">        cm_ : ndarray, shape (n_classes, n_classes)</span>
 <span class="sd">            Confusion matrix</span>
 
-<span class="sd">        `G_, C_, b_`: variables of different kind for defining the optimization problem</span>
+<span class="sd">        G_, C_, b_ : variables of different kind for defining the optimization problem</span>
 <span class="sd">            These variables are precomputed in the `fit` method and are used for solving the optimization problem</span>
 <span class="sd">            using `quadprog.solve_qp`. See `compute_l2_param_train` function</span>
 
-<span class="sd">        `problem_` : a cvxpy Problem object</span>
+<span class="sd">        problem_ : a cvxpy Problem object</span>
 <span class="sd">            This attribute is set to None in the fit() method. With such model, the first time a testing bag is</span>
 <span class="sd">            predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the</span>
 <span class="sd">            case of &#39;L1&#39; and &#39;HD&#39;). For the rest testing bags, this object is passed to allow a warm start. The</span>

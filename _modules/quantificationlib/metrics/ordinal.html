@@ -80,13 +80,7 @@
 
 <div class="viewcode-block" id="emd_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score">[docs]</a><span class="k">def</span> <span class="nf">emd_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Scoring metric based on EMD distance</span>
-<span class="sd">    </span>
-<span class="sd">        References</span>
-<span class="sd">        ----------</span>
-<span class="sd">        Castaño, A., González, P., González, J. A., &amp; Del Coz, J. J. (2022). Matching Distributions Algorithms</span>
-<span class="sd">        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks</span>
-<span class="sd">        and Learning Systems.</span>
-<span class="sd">        </span>
+<span class="sd">       </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        p_true: array-like, shape (n_classes, 1)</span>
@@ -96,6 +90,12 @@
 <span class="sd">        Return</span>
 <span class="sd">        ------</span>
 <span class="sd">        emds: float, the EMD score</span>
+
+<span class="sd">        References</span>
+<span class="sd">        ----------</span>
+<span class="sd">        Castaño, A., González, P., González, J. A., &amp; Del Coz, J. J. (2022). Matching Distributions Algorithms</span>
+<span class="sd">        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks</span>
+<span class="sd">        and Learning Systems.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
         
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
