@@ -66,7 +66,7 @@ class SORDy(UsingClassifiers):
         classes_ : ndarray, shape (n_classes, )
             Class labels
 
-        y_ext_ : ndarray, shape(len('predictions_train_', 1)
+        y_ext_ : ndarray, shape(len(`predictions_train_`, 1)
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
             `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
             than y. In other cases, `y_ext_ == y`.

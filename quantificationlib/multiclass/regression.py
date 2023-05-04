@@ -124,7 +124,7 @@ class REG(six.with_metaclass(ABCMeta)):
         """ Create a training set for REG objects. Each example corresponds to a histogram of a bag
             of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because
             it is formed by concatenating the histogram for each input feature. This method computes the values
-            for `dataX_`, `dataY_` and `bincuts_ attributes`
+            for `dataX_`, `dataY_` and `bincuts_` attributes
 
             Parameters
             ----------

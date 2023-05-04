@@ -186,7 +186,7 @@ def solve_l2(train_distrib, test_distrib, G, C, b):
 
         Notes
         -----
-        G, C and b are computed by `compute_l2_param_train` in the 'fit' method
+        G, C and b are computed by `compute_l2_param_train` in the `fit` method
 
     """
     a = 2 * train_distrib.T.dot(test_distrib)

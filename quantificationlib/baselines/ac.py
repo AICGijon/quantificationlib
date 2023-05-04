@@ -341,15 +341,14 @@ class PAC(UsingClassifiers):
             than y. In other cases, `y_ext_ == y`. 
             `y_ext_` is used in `fit` method whenever the true labels of the training set are needed, instead of y
 
-
-        `cm_` : ndarray, shape (n_classes, n_classes)
+        cm_ : ndarray, shape (n_classes, n_classes)
             Confusion matrix
 
-        `G_, C_, b_`: variables of different kind for defining the optimization problem
+        G_, C_, b_ : variables of different kind for defining the optimization problem
             These variables are precomputed in the `fit` method and are used for solving the optimization problem
             using `quadprog.solve_qp`. See `compute_l2_param_train` function
 
-        `problem_` : a cvxpy Problem object
+        problem_ : a cvxpy Problem object
             This attribute is set to None in the fit() method. With such model, the first time a testing bag is
             predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
             case of 'L1' and 'HD'). For the rest testing bags, this object is passed to allow a warm start. The

@@ -36,13 +36,7 @@ def emd(p_true, p_pred):
 
 def emd_score(p_true, p_pred):
     """ Scoring metric based on EMD distance
-    
-        References
-        ----------
-        Castaño, A., González, P., González, J. A., & Del Coz, J. J. (2022). Matching Distributions Algorithms
-        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks
-        and Learning Systems.
-        
+       
         Parameters
         ----------
         p_true: array-like, shape (n_classes, 1)
@@ -52,6 +46,12 @@ def emd_score(p_true, p_pred):
         Return
         ------
         emds: float, the EMD score
+
+        References
+        ----------
+        Castaño, A., González, P., González, J. A., & Del Coz, J. J. (2022). Matching Distributions Algorithms
+        Based on the Earth Mover’s Distance for Ordinal Quantification.  IEEE Transactions on Neural Networks
+        and Learning Systems.
     """
         
     p_true, p_pred = check_prevalences(p_true, p_pred)

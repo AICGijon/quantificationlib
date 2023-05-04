@@ -129,7 +129,7 @@ class UsingClassifiers(BaseQuantifier):
 
         y_ext_ : ndarray, shape(len(`predictions_train_`), )
             Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
-            predictions_train_ will have a larger dimension (factor=n_repetitions * n_folds of the underlying
+            `predictions_train_` will have a larger dimension (factor=n_repetitions * n_folds of the underlying
             CV_estimator) than y. In other cases, `y_ext_ == y`.
             `y_ext_` must be used in `fit`/`predict` methods whenever the true labels of the training set are needed,
             instead of y

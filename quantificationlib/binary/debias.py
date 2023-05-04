@@ -21,7 +21,7 @@ class DeBias(UsingClassifiers):
 
         where
 
-        `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
+        `Vt = [ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
              `/ (prior(positives) * prior(negatives))`
 
         This class works in two different ways:
@@ -109,7 +109,7 @@ class DeBias(UsingClassifiers):
 
             Finally the method computes the value of Vt
 
-            `Vt =[ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
+            `Vt = [ 1/|T| sum_{x in D} (P(h(x)==+1|x) - prior(positives) )^2 ]`
                      `/ (prior(positives) * prior(negatives))`
 
             Parameters
