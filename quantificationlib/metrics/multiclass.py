@@ -53,7 +53,7 @@ def check_prevalences(p_true, p_pred):
 
 
 def kld(p_true, p_pred, eps=1e-12):
-    """ Kullback - Leiber divergence (KLD)
+    """ Kullback-Leiber divergence (KLD)
 
             :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`
 
@@ -207,6 +207,10 @@ def hd(p_true, p_pred):
 def bray_curtis(p_true, p_pred):
     """ Bray-Curtis dissimilarity
 
+            :math:`bcd = \sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j)`
+
+        being `l` the number of classes
+
         Parameters
         ----------
         p_true : array_like, shape=(n_classes)
@@ -218,7 +222,7 @@ def bray_curtis(p_true, p_pred):
         Returns
         -------
         BCD : float
-            The Bray-Curtis dissimilarity
+            It is equal to :math:`\sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j )`
         """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(np.abs(p_true - p_pred)) / np.sum(p_true + p_pred)
@@ -226,6 +230,13 @@ def bray_curtis(p_true, p_pred):
 
 def topsoe(p_true, p_pred, epsilon=1e-20):
     """ Topsoe distance
+
+        .. math::
+            
+          tsd = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +
+                               (\hat{p}_j \cdot \log{((2 \cdot \hat{p}_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))})
+
+        being `l` the number of classes.
 
         Parameters
         ----------
@@ -240,7 +251,7 @@ def topsoe(p_true, p_pred, epsilon=1e-20):
         
         Returns
         -------
-        TD : float
+        TSD : float
             The Topsoe distance
             
     """
@@ -252,6 +263,13 @@ def topsoe(p_true, p_pred, epsilon=1e-20):
 
 def jensenshannon(p_true, p_pred, epsilon=1e-20):
     """ Jensen-Shannon divergence (a=1/2)
+
+        .. math::
+            
+          jsd = 1/2 \sum_{j=1}^{j=l}  p_j \cdot \log{(p_j + \epsilon)} + \hat{p}_j \cdot \log{(\hat{p}_j + \epsilon)} -
+                               (p_j + \hat{p}_j) \cdot \log{((p_j + \hat{p}_j + \epsilon) / 2)}
+
+        being `l` the number of classes.
 
         Parameters
         ----------
@@ -278,6 +296,10 @@ def jensenshannon(p_true, p_pred, epsilon=1e-20):
 def probsymmetric(p_true, p_pred, epsilon=1e-20):
     """ Probabilistic Symmetric distance
 
+             :math:`psd = 2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`
+
+        being `l` the number of classes
+    
         Parameters
         ----------
         p_true : array_like, shape=(n_classes)
@@ -292,7 +314,7 @@ def probsymmetric(p_true, p_pred, epsilon=1e-20):
         Returns
         -------
         PSD : float
-            The Probabilistic Symmetric distance
+             It is equal to :math:`2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`
     """
         
     p_true, p_pred = check_prevalences(p_true, p_pred)
@@ -302,6 +324,12 @@ def probsymmetric(p_true, p_pred, epsilon=1e-20):
 
 def brier_multi(p_true, p_pred):
     """ Brier score (classification) for multiclass problems
+
+        .. math::
+           
+           bsm = 1/n \sum_{i=1}^{i=n} \sum_{j=1}^{j=l} (\hat{p}_{ij} - p_{ij} )^2
+
+        being `l` the number of classes and `n` the number of predictions
 
         Parameters
         ----------
@@ -313,8 +341,8 @@ def brier_multi(p_true, p_pred):
 
         Returns
         -------
-        BS : float
-            The Brier score
+        BSM : float
+            The Brier score for multiclass
        
     """
     return np.mean(np.sum((p_pred - p_true)**2, axis=1))
