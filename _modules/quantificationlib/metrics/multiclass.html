@@ -97,7 +97,7 @@
 
 
 <div class="viewcode-block" id="kld"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.kld">[docs]</a><span class="k">def</span> <span class="nf">kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Kullback - Leiber divergence (KLD)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Kullback-Leiber divergence (KLD)</span>
 
 <span class="sd">            :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`</span>
 
@@ -251,6 +251,10 @@
 <div class="viewcode-block" id="bray_curtis"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis">[docs]</a><span class="k">def</span> <span class="nf">bray_curtis</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Bray-Curtis dissimilarity</span>
 
+<span class="sd">            :math:`bcd = \sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j)`</span>
+
+<span class="sd">        being `l` the number of classes</span>
+
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        p_true : array_like, shape=(n_classes)</span>
@@ -262,7 +266,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        BCD : float</span>
-<span class="sd">            The Bray-Curtis dissimilarity</span>
+<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j )`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">p_pred</span><span class="p">)</span></div>
@@ -270,6 +274,13 @@
 
 <div class="viewcode-block" id="topsoe"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a><span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe distance</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            </span>
+<span class="sd">          tsd = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +</span>
+<span class="sd">                               (\hat{p}_j \cdot \log{((2 \cdot \hat{p}_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))})</span>
+
+<span class="sd">        being `l` the number of classes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -284,7 +295,7 @@
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        TD : float</span>
+<span class="sd">        TSD : float</span>
 <span class="sd">            The Topsoe distance</span>
 <span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -296,6 +307,13 @@
 
 <div class="viewcode-block" id="jensenshannon"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon">[docs]</a><span class="k">def</span> <span class="nf">jensenshannon</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Jensen-Shannon divergence (a=1/2)</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            </span>
+<span class="sd">          jsd = 1/2 \sum_{j=1}^{j=l}  p_j \cdot \log{(p_j + \epsilon)} + \hat{p}_j \cdot \log{(\hat{p}_j + \epsilon)} -</span>
+<span class="sd">                               (p_j + \hat{p}_j) \cdot \log{((p_j + \hat{p}_j + \epsilon) / 2)}</span>
+
+<span class="sd">        being `l` the number of classes.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -322,6 +340,10 @@
 <div class="viewcode-block" id="probsymmetric"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a><span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric distance</span>
 
+<span class="sd">             :math:`psd = 2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`</span>
+
+<span class="sd">        being `l` the number of classes</span>
+<span class="sd">    </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
 <span class="sd">        p_true : array_like, shape=(n_classes)</span>
@@ -336,7 +358,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        PSD : float</span>
-<span class="sd">            The Probabilistic Symmetric distance</span>
+<span class="sd">             It is equal to :math:`2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
         
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
@@ -346,6 +368,12 @@
 
 <div class="viewcode-block" id="brier_multi"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a><span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Brier score (classification) for multiclass problems</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">           </span>
+<span class="sd">           bsm = 1/n \sum_{i=1}^{i=n} \sum_{j=1}^{j=l} (\hat{p}_{ij} - p_{ij} )^2</span>
+
+<span class="sd">        being `l` the number of classes and `n` the number of predictions</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -357,8 +385,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        BS : float</span>
-<span class="sd">            The Brier score</span>
+<span class="sd">        BSM : float</span>
+<span class="sd">            The Brier score for multiclass</span>
 <span class="sd">       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>

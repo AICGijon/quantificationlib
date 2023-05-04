@@ -58,6 +58,10 @@
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.bray_curtis">
 <span class="sig-name descname"><span class="pre">bray_curtis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#bray_curtis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.bray_curtis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bray-Curtis dissimilarity</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(bcd = \sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j)\)</span></p>
+</div></blockquote>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -66,7 +70,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>BCD</strong> – The Bray-Curtis dissimilarity</p>
+<dd class="field-even"><p><strong>BCD</strong> – It is equal to <span class="math notranslate nohighlight">\(\sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j )\)</span></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -78,6 +82,9 @@
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.brier_multi">
 <span class="sig-name descname"><span class="pre">brier_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#brier_multi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.brier_multi" title="Permalink to this definition">¶</a></dt>
 <dd><p>Brier score (classification) for multiclass problems</p>
+<div class="math notranslate nohighlight">
+\[bsm = 1/n \sum_{i=1}^{i=n} \sum_{j=1}^{j=l} (\hat{p}_{ij} - p_{ij} )^2\]</div>
+<p>being <cite>l</cite> the number of classes and <cite>n</cite> the number of predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -86,7 +93,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>BS</strong> – The Brier score</p>
+<dd class="field-even"><p><strong>BSM</strong> – The Brier score for multiclass</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -171,6 +178,10 @@ value (instead of zero), see correction parameter.</p>
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.jensenshannon">
 <span class="sig-name descname"><span class="pre">jensenshannon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#jensenshannon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.jensenshannon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Jensen-Shannon divergence (a=1/2)</p>
+<div class="math notranslate nohighlight">
+\[jsd = 1/2 \sum_{j=1}^{j=l}  p_j \cdot \log{(p_j + \epsilon)} + \hat{p}_j \cdot \log{(\hat{p}_j + \epsilon)} -
+                     (p_j + \hat{p}_j) \cdot \log{((p_j + \hat{p}_j + \epsilon) / 2)}\]</div>
+<p>being <cite>l</cite> the number of classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -191,7 +202,7 @@ value (instead of zero), see correction parameter.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.kld">
 <span class="sig-name descname"><span class="pre">kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.kld" title="Permalink to this definition">¶</a></dt>
-<dd><p>Kullback - Leiber divergence (KLD)</p>
+<dd><p>Kullback-Leiber divergence (KLD)</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}\)</span></p>
 </div></blockquote>
@@ -316,6 +327,10 @@ KLD is a special case of the family of f-divergences</p>
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.probsymmetric">
 <span class="sig-name descname"><span class="pre">probsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#probsymmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.probsymmetric" title="Permalink to this definition">¶</a></dt>
 <dd><p>Probabilistic Symmetric distance</p>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(psd = 2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)\)</span></p>
+</div></blockquote>
+<p>being <cite>l</cite> the number of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -325,7 +340,7 @@ KLD is a special case of the family of f-divergences</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>PSD</strong> – The Probabilistic Symmetric distance</p>
+<dd class="field-even"><p><strong>PSD</strong> – It is equal to <span class="math notranslate nohighlight">\(2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)\)</span></p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -337,6 +352,10 @@ KLD is a special case of the family of f-divergences</p>
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.topsoe">
 <span class="sig-name descname"><span class="pre">topsoe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#topsoe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.topsoe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Topsoe distance</p>
+<div class="math notranslate nohighlight">
+\[tsd = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +
+                     (\hat{p}_j \cdot \log{((2 \cdot \hat{p}_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))})\]</div>
+<p>being <cite>l</cite> the number of classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -346,7 +365,7 @@ KLD is a special case of the family of f-divergences</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>TD</strong> – The Topsoe distance</p>
+<dd class="field-even"><p><strong>TSD</strong> – The Topsoe distance</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
