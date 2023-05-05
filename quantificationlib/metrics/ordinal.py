@@ -27,7 +27,8 @@ def emd(p_true, p_pred):
 
         Return
         ------
-        emd : float, the EMD distance between p_true and p_pred
+        emd : float 
+            The EMD distance between p_true and p_pred
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(np.abs(np.cumsum(p_true - p_pred)))
@@ -45,7 +46,8 @@ def emd_score(p_true, p_pred):
 
         Return
         ------
-        emds: float, the EMD score
+        emds: float
+             The EMD score
 
         References
         ----------

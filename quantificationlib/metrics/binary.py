@@ -13,7 +13,7 @@ import numpy as np
 
 
 def binary_kld(p_true, p_pred, eps=1e-12):
-    """ A binary version of the Kullback - Leiber divergence (KLD)
+    """ A binary version of the Kullback-Leiber divergence (KLD)
 
             :math:`kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`
 
@@ -31,7 +31,7 @@ def binary_kld(p_true, p_pred, eps=1e-12):
         Returns
         -------
         KLD: float
-            It is equal to :math:`p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`
+             The Kullback-Leiber divergence for binary problems
     """
     if p_pred == 0:
         kld = p_true * np.log2(p_true / eps)
@@ -64,7 +64,7 @@ def bias(p_true, p_pred):
         Returns
         -------
         bias: float
-            It is equal to :math:`\hat{p} - p`
+            The bias for binary problems
     """
     return p_pred - p_true
 
@@ -87,7 +87,7 @@ def absolute_error(p_true, p_pred):
         Returns
         -------
         absolute error: float
-            It is equal to :math:`| \hat{p} - p |`
+            The absolute error for binary problems
     """
     return np.abs(p_pred - p_true)
 
@@ -113,7 +113,7 @@ def squared_error(p_true, p_pred):
         Returns
         -------
         squared_error: float
-            It is equal to :math:`(\hat{p} - p)^2`
+            The squared error for binary problems
     """
     return (p_pred - p_true) ** 2
 
@@ -138,8 +138,8 @@ def relative_absolute_error(p_true, p_pred, eps=1e-12):
 
         Returns
         -------
-        relative_absolute_error: float
-            It is equal to :math:`| \hat{p} - p | / p`
+        RAE: float
+            The relative absolute error for binary problems
     """
     if p_true == 0:
         return np.abs(p_pred - p_true) / (p_true + eps)
@@ -163,7 +163,7 @@ def symmetric_absolute_percentage_error(p_true, p_pred):
         Returns
         -------
         SAPE: float
-            It is equal to :math:`| \hat{p} - p | / (\hat{p} + p)`
+            The symmetric absolute percentage error for binary problems
     """
     if p_pred + p_true == 0:
         return 0
@@ -187,7 +187,7 @@ def normalized_absolute_score(p_true, p_pred):
         Returns
         -------
         NAS: float
-            It is equal to :math:`1 - | \hat{p} - p | / max(p, 1-p)`
+            The normalized absolute score for binary problems
     """
     return 1 - np.abs(p_pred - p_true) / np.max([p_true, 1 - p_true])
 
@@ -208,6 +208,6 @@ def normalized_squared_score(p_true, p_pred):
         Returns
         -------
         NSS: float
-            It is equal to :math:`1 - ( (\hat{p} - p) / max(p, 1-p) )^2`
+            The normalized squared score for binary problems
     """
     return 1 - (np.abs(p_pred - p_true) / np.max([p_true, 1 - p_true])) ** 2

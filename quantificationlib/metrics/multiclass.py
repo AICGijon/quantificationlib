@@ -77,7 +77,7 @@ def kld(p_true, p_pred, eps=1e-12):
         Returns
         -------
         KLD : float
-            It is equal to :math:`\sum_{j=1}^{j=l} p_j \cdot \log{p_j / \hat{p}_j}`
+            The Kullback-Leiber divergence
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(p_true * np.log2(p_true / (p_pred + eps)))
@@ -101,7 +101,7 @@ def mean_absolute_error(p_true, p_pred):
         Returns
         -------
         MAE : float
-            It is equal to :math:`1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`
+            The mean absolute error
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.mean(np.abs(p_pred - p_true))
@@ -125,7 +125,7 @@ def l1(p_true, p_pred):
         Returns
         -------
         l1 : float
-            It is equal to :math:`\sum_{j=1}^{j=l} | p_j - \hat{p}_j |`
+            The L1 lost 
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(np.abs(p_true - p_pred))
@@ -149,7 +149,7 @@ def mean_squared_error(p_true, p_pred):
         Returns
         -------
         MSE : float
-            It is equal to :math:`1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`
+            The mean squared error
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.mean((p_pred - p_true)**2)
@@ -173,7 +173,7 @@ def l2(p_true, p_pred):
         Returns
         -------
         l2 : float
-            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`
+            The L2 loss
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sqrt(np.sum((p_true - p_pred) ** 2))
@@ -197,7 +197,7 @@ def hd(p_true, p_pred):
         Returns
         -------
         HD : float
-            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`
+            The Hellinger distance
     """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     dist = np.sqrt(np.sum((np.sqrt(p_pred) - np.sqrt(p_true)) ** 2))
@@ -222,7 +222,7 @@ def bray_curtis(p_true, p_pred):
         Returns
         -------
         BCD : float
-            It is equal to :math:`\sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j )`
+             The Bray-Curtis dissimilarity
         """
     p_true, p_pred = check_prevalences(p_true, p_pred)
     return np.sum(np.abs(p_true - p_pred)) / np.sum(p_true + p_pred)
@@ -233,7 +233,7 @@ def topsoe(p_true, p_pred, epsilon=1e-20):
 
         .. math::
             
-          tsd = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +
+          topsoe = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +
                                (\hat{p}_j \cdot \log{((2 \cdot \hat{p}_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))})
 
         being `l` the number of classes.
@@ -251,7 +251,7 @@ def topsoe(p_true, p_pred, epsilon=1e-20):
         
         Returns
         -------
-        TSD : float
+        TOPSOE : float
             The Topsoe distance
             
     """
@@ -314,7 +314,7 @@ def probsymmetric(p_true, p_pred, epsilon=1e-20):
         Returns
         -------
         PSD : float
-             It is equal to :math:`2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`
+             The probabilistic symmetric distance
     """
         
     p_true, p_pred = check_prevalences(p_true, p_pred)
@@ -342,7 +342,7 @@ def brier_multi(p_true, p_pred):
         Returns
         -------
         BSM : float
-            The Brier score for multiclass
+            The Brier score for multiclass problems
        
     """
     return np.mean(np.sum((p_pred - p_true)**2, axis=1))
@@ -375,7 +375,7 @@ def geometric_mean(y_true, y_pred, correction=0.0):
     Returns
     -------
     g_mean : float
-        Returns the geometric mean
+        The geometric mean
     """
 
     labels = unique_labels(y_true, y_pred)
