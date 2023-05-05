@@ -70,7 +70,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>absolute error</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p |\)</span></p>
+<dd class="field-even"><p><strong>absolute error</strong> – The absolute error for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -95,7 +95,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>bias</strong> – It is equal to <span class="math notranslate nohighlight">\(\hat{p} - p\)</span></p>
+<dd class="field-even"><p><strong>bias</strong> – The bias for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -106,7 +106,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.binary_kld">
 <span class="sig-name descname"><span class="pre">binary_kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#binary_kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.binary_kld" title="Permalink to this definition">¶</a></dt>
-<dd><p>A binary version of the Kullback - Leiber divergence (KLD)</p>
+<dd><p>A binary version of the Kullback-Leiber divergence (KLD)</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))\)</span></p>
 </div></blockquote>
@@ -119,7 +119,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>KLD</strong> – It is equal to <span class="math notranslate nohighlight">\(p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))\)</span></p>
+<dd class="field-even"><p><strong>KLD</strong> – The Kullback-Leiber divergence for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -142,7 +142,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NAS</strong> – It is equal to <span class="math notranslate nohighlight">\(1 - | \hat{p} - p | / max(p, 1-p)\)</span></p>
+<dd class="field-even"><p><strong>NAS</strong> – The normalized absolute score for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -165,7 +165,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>NSS</strong> – It is equal to <span class="math notranslate nohighlight">\(1 - ( (\hat{p} - p) / max(p, 1-p) )^2\)</span></p>
+<dd class="field-even"><p><strong>NSS</strong> – The normalized squared score for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -190,7 +190,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>relative_absolute_error</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p | / p\)</span></p>
+<dd class="field-even"><p><strong>RAE</strong> – The relative absolute error for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -216,7 +216,7 @@ the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>squared_error</strong> – It is equal to <span class="math notranslate nohighlight">\((\hat{p} - p)^2\)</span></p>
+<dd class="field-even"><p><strong>squared_error</strong> – The squared error for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
@@ -239,7 +239,7 @@ the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>SAPE</strong> – It is equal to <span class="math notranslate nohighlight">\(| \hat{p} - p | / (\hat{p} + p)\)</span></p>
+<dd class="field-even"><p><strong>SAPE</strong> – The symmetric absolute percentage error for binary problems</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>

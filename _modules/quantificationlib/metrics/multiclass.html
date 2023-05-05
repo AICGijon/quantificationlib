@@ -121,7 +121,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        KLD : float</span>
-<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} p_j \cdot \log{p_j / \hat{p}_j}`</span>
+<span class="sd">            The Kullback-Leiber divergence</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)))</span></div>
@@ -145,7 +145,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        MAE : float</span>
-<span class="sd">            It is equal to :math:`1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+<span class="sd">            The mean absolute error</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">))</span></div>
@@ -169,7 +169,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        l1 : float</span>
-<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
+<span class="sd">            The L1 lost </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span></div>
@@ -193,7 +193,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        MSE : float</span>
-<span class="sd">            It is equal to :math:`1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`</span>
+<span class="sd">            The mean squared error</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
@@ -217,7 +217,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        l2 : float</span>
-<span class="sd">            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`</span>
+<span class="sd">            The L2 loss</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
@@ -241,7 +241,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        HD : float</span>
-<span class="sd">            It is equal to :math:`\sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`</span>
+<span class="sd">            The Hellinger distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_pred</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
@@ -266,7 +266,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        BCD : float</span>
-<span class="sd">            It is equal to :math:`\sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j )`</span>
+<span class="sd">             The Bray-Curtis dissimilarity</span>
 <span class="sd">        &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">p_pred</span><span class="p">)</span></div>
@@ -277,7 +277,7 @@
 
 <span class="sd">        .. math::</span>
 <span class="sd">            </span>
-<span class="sd">          tsd = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +</span>
+<span class="sd">          topsoe = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +</span>
 <span class="sd">                               (\hat{p}_j \cdot \log{((2 \cdot \hat{p}_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))})</span>
 
 <span class="sd">        being `l` the number of classes.</span>
@@ -295,7 +295,7 @@
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        TSD : float</span>
+<span class="sd">        TOPSOE : float</span>
 <span class="sd">            The Topsoe distance</span>
 <span class="sd">            </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -358,7 +358,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        PSD : float</span>
-<span class="sd">             It is equal to :math:`2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`</span>
+<span class="sd">             The probabilistic symmetric distance</span>
 <span class="sd">    &quot;&quot;&quot;</span>
         
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
@@ -386,7 +386,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        BSM : float</span>
-<span class="sd">            The Brier score for multiclass</span>
+<span class="sd">            The Brier score for multiclass problems</span>
 <span class="sd">       </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
@@ -419,7 +419,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    g_mean : float</span>
-<span class="sd">        Returns the geometric mean</span>
+<span class="sd">        The geometric mean</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">labels</span> <span class="o">=</span> <span class="n">unique_labels</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>

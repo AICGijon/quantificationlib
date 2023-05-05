@@ -57,7 +57,7 @@
 
 
 <div class="viewcode-block" id="binary_kld"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.binary.html#quantificationlib.metrics.binary.binary_kld">[docs]</a><span class="k">def</span> <span class="nf">binary_kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; A binary version of the Kullback - Leiber divergence (KLD)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A binary version of the Kullback-Leiber divergence (KLD)</span>
 
 <span class="sd">            :math:`kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`</span>
 
@@ -75,7 +75,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        KLD: float</span>
-<span class="sd">            It is equal to :math:`p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))`</span>
+<span class="sd">             The Kullback-Leiber divergence for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">p_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">kld</span> <span class="o">=</span> <span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="n">eps</span><span class="p">)</span>
@@ -108,7 +108,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bias: float</span>
-<span class="sd">            It is equal to :math:`\hat{p} - p`</span>
+<span class="sd">            The bias for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span></div>
 
@@ -131,7 +131,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        absolute error: float</span>
-<span class="sd">            It is equal to :math:`| \hat{p} - p |`</span>
+<span class="sd">            The absolute error for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span></div>
 
@@ -157,7 +157,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        squared_error: float</span>
-<span class="sd">            It is equal to :math:`(\hat{p} - p)^2`</span>
+<span class="sd">            The squared error for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span></div>
 
@@ -182,8 +182,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        relative_absolute_error: float</span>
-<span class="sd">            It is equal to :math:`| \hat{p} - p | / p`</span>
+<span class="sd">        RAE: float</span>
+<span class="sd">            The relative absolute error for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">p_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
@@ -207,7 +207,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        SAPE: float</span>
-<span class="sd">            It is equal to :math:`| \hat{p} - p | / (\hat{p} + p)`</span>
+<span class="sd">            The symmetric absolute percentage error for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">p_pred</span> <span class="o">+</span> <span class="n">p_true</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>
@@ -231,7 +231,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        NAS: float</span>
-<span class="sd">            It is equal to :math:`1 - | \hat{p} - p | / max(p, 1-p)`</span>
+<span class="sd">            The normalized absolute score for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">])</span></div>
 
@@ -252,7 +252,7 @@
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        NSS: float</span>
-<span class="sd">            It is equal to :math:`1 - ( (\hat{p} - p) / max(p, 1-p) )^2`</span>
+<span class="sd">            The normalized squared score for binary problems</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">p_true</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">]))</span> <span class="o">**</span> <span class="mi">2</span></div>
 </pre></div>
