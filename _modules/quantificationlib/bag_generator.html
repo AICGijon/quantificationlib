@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.bag_generator &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -64,14 +64,22 @@
 <span class="kn">from</span> <span class="nn">quantificationlib.multiclass.df</span> <span class="kn">import</span> <span class="n">compute_bincuts</span>
 
 
-<div class="viewcode-block" id="BagGenerator"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.BagGenerator">[docs]</a><span class="k">class</span> <span class="nc">BagGenerator</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="BagGenerator">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.BagGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">BagGenerator</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Base class for bag generator classes</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-<div class="viewcode-block" id="BagGenerator.generate_bags"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.BagGenerator.generate_bags">[docs]</a>    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+<div class="viewcode-block" id="BagGenerator.generate_bags">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.BagGenerator.generate_bags">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+</div>
 
 
-<div class="viewcode-block" id="PriorShift_BagGenerator"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorShift_BagGenerator">[docs]</a><span class="k">class</span> <span class="nc">PriorShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PriorShift_BagGenerator">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorShift_BagGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">PriorShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate bags with prior probability shift</span>
 
 <span class="sd">        Parameters</span>
@@ -148,7 +156,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="PriorShift_BagGenerator.generate_bags"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorShift_BagGenerator.generate_bags">[docs]</a>    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="PriorShift_BagGenerator.generate_bags">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorShift_BagGenerator.generate_bags">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create bags of examples simulating prior probability shift</span>
 
 <span class="sd">            Two different methods are implemented:</span>
@@ -195,6 +205,7 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_generate_dirichlet</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Invalid method for random generaror object&#39;</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="nf">_generate_uniform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create bags of examples simulating prior probability shift using an uniform distribution of the prevalences</span>
@@ -356,7 +367,10 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span></div>
 
 
-<div class="viewcode-block" id="CovariateShift_BagGenerator"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.CovariateShift_BagGenerator">[docs]</a><span class="k">class</span> <span class="nc">CovariateShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CovariateShift_BagGenerator">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.CovariateShift_BagGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">CovariateShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate bags with covariate shift</span>
 
 <span class="sd">        The idea is to pick just an instance from X and then randomly selecting the examples of the bag according</span>
@@ -410,7 +424,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="CovariateShift_BagGenerator.generate_bags"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.CovariateShift_BagGenerator.generate_bags">[docs]</a>    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="CovariateShift_BagGenerator.generate_bags">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.CovariateShift_BagGenerator.generate_bags">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create bags of examples simulating covariate shift</span>
 
 <span class="sd">            The method first picks a center example for each bag. The probability to select an example for the bag</span>
@@ -468,10 +484,14 @@
             <span class="k">for</span> <span class="n">n_cls</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">classes</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">[</span><span class="n">n_cls</span><span class="p">,</span> <span class="n">n_bag</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span><span class="p">[:,</span> <span class="n">n_bag</span><span class="p">]]</span> <span class="o">==</span> <span class="bp">cls</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">bag_size</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span></div>
+</div>
 
 
-<div class="viewcode-block" id="PriorAndCovariateShift_BagGenerator"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorAndCovariateShift_BagGenerator">[docs]</a><span class="k">class</span> <span class="nc">PriorAndCovariateShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
+
+<div class="viewcode-block" id="PriorAndCovariateShift_BagGenerator">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorAndCovariateShift_BagGenerator">[docs]</a>
+<span class="k">class</span> <span class="nc">PriorAndCovariateShift_BagGenerator</span><span class="p">(</span><span class="n">BagGenerator</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Generate bags with a mix of prior probability shift and covariate shfit</span>
 
 <span class="sd">        This class generates the bags using two objects of the classes PriorShift_BagGenerator and</span>
@@ -546,7 +566,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="PriorAndCovariateShift_BagGenerator.generate_bags"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorAndCovariateShift_BagGenerator.generate_bags">[docs]</a>    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="PriorAndCovariateShift_BagGenerator.generate_bags">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.bag_generator.html#quantificationlib.bag_generator.PriorAndCovariateShift_BagGenerator.generate_bags">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_bags</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create bags of examples simulating prior probability shift and covariate shift. It uses instances of</span>
 <span class="sd">            classes PriorShift_BagGenerator and CovariateShift_BagGenerator</span>
 
@@ -593,7 +615,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n_bags_prior</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="n">n_bags_prior</span><span class="p">]</span> <span class="o">=</span> <span class="n">prior</span><span class="o">.</span><span class="n">generate_bags</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">[:,</span> <span class="n">n_bags_prior</span><span class="p">:],</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span><span class="p">[:,</span> <span class="n">n_bags_prior</span><span class="p">:]</span> <span class="o">=</span> <span class="n">covariate</span><span class="o">.</span><span class="n">generate_bags</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">prevalences_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">indexes_</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -642,8 +666,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

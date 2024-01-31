@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.search module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -46,12 +46,12 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.search">
-<span id="quantificationlib-search-module"></span><h1>quantificationlib.search module<a class="headerlink" href="#module-quantificationlib.search" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-search-module"></span><h1>quantificationlib.search module<a class="headerlink" href="#module-quantificationlib.search" title="Link to this heading">¶</a></h1>
 <p>Search functions. Needed by those quantifiers based on matching distribution that compute the estimated prevalence
 using a search algorithm</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.compute_quantiles">
-<span class="sig-name descname"><span class="pre">compute_quantiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_quantiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#compute_quantiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.compute_quantiles" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_quantiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">probabilities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_quantiles</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#compute_quantiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.compute_quantiles" title="Link to this definition">¶</a></dt>
 <dd><p>Compute quantiles</p>
 <p>Used by QUANTy. It computes the quantiles both for the testing distribution (in this case
 the value of the prevalence is ignored), and for the weighted mixture of positives and negatives (this depends
@@ -80,7 +80,7 @@ quantiles of the training mixture distribution)</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.compute_sord_weights">
-<span class="sig-name descname"><span class="pre">compute_sord_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#compute_sord_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.compute_sord_weights" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_sord_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#compute_sord_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.compute_sord_weights" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the weight for each example, depending on the prevalence, to compute afterwards the SORD distance</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -113,7 +113,7 @@ in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.global_search">
-<span class="sig-name descname"><span class="pre">global_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixtures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_mixtures</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#global_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.global_search" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">global_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixtures</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_mixtures</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#global_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.global_search" title="Link to this definition">¶</a></dt>
 <dd><p>Search function for non-V-shape distance functions</p>
 <p>Given a function <cite>distance_func</cite> with a single local minumum in the interval [0,1], the method
 returns the prevalence that minimizes the differente between the mixture training distribution and
@@ -150,7 +150,7 @@ compute quantiles (for quantiles-based classes). See the help of this two functi
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.golden_section_search">
-<span class="sig-name descname"><span class="pre">golden_section_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#golden_section_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.golden_section_search" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">golden_section_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixture_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#golden_section_search"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.golden_section_search" title="Link to this definition">¶</a></dt>
 <dd><p>Golden section search</p>
 <p>Only useful for binary quantification
 Given a function <cite>distance_func</cite> with a single local minumum in the interval [a, b], <cite>golden_section_search</cite>
@@ -181,7 +181,7 @@ compute quantiles (for quantiles-based classes). See the help of this two functi
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.mixture_of_pdfs">
-<span class="sig-name descname"><span class="pre">mixture_of_pdfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_distrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_distrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#mixture_of_pdfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.mixture_of_pdfs" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mixture_of_pdfs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prevalence</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pos_distrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_distrib</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#mixture_of_pdfs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.mixture_of_pdfs" title="Link to this definition">¶</a></dt>
 <dd><p>Mix two pdfs given a value for the prevalence of the positive class</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -202,7 +202,7 @@ compute quantiles (for quantiles-based classes). See the help of this two functi
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.search.sord">
-<span class="sig-name descname"><span class="pre">sord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_distrib</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#sord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.sord" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">sord</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">union_distrib</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/search.html#sord"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.search.sord" title="Link to this definition">¶</a></dt>
 <dd><p>Computes the SORD distance for SORDy algorithm for a given union_distribution and the weights of the
 examples (that depends on the prevalence used to compute the mixture of the training distribution).
 This methods correspond to the implementation of Algorithm 1 in (Maletzke et al. 2019)</p>
@@ -300,8 +300,8 @@ in quantification. In AAAI 2019, volume 33, pp. 4552–4560. 2019.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.multiclass.df module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,11 +52,11 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.multiclass.df">
-<span id="quantificationlib-multiclass-df-module"></span><h1>quantificationlib.multiclass.df module<a class="headerlink" href="#module-quantificationlib.multiclass.df" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-multiclass-df-module"></span><h1>quantificationlib.multiclass.df module<a class="headerlink" href="#module-quantificationlib.multiclass.df" title="Link to this heading">¶</a></h1>
 <p>Multiclass versions for quantifiers based on representing the distributions using CDFs/PDFs</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DFX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DFX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distribution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a></p>
 <p>Generic Multiclass DFX method</p>
 <p>The idea is to represent the mixture of the training distribution and the testing distribution
@@ -108,7 +108,7 @@ distribution and the testing distribution</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -119,7 +119,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.distribution_function">
-<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.distribution_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.distribution_function" title="Link to this definition">¶</a></dt>
 <dd><p>Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -130,7 +130,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.n_bins">
-<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.n_bins" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.n_bins" title="Link to this definition">¶</a></dt>
 <dd><p>The number of bins to compute the PDFs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -141,7 +141,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.bin_strategy">
-<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.bin_strategy" title="Link to this definition">¶</a></dt>
 <dd><p>Method to compute the boundaries of the bins</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -152,7 +152,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.distance">
-<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.distance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.distance" title="Link to this definition">¶</a></dt>
 <dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’) or a distance function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -163,7 +163,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.tol">
-<span class="sig-name descname"><span class="pre">tol</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.tol" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tol</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.tol" title="Link to this definition">¶</a></dt>
 <dd><p>The precision of the solution when search is used to compute the solution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -174,7 +174,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.bincuts_">
-<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.bincuts_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.bincuts_" title="Link to this definition">¶</a></dt>
 <dd><p>Bin cuts for each input feature</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -185,7 +185,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.train_distrib_">
-<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.train_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>The PDF for each class in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -196,7 +196,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.test_distrib_">
-<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.test_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.test_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>The PDF for the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -207,7 +207,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.problem_">
-<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.problem_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.problem_" title="Link to this definition">¶</a></dt>
 <dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
 predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
 case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
@@ -221,7 +221,7 @@ solving process is faster.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.mixtures_">
-<span class="sig-name descname"><span class="pre">mixtures_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.mixtures_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mixtures_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.mixtures_" title="Link to this definition">¶</a></dt>
 <dd><p>Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction
 for a collection of testing bags</p>
 <dl class="field-list simple">
@@ -233,7 +233,7 @@ for a collection of testing bags</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -250,7 +250,7 @@ on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</p>
 and Knowledge Extraction, 1(3), (2019) 805-831.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method just computes the PDFs for all the classes in the training set. The values are stored in
 <a href="#id1"><span class="problematic" id="id2">train_dist_</span></a></p>
 <dl class="field-list simple">
@@ -265,7 +265,7 @@ and Knowledge Extraction, 1(3), (2019) 805-831.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFX.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFX.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFX.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>First, the method computes the PDF for the testing bag.</p>
 <p>After that, the prevalences are computed using the corresponding function according to the value of
@@ -287,7 +287,7 @@ distance attribute</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DFy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DFy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distribution_function</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'PDF'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'HD'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Generic Multiclass DFy method</p>
 <p>The idea is to represent the mixture of the training distribution and the testing distribution
@@ -356,7 +356,7 @@ distribution and the testing distribution</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -367,7 +367,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.estimator_train">
-<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_train" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -378,7 +378,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.estimator_test">
-<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.estimator_test" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -389,7 +389,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predictions_train_">
-<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_train_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -400,7 +400,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predictions_test_">
-<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predictions_test_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -411,7 +411,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.needs_predictions_train">
-<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.needs_predictions_train" title="Link to this definition">¶</a></dt>
 <dd><p>It is True because PDFy quantifiers need to estimate the training distribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -422,7 +422,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.probabilistic_predictions">
-<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.probabilistic_predictions" title="Link to this definition">¶</a></dt>
 <dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -433,7 +433,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.bin_strategy">
-<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bin_strategy" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bin_strategy</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bin_strategy" title="Link to this definition">¶</a></dt>
 <dd><p>Method to compute the boundaries of the bins</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -444,7 +444,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.distance">
-<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distance" title="Link to this definition">¶</a></dt>
 <dd><p>A string with the name of the distance function (‘HD’/’L1’/’L2’) or a distance function</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -455,7 +455,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.bincuts_">
-<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bincuts_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bincuts_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.bincuts_" title="Link to this definition">¶</a></dt>
 <dd><p>Bin cuts for each input feature</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -466,7 +466,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.tol">
-<span class="sig-name descname"><span class="pre">tol</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.tol" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tol</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.tol" title="Link to this definition">¶</a></dt>
 <dd><p>The precision of the solution when search is used to compute the solution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -477,7 +477,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="id0">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#id0" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -488,7 +488,7 @@ distribution and the testing distribution</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.y_ext_">
-<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.y_ext_" title="Link to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
 <cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
 than y. In other cases, <cite>y_ext_ == y</cite>.
@@ -502,7 +502,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.distribution_function">
-<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distribution_function" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distribution_function</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.distribution_function" title="Link to this definition">¶</a></dt>
 <dd><p>Type of distribution function used. Two types are supported ‘CDF’ and ‘PDF’</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -513,7 +513,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.n_bins">
-<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.n_bins" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">n_bins</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.n_bins" title="Link to this definition">¶</a></dt>
 <dd><p>The number of bins to compute the CDFs/PDFs</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -524,7 +524,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.train_distrib_">
-<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.train_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>The CDF/PDF for each class in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -535,7 +535,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.test_distrib_">
-<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.test_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.test_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>The CDF/PDF for the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -558,7 +558,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_l2_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.problem_">
-<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.problem_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.problem_" title="Link to this definition">¶</a></dt>
 <dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
 predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
 case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
@@ -572,7 +572,7 @@ solving process is faster.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.mixtures_">
-<span class="sig-name descname"><span class="pre">mixtures_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.mixtures_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mixtures_</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.mixtures_" title="Link to this definition">¶</a></dt>
 <dd><p>Contains the mixtures for all the prevalences in the range [0, 1] step=0.01. This speeds up the prediction
 for a collection of testing bags</p>
 <dl class="field-list simple">
@@ -584,7 +584,7 @@ for a collection of testing bags</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -607,7 +607,7 @@ European conference on machine learning (ECML’05), Porto, (2005) pp 564–575<
 and Knowledge Extraction, 1(3), (2019) 805-831.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
 testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
@@ -628,7 +628,7 @@ After that, the method computes the pdfs for all the classes in the training set
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#DFy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
@@ -658,11 +658,97 @@ method of estimator_test (it must be an actual estimator)</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_train</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_train</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.DFy" title="quantificationlib.multiclass.df.DFy"><em>DFy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.DFy.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.DFy.set_predict_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_test</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_test</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.DFy" title="quantificationlib.multiclass.df.DFy"><em>DFy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.HDX">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#HDX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.HDX" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#HDX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.HDX" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#quantificationlib.multiclass.df.DFX" title="quantificationlib.multiclass.df.DFX"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFX</span></code></a></p>
 <p>Multiclass HDX method</p>
 <p>This class is a wrapper. It just uses all the inherited methods of its superclass (DFX)</p>
@@ -673,29 +759,201 @@ the Hellinger Distance. Information Sciences 218 (2013), 146–164.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.HDy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HDy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#HDy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.HDy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">HDy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#HDy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.HDy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#quantificationlib.multiclass.df.DFy" title="quantificationlib.multiclass.df.DFy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFy</span></code></a></p>
 <p>Multiclass HDy method</p>
 <p>This class is just a wrapper. It just uses all the inherited methods of its superclass (DFy)</p>
 <p class="rubric">References</p>
 <p>Víctor González-Castro, Rocío Alaiz-Rodríguez, and Enrique Alegre: Class Distribution Estimation based
 on the Hellinger Distance. Information Sciences 218 (2013), 146–164.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.HDy.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.HDy.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_train</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_train</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.HDy" title="quantificationlib.multiclass.df.HDy"><em>HDy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.HDy.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.HDy.set_predict_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_test</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_test</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.HDy" title="quantificationlib.multiclass.df.HDy"><em>HDy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.MMy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MMy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#MMy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.MMy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">MMy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#MMy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.MMy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#quantificationlib.multiclass.df.DFy" title="quantificationlib.multiclass.df.DFy"><code class="xref py py-class docutils literal notranslate"><span class="pre">DFy</span></code></a></p>
 <p>Multiclass MM method</p>
 <p>This class is just a wrapper. It just uses all the inherited methods of its superclass (DFy)</p>
 <p class="rubric">References</p>
 <p>George Forman: Counting positives accurately despite inaccurate classification. In: Proceedings of the 16th
 European conference on machine learning (ECML’05), Porto, (2005) pp 564–575</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.MMy.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.MMy.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_train</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_train</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.MMy" title="quantificationlib.multiclass.df.MMy"><em>MMy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.df.MMy.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.df.MMy.set_predict_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_test</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_test</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.df.MMy" title="quantificationlib.multiclass.df.MMy"><em>MMy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.df.compute_bincuts">
-<span class="sig-name descname"><span class="pre">compute_bincuts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#compute_bincuts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.compute_bincuts" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_bincuts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_bins</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_strategy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'equal_width'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">att_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/df.html#compute_bincuts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.df.compute_bincuts" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the bincuts for calculate a histrogram with the values in X. These bincuts depends on
 the bincut strategy</p>
 <dl class="field-list simple">
@@ -802,11 +1060,21 @@ values will be 0 and 1</p></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.set_fit_request"><code class="docutils literal notranslate"><span class="pre">set_fit_request()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.DFy.set_predict_request"><code class="docutils literal notranslate"><span class="pre">set_predict_request()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.HDX"><code class="docutils literal notranslate"><span class="pre">HDX</span></code></a></li>
-<li><a class="reference internal" href="#quantificationlib.multiclass.df.HDy"><code class="docutils literal notranslate"><span class="pre">HDy</span></code></a></li>
-<li><a class="reference internal" href="#quantificationlib.multiclass.df.MMy"><code class="docutils literal notranslate"><span class="pre">MMy</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.HDy"><code class="docutils literal notranslate"><span class="pre">HDy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.HDy.set_fit_request"><code class="docutils literal notranslate"><span class="pre">set_fit_request()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.HDy.set_predict_request"><code class="docutils literal notranslate"><span class="pre">set_predict_request()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.MMy"><code class="docutils literal notranslate"><span class="pre">MMy</span></code></a><ul>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.MMy.set_fit_request"><code class="docutils literal notranslate"><span class="pre">set_fit_request()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.df.MMy.set_predict_request"><code class="docutils literal notranslate"><span class="pre">set_predict_request()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.df.compute_bincuts"><code class="docutils literal notranslate"><span class="pre">compute_bincuts()</span></code></a></li>
 </ul>
 </li>
@@ -861,8 +1129,8 @@ values will be 0 and 1</p></li>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

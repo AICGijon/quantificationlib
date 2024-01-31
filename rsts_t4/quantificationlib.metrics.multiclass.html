@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.metrics.multiclass module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,11 +52,11 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.metrics.multiclass">
-<span id="quantificationlib-metrics-multiclass-module"></span><h1>quantificationlib.metrics.multiclass module<a class="headerlink" href="#module-quantificationlib.metrics.multiclass" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-metrics-multiclass-module"></span><h1>quantificationlib.metrics.multiclass module<a class="headerlink" href="#module-quantificationlib.metrics.multiclass" title="Link to this heading">¶</a></h1>
 <p>Score functions and loss functions for multiclass quantification problems</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.bray_curtis">
-<span class="sig-name descname"><span class="pre">bray_curtis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#bray_curtis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.bray_curtis" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bray_curtis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#bray_curtis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.bray_curtis" title="Link to this definition">¶</a></dt>
 <dd><p>Bray-Curtis dissimilarity</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(bcd = \sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j)\)</span></p>
@@ -80,7 +80,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.brier_multi">
-<span class="sig-name descname"><span class="pre">brier_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#brier_multi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.brier_multi" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">brier_multi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#brier_multi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.brier_multi" title="Link to this definition">¶</a></dt>
 <dd><p>Brier score (classification) for multiclass problems</p>
 <div class="math notranslate nohighlight">
 \[bsm = 1/n \sum_{i=1}^{i=n} \sum_{j=1}^{j=l} (\hat{p}_{ij} - p_{ij} )^2\]</div>
@@ -103,7 +103,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.check_prevalences">
-<span class="sig-name descname"><span class="pre">check_prevalences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#check_prevalences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.check_prevalences" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">check_prevalences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#check_prevalences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.check_prevalences" title="Link to this definition">¶</a></dt>
 <dd><p>Check that p_true and p_pred are valid and consistent</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -124,7 +124,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.geometric_mean">
-<span class="sig-name descname"><span class="pre">geometric_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#geometric_mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.geometric_mean" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">geometric_mean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#geometric_mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.geometric_mean" title="Link to this definition">¶</a></dt>
 <dd><p>Compute the geometric mean.</p>
 <p>In quantification, the geometric mean is useful to training a classifier for imbalanced problems (a quite common
 issue). The geometric mean tries to maximize the accuracy for all classes, their accuracies must be balanced to
@@ -152,7 +152,7 @@ value (instead of zero), see correction parameter.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.hd">
-<span class="sig-name descname"><span class="pre">hd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#hd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.hd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">hd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#hd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.hd" title="Link to this definition">¶</a></dt>
 <dd><p>Hellinger distance (HD)</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}\)</span></p>
@@ -176,7 +176,7 @@ value (instead of zero), see correction parameter.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.jensenshannon">
-<span class="sig-name descname"><span class="pre">jensenshannon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#jensenshannon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.jensenshannon" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">jensenshannon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#jensenshannon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.jensenshannon" title="Link to this definition">¶</a></dt>
 <dd><p>Jensen-Shannon divergence (a=1/2)</p>
 <div class="math notranslate nohighlight">
 \[jsd = 1/2 \sum_{j=1}^{j=l}  p_j \cdot \log{(p_j + \epsilon)} + \hat{p}_j \cdot \log{(\hat{p}_j + \epsilon)} -
@@ -201,7 +201,7 @@ value (instead of zero), see correction parameter.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.kld">
-<span class="sig-name descname"><span class="pre">kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.kld" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.kld" title="Link to this definition">¶</a></dt>
 <dd><p>Kullback-Leiber divergence (KLD)</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}\)</span></p>
@@ -229,7 +229,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.l1">
-<span class="sig-name descname"><span class="pre">l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.l1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.l1" title="Link to this definition">¶</a></dt>
 <dd><p>L1 loss function</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |\)</span></p>
@@ -253,7 +253,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.l2">
-<span class="sig-name descname"><span class="pre">l2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#l2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.l2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">l2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#l2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.l2" title="Link to this definition">¶</a></dt>
 <dd><p>L2 loss function</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}\)</span></p>
@@ -277,7 +277,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.mean_absolute_error">
-<span class="sig-name descname"><span class="pre">mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#mean_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.mean_absolute_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#mean_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.mean_absolute_error" title="Link to this definition">¶</a></dt>
 <dd><p>Mean absolute error</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |\)</span></p>
@@ -301,7 +301,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.mean_squared_error">
-<span class="sig-name descname"><span class="pre">mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#mean_squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.mean_squared_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#mean_squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.mean_squared_error" title="Link to this definition">¶</a></dt>
 <dd><p>Mean squared error</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2\)</span></p>
@@ -325,7 +325,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.probsymmetric">
-<span class="sig-name descname"><span class="pre">probsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#probsymmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.probsymmetric" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">probsymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#probsymmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.probsymmetric" title="Link to this definition">¶</a></dt>
 <dd><p>Probabilistic Symmetric distance</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(psd = 2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)\)</span></p>
@@ -350,7 +350,7 @@ KLD is a special case of the family of f-divergences</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.multiclass.topsoe">
-<span class="sig-name descname"><span class="pre">topsoe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#topsoe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.topsoe" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">topsoe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/multiclass.html#topsoe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.multiclass.topsoe" title="Link to this definition">¶</a></dt>
 <dd><p>Topsoe distance</p>
 <div class="math notranslate nohighlight">
 \[topsoe = \sum_{j=1}^{j=l} (p_j \cdot \log{((2 \cdot p_j + \epsilon)/( p_j + \hat{p}_j + \epsilon))}) +
@@ -456,8 +456,8 @@ KLD is a special case of the family of f-divergences</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

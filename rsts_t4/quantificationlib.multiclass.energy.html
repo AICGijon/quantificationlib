@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.multiclass.energy module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,11 +51,11 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.multiclass.energy">
-<span id="quantificationlib-multiclass-energy-module"></span><h1>quantificationlib.multiclass.energy module<a class="headerlink" href="#module-quantificationlib.multiclass.energy" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-multiclass-energy-module"></span><h1>quantificationlib.multiclass.energy module<a class="headerlink" href="#module-quantificationlib.multiclass.energy" title="Link to this heading">¶</a></h1>
 <p>Multiclass versions for quantifiers based on the Energy Distance</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CvMy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CvMy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Multiclass CvMy method</p>
 <p>As described in (Castaño et al 2019), the predicted prevalences can be analytically calculated solving an
@@ -88,7 +88,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.estimator_train">
-<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_train" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -99,7 +99,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.estimator_test">
-<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.estimator_test" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -110,7 +110,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predictions_train_">
-<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_train_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -121,7 +121,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predictions_test_">
-<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predictions_test_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -132,7 +132,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.needs_predictions_train">
-<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.needs_predictions_train" title="Link to this definition">¶</a></dt>
 <dd><p>It is True because CvMy quantifiers need to estimate the training distribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -143,7 +143,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.probabilistic_predictions">
-<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.probabilistic_predictions" title="Link to this definition">¶</a></dt>
 <dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -154,7 +154,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -165,7 +165,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.y_ext_">
-<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.y_ext_" title="Link to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
 <cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
 than y. In other cases, <cite>y_ext_ == y</cite>.
@@ -179,7 +179,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.distance">
-<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.distance" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distance</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.distance" title="Link to this definition">¶</a></dt>
 <dd><p>Function used to compute the distance between every pair of examples</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -190,7 +190,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.train_n_cls_i_">
-<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_n_cls_i_" title="Link to this definition">¶</a></dt>
 <dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -201,7 +201,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.train_distrib_">
-<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.train_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
@@ -213,7 +213,7 @@ problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.test_distrib_">
-<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.test_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.test_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>The distribution of the test distribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -224,7 +224,7 @@ problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.K_">
-<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.K_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.K_" title="Link to this definition">¶</a></dt>
 <dd><p>Average distance between the examples in the training set of each pair of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -247,7 +247,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.a_">
-<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.a_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.a_" title="Link to this definition">¶</a></dt>
 <dd><p>This one is computed in the <cite>predict</cite> method, just before solving the optimization problem</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -258,7 +258,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -276,7 +276,7 @@ predictions_train/predictions_test are used</p>
 Juan José del Coz: An analysis of quantification methods based on matching distributions</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
 testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
@@ -297,7 +297,7 @@ After that, the method stores the true classes in <cite>y_train_</cite> attribut
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#CvMy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
@@ -326,11 +326,97 @@ method of estimator_test (it must be an actual estimator)</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_train</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_train</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy" title="quantificationlib.multiclass.energy.CvMy"><em>CvMy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.CvMy.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.energy.CvMy.set_predict_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_test</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_test</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy" title="quantificationlib.multiclass.energy.CvMy"><em>CvMy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">euclidean_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDX</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">euclidean_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a></p>
 <p>Multiclass EDX method</p>
 <dl class="field-list simple">
@@ -343,7 +429,7 @@ method of estimator_test (it must be an actual estimator)</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.distance_">
-<span class="sig-name descname"><span class="pre">distance_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.distance_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">distance_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.distance_" title="Link to this definition">¶</a></dt>
 <dd><p>The distance fuction used for computing the distance between every pair of examples</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -354,7 +440,7 @@ method of estimator_test (it must be an actual estimator)</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -365,7 +451,7 @@ method of estimator_test (it must be an actual estimator)</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.train_n_cls_i_">
-<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_n_cls_i_" title="Link to this definition">¶</a></dt>
 <dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -376,7 +462,7 @@ method of estimator_test (it must be an actual estimator)</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.train_distrib_">
-<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.train_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
@@ -388,7 +474,7 @@ problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.K_">
-<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.K_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.K_" title="Link to this definition">¶</a></dt>
 <dd><p>Average distance between the examples in the training set of each pair of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -411,7 +497,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -426,7 +512,7 @@ class-prior estimation under class balance change using energy distance. Transac
 and Systems 99, 1 (2016), 176–186.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method computes all the elements of the optimization that involve just the training data:
 <cite>K_, G_, C_ and b_</cite>.</p>
 <dl class="field-list simple">
@@ -441,7 +527,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDX.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDX.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDX.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>This method computes a, the only element of the optimization problem that needs the testing
 data. Then, it solves the optimization problem using <cite>quadprog.solve_qp</cite> in <cite>solve_ed</cite> function</p>
@@ -462,7 +548,7 @@ data. Then, it solves the optimization problem using <cite>quadprog.solve_qp</ci
 
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">EDy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimator_train=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_test=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance=&lt;function</span> <span class="pre">manhattan_distances&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.UsingClassifiers" title="quantificationlib.base.UsingClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">UsingClassifiers</span></code></a></p>
 <p>Multiclass EDy method</p>
 <p>As described in (Castaño et al 2019), the predicted prevalences can be analytically calculated solving an
@@ -495,7 +581,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.estimator_train">
-<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_train" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -506,7 +592,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.estimator_test">
-<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_test" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">estimator_test</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.estimator_test" title="Link to this definition">¶</a></dt>
 <dd><p>Estimator used to classify the examples of the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -517,7 +603,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predictions_train_">
-<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_train_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_train_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_train_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the training set</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -528,7 +614,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predictions_test_">
-<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_test_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predictions_test_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predictions_test_" title="Link to this definition">¶</a></dt>
 <dd><p>Predictions of the examples in the testing bag</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -539,7 +625,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.needs_predictions_train">
-<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.needs_predictions_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">needs_predictions_train</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.needs_predictions_train" title="Link to this definition">¶</a></dt>
 <dd><p>It is True because EDy quantifiers need to estimate the training distribution</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -550,7 +636,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.probabilistic_predictions">
-<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.probabilistic_predictions" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">probabilistic_predictions</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.probabilistic_predictions" title="Link to this definition">¶</a></dt>
 <dd><p>This means that <cite>predictions_train_/predictions_test_</cite> contain probabilistic predictions</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -561,7 +647,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -572,7 +658,7 @@ For some experiments both estimator_train and estimator_test could be the same</
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.y_ext_">
-<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.y_ext_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">y_ext_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.y_ext_" title="Link to this definition">¶</a></dt>
 <dd><p>Repmat of true labels of the training set. When CV_estimator is used with averaged_predictions=False,
 <cite>predictions_train_</cite> will have a larger dimension (factor=n_repetitions * n_folds of the underlying CV)
 than y. In other cases, <cite>y_ext_ == y</cite>.
@@ -586,7 +672,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.train_n_cls_i_">
-<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_n_cls_i_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_n_cls_i_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_n_cls_i_" title="Link to this definition">¶</a></dt>
 <dd><p>Number of the examples of each class in the training set. Used to compute average distances</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -597,7 +683,7 @@ than y. In other cases, <cite>y_ext_ == y</cite>.
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.train_distrib_">
-<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_distrib_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">train_distrib_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.train_distrib_" title="Link to this definition">¶</a></dt>
 <dd><p>Each key has associated a ndarray with the predictions, shape (train_n_cls_i_[i], 1) (binary quantification
 problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)</p>
 <dl class="field-list simple">
@@ -609,7 +695,7 @@ problems) or (train_n_cls_i_[i], n_classes) (multiclass quantification problems)
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.K_">
-<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.K_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">K_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.K_" title="Link to this definition">¶</a></dt>
 <dd><p>Average distance between the examples in the training set of each pair of classes</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -632,7 +718,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.a_">
-<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.a_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">a_</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.a_" title="Link to this definition">¶</a></dt>
 <dd><p>This one is computed in the <cite>predict</cite> method, just before solving the optimization problem</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -643,7 +729,7 @@ using <cite>quadprog.solve_qp</cite>. See <cite>compute_ed_param_train</cite> fu
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -661,7 +747,7 @@ predictions_train/predictions_test are used</p>
 Juan José del Coz: An analysis of quantification methods based on matching distributions</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
 testing set (if needed), and 2) computes <cite>predictions_train_</cite> (probabilities) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
@@ -684,7 +770,7 @@ training data:
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/energy.html#EDy.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>First, <cite>predictions_test_</cite> are computed (if needed, when predictions_test parameter is None) by
 <cite>super().predict()</cite> method.</p>
@@ -709,6 +795,92 @@ method of estimator_test (it must be an actual estimator)</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>ndarray, shape(n_classes, )</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.set_fit_request">
+<span class="sig-name descname"><span class="pre">set_fit_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_train</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.set_fit_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">fit</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">fit</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_train</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_train</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">fit</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.energy.EDy" title="quantificationlib.multiclass.energy.EDy"><em>EDy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="quantificationlib.multiclass.energy.EDy.set_predict_request">
+<span class="sig-name descname"><span class="pre">set_predict_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predictions_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'$UNCHANGED$'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#quantificationlib.multiclass.energy.EDy.set_predict_request" title="Link to this definition">¶</a></dt>
+<dd><p>Request metadata passed to the <code class="docutils literal notranslate"><span class="pre">predict</span></code> method.</p>
+<p>Note that this method is only relevant if
+<code class="docutils literal notranslate"><span class="pre">enable_metadata_routing=True</span></code> (see <code class="xref py py-func docutils literal notranslate"><span class="pre">sklearn.set_config()</span></code>).
+Please see <span class="xref std std-ref">User Guide</span> on how the routing
+mechanism works.</p>
+<p>The options for each parameter are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: metadata is requested, and passed to <code class="docutils literal notranslate"><span class="pre">predict</span></code> if provided. The request is ignored if metadata is not provided.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: metadata is not requested and the meta-estimator will not pass it to <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: metadata is not requested, and the meta-estimator will raise an error if the user provides it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">str</span></code>: metadata should be passed to the meta-estimator with this given alias instead of the original name.</p></li>
+</ul>
+<p>The default (<code class="docutils literal notranslate"><span class="pre">sklearn.utils.metadata_routing.UNCHANGED</span></code>) retains the
+existing request. This allows you to change the request for some
+parameters and not others.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">New in version 1.3.</span></p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method is only relevant if this estimator is used as a
+sub-estimator of a meta-estimator, e.g. used inside a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Pipeline</span></code>. Otherwise it has no effect.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions_test</strong> (<em>str</em><em>, </em><em>True</em><em>, </em><em>False</em><em>, or </em><em>None</em><em>,                     </em><em>default=sklearn.utils.metadata_routing.UNCHANGED</em>) – Metadata routing for <code class="docutils literal notranslate"><span class="pre">predictions_test</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">predict</span></code>.</p></li>
+<li><p><strong>self</strong> (<a class="reference internal" href="#quantificationlib.multiclass.energy.EDy" title="quantificationlib.multiclass.energy.EDy"><em>EDy</em></a>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>self</strong> – The updated object.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>object</p>
 </dd>
 </dl>
 </dd></dl>
@@ -750,6 +922,8 @@ method of estimator_test (it must be an actual estimator)</p>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.set_fit_request"><code class="docutils literal notranslate"><span class="pre">set_fit_request()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.CvMy.set_predict_request"><code class="docutils literal notranslate"><span class="pre">set_predict_request()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDX"><code class="docutils literal notranslate"><span class="pre">EDX</span></code></a><ul>
@@ -779,6 +953,8 @@ method of estimator_test (it must be an actual estimator)</p>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.verbose"><code class="docutils literal notranslate"><span class="pre">verbose</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.fit"><code class="docutils literal notranslate"><span class="pre">fit()</span></code></a></li>
 <li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.predict"><code class="docutils literal notranslate"><span class="pre">predict()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.set_fit_request"><code class="docutils literal notranslate"><span class="pre">set_fit_request()</span></code></a></li>
+<li><a class="reference internal" href="#quantificationlib.multiclass.energy.EDy.set_predict_request"><code class="docutils literal notranslate"><span class="pre">set_predict_request()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -834,8 +1010,8 @@ method of estimator_test (it must be an actual estimator)</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

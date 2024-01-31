@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.search &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -64,7 +64,9 @@
 <span class="c1">############</span>
 <span class="c1"># Search function for distance functions that can have several local minima</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="global_search"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.global_search">[docs]</a><span class="k">def</span> <span class="nf">global_search</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">mixture_func</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">mixtures</span><span class="p">,</span> <span class="n">return_mixtures</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="global_search">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.global_search">[docs]</a>
+<span class="k">def</span> <span class="nf">global_search</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">mixture_func</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">mixtures</span><span class="p">,</span> <span class="n">return_mixtures</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Search function for non-V-shape distance functions</span>
 
 <span class="sd">        Given a function `distance_func` with a single local minumum in the interval [0,1], the method</span>
@@ -155,10 +157,13 @@
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="n">p_estimated</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1"># Search function for distance functions with just one global minimum</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="golden_section_search"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.golden_section_search">[docs]</a><span class="k">def</span> <span class="nf">golden_section_search</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">mixture_func</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="golden_section_search">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.golden_section_search">[docs]</a>
+<span class="k">def</span> <span class="nf">golden_section_search</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">mixture_func</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Golden section search</span>
 
 <span class="sd">        Only useful for binary quantification</span>
@@ -252,10 +257,13 @@
         <span class="k">return</span> <span class="n">fd</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1"># Functions for computing mixtures of distributions (pdfs and quantiles)</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="mixture_of_pdfs"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.mixture_of_pdfs">[docs]</a><span class="k">def</span> <span class="nf">mixture_of_pdfs</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos_distrib</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neg_distrib</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="mixture_of_pdfs">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.mixture_of_pdfs">[docs]</a>
+<span class="k">def</span> <span class="nf">mixture_of_pdfs</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pos_distrib</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">neg_distrib</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Mix two pdfs given a value for the prevalence of the positive class</span>
 
 <span class="sd">        Parameters</span>
@@ -278,7 +286,10 @@
     <span class="k">return</span> <span class="n">mixture</span></div>
 
 
-<div class="viewcode-block" id="compute_quantiles"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.compute_quantiles">[docs]</a><span class="k">def</span> <span class="nf">compute_quantiles</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">probabilities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_quantiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compute_quantiles">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.compute_quantiles">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_quantiles</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">probabilities</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_quantiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Compute quantiles</span>
 
 <span class="sd">        Used by QUANTy. It computes the quantiles both for the testing distribution (in this case</span>
@@ -346,10 +357,13 @@
     <span class="k">return</span> <span class="n">quantiles</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1"># Functions for solving SORDy</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="compute_sord_weights"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.compute_sord_weights">[docs]</a><span class="k">def</span> <span class="nf">compute_sord_weights</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">union_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_sord_weights">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.compute_sord_weights">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_sord_weights</span><span class="p">(</span><span class="n">prevalence</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">union_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">classes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes the weight for each example, depending on the prevalence, to compute afterwards the SORD distance</span>
 
 <span class="sd">        Parameters</span>
@@ -389,7 +403,10 @@
     <span class="k">return</span> <span class="n">weights</span></div>
 
 
-<div class="viewcode-block" id="sord"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.sord">[docs]</a><span class="k">def</span> <span class="nf">sord</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">union_distrib</span><span class="p">):</span>
+
+<div class="viewcode-block" id="sord">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.search.html#quantificationlib.search.sord">[docs]</a>
+<span class="k">def</span> <span class="nf">sord</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">union_distrib</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes the SORD distance for SORDy algorithm for a given union_distribution and the weights of the</span>
 <span class="sd">        examples (that depends on the prevalence used to compute the mixture of the training distribution).</span>
 <span class="sd">        This methods correspond to the implementation of Algorithm 1 in (Maletzke et al. 2019)</span>
@@ -425,6 +442,7 @@
         <span class="n">total_cost</span> <span class="o">=</span> <span class="n">total_cost</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">delta</span> <span class="o">*</span> <span class="n">cum_weights</span><span class="p">)</span>
         <span class="n">cum_weights</span> <span class="o">=</span> <span class="n">cum_weights</span> <span class="o">+</span> <span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">total_cost</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -473,8 +491,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.multiclass.knn module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -51,11 +51,11 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.multiclass.knn">
-<span id="quantificationlib-multiclass-knn-module"></span><h1>quantificationlib.multiclass.knn module<a class="headerlink" href="#module-quantificationlib.multiclass.knn" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-multiclass-knn-module"></span><h1>quantificationlib.multiclass.knn module<a class="headerlink" href="#module-quantificationlib.multiclass.knn" title="Link to this heading">¶</a></h1>
 <p>PWKQuantifier a quantifier based on K-Nearest Neighbor</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PWKQuantifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minkowski'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PWKQuantifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_neighbors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'minkowski'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="quantificationlib.base.html#quantificationlib.base.WithoutClassifiers" title="quantificationlib.base.WithoutClassifiers"><code class="xref py py-class docutils literal notranslate"><span class="pre">WithoutClassifiers</span></code></a></p>
 <p>Quantifier based on K-Nearest Neighbor proposed by (Barranquero et al., 2013)</p>
 <p>It is a AC method in which the estimator is PWK, a weighted version of KNN in
@@ -82,7 +82,7 @@ in which case only “nonzero” elements may be considered neighbors.</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.classes_">
-<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.classes_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">classes_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.classes_" title="Link to this definition">¶</a></dt>
 <dd><p>Class labels</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -93,7 +93,7 @@ in which case only “nonzero” elements may be considered neighbors.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.cm_">
-<span class="sig-name descname"><span class="pre">cm_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.cm_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">cm_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.cm_" title="Link to this definition">¶</a></dt>
 <dd><p>Confusion matrix. The true classes are in the rows and the predicted classes in the columns. So, for
 the binary case, the count of true negatives is cm_[0,0], false negatives is cm_[1,0],
 true positives is cm_[1,1] and false positives is cm_[0,1] .</p>
@@ -106,7 +106,7 @@ true positives is cm_[1,1] and false positives is cm_[0,1] .</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.problem_">
-<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.problem_" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">problem_</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.problem_" title="Link to this definition">¶</a></dt>
 <dd><p>This attribute is set to None in the fit() method. With such model, the first time a testing bag is
 predicted this attribute will contain the corresponding cvxpy Object (if such library is used, i.e in the
 case of ‘L1’ and ‘HD’). For the rest testing bags, this object is passed to allow a warm start. The
@@ -120,7 +120,7 @@ solving process is faster.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.verbose" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.verbose" title="Link to this definition">¶</a></dt>
 <dd><p>The verbosity level</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
@@ -134,7 +134,7 @@ solving process is faster.</p>
 for prevalence estimation in binary problems. Pattern Recognition, 46(2), 472-482. 2013</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.fit">
-<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.fit" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.fit" title="Link to this definition">¶</a></dt>
 <dd><p>This method performs the following operations: 1) fits the estimators for the training set and the
 testing set (if needed), and 2) computes <cite>predictions_train_</cite> (crisp values) if needed. Both operations are
 performed by the <cite>fit</cite> method of its superclass.
@@ -151,7 +151,7 @@ Finally the method computes the confusion matrix of the training set using <cite
 
 <dl class="py method">
 <dt class="sig sig-object py" id="quantificationlib.multiclass.knn.PWKQuantifier.predict">
-<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.predict" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/multiclass/knn.html#PWKQuantifier.predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.multiclass.knn.PWKQuantifier.predict" title="Link to this definition">¶</a></dt>
 <dd><p>Predict the class distribution of a testing bag</p>
 <p>The prevalences are computed solving a system of linear scalar equations:</p>
 <blockquote>
@@ -262,8 +262,8 @@ optimization problem of this kind:</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

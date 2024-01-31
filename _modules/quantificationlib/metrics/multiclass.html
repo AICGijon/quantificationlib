@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.metrics.multiclass &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -61,7 +61,9 @@
 <span class="kn">from</span> <span class="nn">sklearn.utils.multiclass</span> <span class="kn">import</span> <span class="n">unique_labels</span>
 
 
-<div class="viewcode-block" id="check_prevalences"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.check_prevalences">[docs]</a><span class="k">def</span> <span class="nf">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="check_prevalences">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.check_prevalences">[docs]</a>
+<span class="k">def</span> <span class="nf">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Check that p_true and p_pred are valid and consistent</span>
 
 <span class="sd">        Parameters</span>
@@ -96,7 +98,10 @@
     <span class="k">return</span> <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span></div>
 
 
-<div class="viewcode-block" id="kld"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.kld">[docs]</a><span class="k">def</span> <span class="nf">kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+
+<div class="viewcode-block" id="kld">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.kld">[docs]</a>
+<span class="k">def</span> <span class="nf">kld</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Kullback-Leiber divergence (KLD)</span>
 
 <span class="sd">            :math:`kld = \sum_{j=1}^{j=l} p_j \cdot \log{p_j/\hat{p}_j}`</span>
@@ -127,7 +132,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p_true</span> <span class="o">/</span> <span class="p">(</span><span class="n">p_pred</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)))</span></div>
 
 
-<div class="viewcode-block" id="mean_absolute_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_absolute_error">[docs]</a><span class="k">def</span> <span class="nf">mean_absolute_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mean_absolute_error">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_absolute_error">[docs]</a>
+<span class="k">def</span> <span class="nf">mean_absolute_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Mean absolute error</span>
 
 <span class="sd">            :math:`mae = 1/l \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
@@ -151,7 +159,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="l1"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l1">[docs]</a><span class="k">def</span> <span class="nf">l1</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="l1">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l1">[docs]</a>
+<span class="k">def</span> <span class="nf">l1</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; L1 loss function</span>
 
 <span class="sd">            :math:`l1 = \sum_{j=1}^{j=l} | p_j - \hat{p}_j |`</span>
@@ -175,7 +186,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="mean_squared_error"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_squared_error">[docs]</a><span class="k">def</span> <span class="nf">mean_squared_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mean_squared_error">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.mean_squared_error">[docs]</a>
+<span class="k">def</span> <span class="nf">mean_squared_error</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Mean squared error</span>
 
 <span class="sd">            :math:`mse = 1/l \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2`</span>
@@ -199,7 +213,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="l2"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l2">[docs]</a><span class="k">def</span> <span class="nf">l2</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="l2">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.l2">[docs]</a>
+<span class="k">def</span> <span class="nf">l2</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; L2 loss function</span>
 
 <span class="sd">            :math:`l2 = \sqrt{\sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2}`</span>
@@ -223,7 +240,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="hd"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.hd">[docs]</a><span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="hd">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.hd">[docs]</a>
+<span class="k">def</span> <span class="nf">hd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Hellinger distance (HD)</span>
 
 <span class="sd">            :math:`hd = \sqrt{\sum_{j=1}^{j=l} (\sqrt{p_j} - \sqrt{\hat{p}_j}}`</span>
@@ -248,7 +268,10 @@
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="bray_curtis"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis">[docs]</a><span class="k">def</span> <span class="nf">bray_curtis</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="bray_curtis">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.bray_curtis">[docs]</a>
+<span class="k">def</span> <span class="nf">bray_curtis</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Bray-Curtis dissimilarity</span>
 
 <span class="sd">            :math:`bcd = \sum_{j=1}^{j=l} | (p_j - \hat{p}_j) | / \sum_{j=1}^{j=l} (p_j + \hat{p}_j)`</span>
@@ -272,7 +295,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">+</span> <span class="n">p_pred</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="topsoe"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a><span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+
+<div class="viewcode-block" id="topsoe">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.topsoe">[docs]</a>
+<span class="k">def</span> <span class="nf">topsoe</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Topsoe distance</span>
 
 <span class="sd">        .. math::</span>
@@ -305,7 +331,10 @@
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="jensenshannon"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon">[docs]</a><span class="k">def</span> <span class="nf">jensenshannon</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+
+<div class="viewcode-block" id="jensenshannon">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.jensenshannon">[docs]</a>
+<span class="k">def</span> <span class="nf">jensenshannon</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Jensen-Shannon divergence (a=1/2)</span>
 
 <span class="sd">        .. math::</span>
@@ -337,7 +366,10 @@
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="probsymmetric"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a><span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
+
+<div class="viewcode-block" id="probsymmetric">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.probsymmetric">[docs]</a>
+<span class="k">def</span> <span class="nf">probsymmetric</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-20</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Probabilistic Symmetric distance</span>
 
 <span class="sd">             :math:`psd = 2 \cdot \sum_{j=1}^{j=l} (p_j - \hat{p}_j)^2 / (p_j + \hat{p}_j + \epsilon)`</span>
@@ -366,7 +398,10 @@
     <span class="k">return</span> <span class="n">dist</span></div>
 
 
-<div class="viewcode-block" id="brier_multi"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a><span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+
+<div class="viewcode-block" id="brier_multi">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.brier_multi">[docs]</a>
+<span class="k">def</span> <span class="nf">brier_multi</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Brier score (classification) for multiclass problems</span>
 
 <span class="sd">        .. math::</span>
@@ -392,7 +427,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">p_pred</span> <span class="o">-</span> <span class="n">p_true</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="geometric_mean"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.geometric_mean">[docs]</a><span class="k">def</span> <span class="nf">geometric_mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+
+<div class="viewcode-block" id="geometric_mean">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.multiclass.html#quantificationlib.metrics.multiclass.geometric_mean">[docs]</a>
+<span class="k">def</span> <span class="nf">geometric_mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">correction</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the geometric mean.</span>
 
 <span class="sd">    In quantification, the geometric mean is useful to training a classifier for imbalanced problems (a quite common</span>
@@ -455,6 +493,7 @@
     <span class="k">with</span> <span class="n">np</span><span class="o">.</span><span class="n">errstate</span><span class="p">(</span><span class="n">divide</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">invalid</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">):</span>
         <span class="n">g_mean</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gmean</span><span class="p">(</span><span class="n">recall</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">g_mean</span></div>
+
 
 
 <span class="c1">#</span>
@@ -574,8 +613,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

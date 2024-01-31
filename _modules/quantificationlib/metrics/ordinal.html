@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.metrics.ordinal &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -60,7 +60,9 @@
 <span class="kn">from</span> <span class="nn">quantificationlib.metrics.multiclass</span> <span class="kn">import</span> <span class="n">check_prevalences</span>
 
 
-<div class="viewcode-block" id="emd"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd">[docs]</a><span class="k">def</span> <span class="nf">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="emd">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd">[docs]</a>
+<span class="k">def</span> <span class="nf">emd</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distance between two sets of prevalences</span>
 
 <span class="sd">        Parameters</span>
@@ -76,10 +78,13 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span> <span class="o">=</span> <span class="n">check_prevalences</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">p_true</span> <span class="o">-</span> <span class="n">p_pred</span><span class="p">)))</span></div>
+
     <span class="c1"># return sum([abs(sum(p_pred[:j+1]) - sum(p_true[:j+1])) for j in range(len(p_true)-1)])</span>
 
 
-<div class="viewcode-block" id="emd_score"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score">[docs]</a><span class="k">def</span> <span class="nf">emd_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
+<div class="viewcode-block" id="emd_score">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_score">[docs]</a>
+<span class="k">def</span> <span class="nf">emd_score</span><span class="p">(</span><span class="n">p_true</span><span class="p">,</span> <span class="n">p_pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Scoring metric based on EMD distance</span>
 <span class="sd">       </span>
 <span class="sd">        Parameters</span>
@@ -110,7 +115,10 @@
     <span class="k">return</span> <span class="n">emds</span></div>
 
 
-<div class="viewcode-block" id="emd_distances"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_distances">[docs]</a><span class="k">def</span> <span class="nf">emd_distances</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
+
+<div class="viewcode-block" id="emd_distances">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.metrics.ordinal.html#quantificationlib.metrics.ordinal.emd_distances">[docs]</a>
+<span class="k">def</span> <span class="nf">emd_distances</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Return the EMD distances between the rows of A and B</span>
 
 <span class="sd">        Parameters</span>
@@ -145,6 +153,7 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
         <span class="n">distances</span> <span class="o">=</span> <span class="n">distances</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">A</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">B</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">distances</span></div>
+
 
 
 </pre></div>
@@ -195,8 +204,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

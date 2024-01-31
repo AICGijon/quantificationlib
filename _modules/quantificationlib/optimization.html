@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.optimization &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -63,7 +63,9 @@
 <span class="c1">############</span>
 <span class="c1">#  Functions for solving optimization problems using CVXPY, loss functions: L1, HD</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="solve_l1"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l1">[docs]</a><span class="k">def</span> <span class="nf">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="solve_l1">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l1">[docs]</a>
+<span class="k">def</span> <span class="nf">solve_l1</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, DF and Friedman optimization problems for L1 loss function</span>
 
 <span class="sd">            `min   |train_distrib * prevalences - test_distrib|`      \n</span>
@@ -128,7 +130,10 @@
         <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">primal_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="solve_hd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_hd">[docs]</a><span class="k">def</span> <span class="nf">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;ECOS&#39;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="solve_hd">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_hd">[docs]</a>
+<span class="k">def</span> <span class="nf">solve_hd</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">,</span> <span class="n">problem</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;ECOS&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for DF methods using Hellinger Distance</span>
 
 <span class="sd">        This method just uses cvxpy library</span>
@@ -176,10 +181,13 @@
         <span class="k">return</span> <span class="n">problem</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">primal_vars</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1">#  Functions for solving optimization problems using QUADPROG (L2 loss function)</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="solve_l2"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l2">[docs]</a><span class="k">def</span> <span class="nf">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="solve_l2">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_l2">[docs]</a>
+<span class="k">def</span> <span class="nf">solve_l2</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves AC, PAC, DF and Friedman optimization problems for L2 loss function</span>
 
 <span class="sd">            min    (test_distrib - train_distrib * prevalences).T * (test_distrib - train_distrib * prevalences) \n</span>
@@ -239,7 +247,10 @@
     <span class="k">return</span> <span class="n">prevalences</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="compute_l2_param_train"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_l2_param_train">[docs]</a><span class="k">def</span> <span class="nf">compute_l2_param_train</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compute_l2_param_train">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_l2_param_train">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_l2_param_train</span><span class="p">(</span><span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving QP using L2 loss function. </span>
 <span class="sd">        For instance, this library  uses quadprog.solve_qp that solves the following kind of problems::</span>
 
@@ -294,11 +305,14 @@
     <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1"># Functions to check if a matrix is positive definite and to compute the nearest positive definite matrix</span>
 <span class="c1"># if it is not</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="nearest_pd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.nearest_pd">[docs]</a><span class="k">def</span> <span class="nf">nearest_pd</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+<div class="viewcode-block" id="nearest_pd">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.nearest_pd">[docs]</a>
+<span class="k">def</span> <span class="nf">nearest_pd</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Find the nearest positive-definite matrix to input</span>
 
 <span class="sd">        A Python/Numpy port of John D&#39;Errico&#39;s `nearestSPD` MATLAB code [1], which credits [2].</span>
@@ -342,7 +356,10 @@
     <span class="k">return</span> <span class="n">A3</span></div>
 
 
-<div class="viewcode-block" id="dpofa"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.dpofa">[docs]</a><span class="k">def</span> <span class="nf">dpofa</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+
+<div class="viewcode-block" id="dpofa">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.dpofa">[docs]</a>
+<span class="k">def</span> <span class="nf">dpofa</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Factors a symmetric positive definite matrix</span>
 
 <span class="sd">        This is a version of the dpofa function included in quadprog library. Here, it is mainly used to check</span>
@@ -385,7 +402,10 @@
     <span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="n">r</span></div>
 
 
-<div class="viewcode-block" id="is_pd"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.is_pd">[docs]</a><span class="k">def</span> <span class="nf">is_pd</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+
+<div class="viewcode-block" id="is_pd">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.is_pd">[docs]</a>
+<span class="k">def</span> <span class="nf">is_pd</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Checks whether a matrix is positive definite or not</span>
 
 <span class="sd">        It is based on dpofa function, a version of the dpofa function included in quadprog library. When dpofa</span>
@@ -404,10 +424,13 @@
     <span class="k">return</span> <span class="n">dpofa</span><span class="p">(</span><span class="n">m</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span></div>
 
 
+
 <span class="c1">############</span>
 <span class="c1"># Functions for solving ED-based methods based on QUADPROG</span>
 <span class="c1">############</span>
-<div class="viewcode-block" id="solve_ed"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_ed">[docs]</a><span class="k">def</span> <span class="nf">solve_ed</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="solve_ed">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.solve_ed">[docs]</a>
+<span class="k">def</span> <span class="nf">solve_ed</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Solves the optimization problem for ED-based quantifiers</span>
 
 <span class="sd">        It just calls `quadprog.solve_qp` with the appropriate parameters. These paremeters were computed</span>
@@ -450,7 +473,10 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="compute_ed_param_train"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_train">[docs]</a><span class="k">def</span> <span class="nf">compute_ed_param_train</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compute_ed_param_train">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_train">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_ed_param_train</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the train distribution for solving ED-problems using `quadprog.solve_qp`</span>
 
 <span class="sd">        Parameters</span>
@@ -519,7 +545,10 @@
     <span class="k">return</span> <span class="n">K</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">b</span></div>
 
 
-<div class="viewcode-block" id="compute_ed_param_test"><a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_test">[docs]</a><span class="k">def</span> <span class="nf">compute_ed_param_test</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
+
+<div class="viewcode-block" id="compute_ed_param_test">
+<a class="viewcode-back" href="../../rsts_t4/quantificationlib.optimization.html#quantificationlib.optimization.compute_ed_param_test">[docs]</a>
+<span class="k">def</span> <span class="nf">compute_ed_param_test</span><span class="p">(</span><span class="n">distance_func</span><span class="p">,</span> <span class="n">train_distrib</span><span class="p">,</span> <span class="n">test_distrib</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">classes</span><span class="p">,</span> <span class="n">n_cls_i</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Computes params related to the test distribution for solving ED-problems using `quadprog.solve_qp`</span>
 
 <span class="sd">        Parameters</span>
@@ -566,6 +595,7 @@
 
     <span class="n">a</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span> <span class="n">Kt</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">Kt</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">K</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">a</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -614,8 +644,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

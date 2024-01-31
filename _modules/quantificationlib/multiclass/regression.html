@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.multiclass.regression &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -57,7 +57,9 @@
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span>
 
 
-<div class="viewcode-block" id="REG"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG">[docs]</a><span class="k">class</span> <span class="nc">REG</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)):</span>
+<div class="viewcode-block" id="REG">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG">[docs]</a>
+<span class="k">class</span> <span class="nc">REG</span><span class="p">(</span><span class="n">six</span><span class="o">.</span><span class="n">with_metaclass</span><span class="p">(</span><span class="n">ABCMeta</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; REG base class for REGX y REGy</span>
 
 <span class="sd">        The idea of these quantifiers is to learn a regression model able to predict the prevalences. To learn said</span>
@@ -164,7 +166,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">models_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_classes_</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="REG.create_training_set_of_distributions"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.create_training_set_of_distributions">[docs]</a>    <span class="k">def</span> <span class="nf">create_training_set_of_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="REG.create_training_set_of_distributions">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.create_training_set_of_distributions">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_training_set_of_distributions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">att_range</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Create a training set for REG objects. Each example corresponds to a histogram of a bag</span>
 <span class="sd">            of examples generated from (X, y). The size of the complete histogram is n_features * n_bins, because</span>
 <span class="sd">            it is formed by concatenating the histogram for each input feature. This method computes the values</span>
@@ -210,7 +214,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">dataX_</span><span class="p">[</span><span class="n">nbag</span><span class="p">,</span> <span class="n">att</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">:(</span><span class="n">att</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_bins</span><span class="p">]</span> <span class="o">=</span> \
                     <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">indexes</span><span class="p">[:,</span> <span class="n">nbag</span><span class="p">],</span> <span class="n">att</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">n_examples</span></div>
 
-<div class="viewcode-block" id="REG.fit_regressor"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.fit_regressor">[docs]</a>    <span class="k">def</span> <span class="nf">fit_regressor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REG.fit_regressor">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.fit_regressor">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit_regressor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method trains the regressor model using `dataX_` and `dataY_`</span>
 <span class="sd">         &quot;&quot;&quot;</span>
         <span class="c1">#  checking if it is a binary problem</span>
@@ -238,7 +245,10 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="REG.predict_bag"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.predict_bag">[docs]</a>    <span class="k">def</span> <span class="nf">predict_bag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bagX</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REG.predict_bag">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REG.predict_bag">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict_bag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bagX</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method makes a prediction for a testing bag represented by its PDF, bagX parameter</span>
 
 <span class="sd">            Parameters</span>
@@ -278,10 +288,14 @@
 
             <span class="n">prevalences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">prevalences</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
             <span class="n">prevalences</span> <span class="o">=</span> <span class="n">prevalences</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prevalences</span><span class="p">))</span>
-            <span class="k">return</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div></div>
+            <span class="k">return</span> <span class="n">prevalences</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="REGX"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX">[docs]</a><span class="k">class</span> <span class="nc">REGX</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REGX">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX">[docs]</a>
+<span class="k">class</span> <span class="nc">REGX</span><span class="p">(</span><span class="n">WithoutClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; REGX</span>
 
 <span class="sd">        The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,</span>
@@ -376,7 +390,9 @@
         <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">bag_generator</span><span class="o">=</span><span class="n">bag_generator</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="n">n_bins</span><span class="p">,</span> <span class="n">bin_strategy</span><span class="o">=</span><span class="n">bin_strategy</span><span class="p">,</span>
                                    <span class="n">regression_estimator</span><span class="o">=</span><span class="n">regression_estimator</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
 
-<div class="viewcode-block" id="REGX.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="REGX.fit">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just has two steps: 1) it computes a training dataset formed by a collection of bags of</span>
 <span class="sd">            examples (using create_training_set_of_distributions) and 2) it trains a regression model using said</span>
 <span class="sd">            training set just calling fit_regressor, a inherited method from REG base class</span>
@@ -407,7 +423,10 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="REGX.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REGX.predict">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGX.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method computes the histogram for the testing set X, using the bincuts for each input feature</span>
 <span class="sd">            computed by fit method and then it makes a prediction applying the regression model using the</span>
 <span class="sd">            inherited method predict_bag</span>
@@ -438,10 +457,14 @@
                                                                            <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">att</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span>\
                                                                            <span class="n">n_examples</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGX</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="REGy"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy">[docs]</a><span class="k">class</span> <span class="nc">REGy</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REGy">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy">[docs]</a>
+<span class="k">class</span> <span class="nc">REGy</span><span class="p">(</span><span class="n">UsingClassifiers</span><span class="p">,</span> <span class="n">REG</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; REGy</span>
 
 <span class="sd">        The idea is to learn a regression model able to predict the prevalences given a PDF distribution. In this case,</span>
@@ -570,7 +593,9 @@
                                    <span class="n">estimator_train</span><span class="o">=</span><span class="n">estimator_train</span><span class="p">,</span> <span class="n">estimator_test</span><span class="o">=</span><span class="n">estimator_test</span><span class="p">,</span>
                                    <span class="n">needs_predictions_train</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probabilistic_predictions</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="REGy.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="REGy.fit">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">predictions_train</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method just has two steps: 1) it computes a training dataset formed by a collection of bags of</span>
 <span class="sd">            examples (using create_training_set_of_distributions) and 2) it trains a regression model using said</span>
 <span class="sd">            training set just calling fit_regressor, a inherited method from REG base class</span>
@@ -617,7 +642,10 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="REGy.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+<div class="viewcode-block" id="REGy.predict">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.multiclass.regression.html#quantificationlib.multiclass.regression.REGy.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">predictions_test</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; This method first computes the histogram for the testing set X, using the bincuts computed by the fit</span>
 <span class="sd">            method and the predictions for the testing bag (X, y). These predictions may be explicited given in the</span>
 <span class="sd">            predictions_test parameter. Then it makes a prediction applying the regression model using the</span>
@@ -664,7 +692,9 @@
                                                                                <span class="n">bins</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bincuts_</span><span class="p">[</span><span class="n">descr</span><span class="p">,</span> <span class="p">:])[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> \
                                                                                <span class="n">n_examples</span>
 
-        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">REGy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">predict_bag</span><span class="p">(</span><span class="n">bagX</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -713,8 +743,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

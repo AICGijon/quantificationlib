@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.optimization module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -50,12 +50,12 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.optimization">
-<span id="quantificationlib-optimization-module"></span><h1>quantificationlib.optimization module<a class="headerlink" href="#module-quantificationlib.optimization" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-optimization-module"></span><h1>quantificationlib.optimization module<a class="headerlink" href="#module-quantificationlib.optimization" title="Link to this heading">¶</a></h1>
 <p>Optimization related functions. Needed by those quantifiers that solve optimization problems to compute the
 estimated prevalence given a testing bag</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.compute_ed_param_test">
-<span class="sig-name descname"><span class="pre">compute_ed_param_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cls_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_ed_param_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_ed_param_test" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_ed_param_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">K</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cls_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_ed_param_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_ed_param_test" title="Link to this definition">¶</a></dt>
 <dd><p>Computes params related to the test distribution for solving ED-problems using <cite>quadprog.solve_qp</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -85,7 +85,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.compute_ed_param_train">
-<span class="sig-name descname"><span class="pre">compute_ed_param_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cls_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_ed_param_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_ed_param_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_ed_param_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cls_i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_ed_param_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_ed_param_train" title="Link to this definition">¶</a></dt>
 <dd><p>Computes params related to the train distribution for solving ED-problems using <cite>quadprog.solve_qp</cite></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -116,7 +116,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.compute_l2_param_train">
-<span class="sig-name descname"><span class="pre">compute_l2_param_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_l2_param_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_l2_param_train" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">compute_l2_param_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#compute_l2_param_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.compute_l2_param_train" title="Link to this definition">¶</a></dt>
 <dd><p>Computes params related to the train distribution for solving QP using L2 loss function.
 For instance, this library  uses quadprog.solve_qp that solves the following kind of problems:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Minimize</span>     <span class="mi">1</span><span class="o">/</span><span class="mi">2</span> <span class="n">x</span><span class="o">^</span><span class="n">T</span> <span class="n">G</span> <span class="n">x</span> <span class="o">-</span> <span class="n">a</span><span class="o">^</span><span class="n">T</span> <span class="n">x</span>
@@ -162,7 +162,7 @@ prevalences_i&gt;=0, and an additional constraint for ensuring that sum(prevalen
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.dpofa">
-<span class="sig-name descname"><span class="pre">dpofa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#dpofa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.dpofa" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">dpofa</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#dpofa"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.dpofa" title="Link to this definition">¶</a></dt>
 <dd><p>Factors a symmetric positive definite matrix</p>
 <p>This is a version of the dpofa function included in quadprog library. Here, it is mainly used to check
 whether a matrix is positive definite or not</p>
@@ -187,7 +187,7 @@ could be different from 0.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.is_pd">
-<span class="sig-name descname"><span class="pre">is_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#is_pd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.is_pd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">is_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#is_pd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.is_pd" title="Link to this definition">¶</a></dt>
 <dd><p>Checks whether a matrix is positive definite or not</p>
 <p>It is based on dpofa function, a version of the dpofa function included in quadprog library. When dpofa
 returns 0 the matrix is positive definite.</p>
@@ -203,7 +203,7 @@ returns 0 the matrix is positive definite.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.nearest_pd">
-<span class="sig-name descname"><span class="pre">nearest_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#nearest_pd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.nearest_pd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">nearest_pd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#nearest_pd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.nearest_pd" title="Link to this definition">¶</a></dt>
 <dd><p>Find the nearest positive-definite matrix to input</p>
 <p>A Python/Numpy port of John D’Errico’s <cite>nearestSPD</cite> MATLAB code [1], which credits [2].</p>
 <p class="rubric">References</p>
@@ -216,7 +216,7 @@ returns 0 the matrix is positive definite.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_ed">
-<span class="sig-name descname"><span class="pre">solve_ed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_ed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_ed" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">solve_ed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_ed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_ed" title="Link to this definition">¶</a></dt>
 <dd><p>Solves the optimization problem for ED-based quantifiers</p>
 <p>It just calls <cite>quadprog.solve_qp</cite> with the appropriate parameters. These paremeters were computed
 before by calling <cite>compute_ed_param_train</cite> and <cite>compute_ed_param_test</cite>.
@@ -250,7 +250,7 @@ and Systems 99, 1 (2016), 176–186.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_hd">
-<span class="sig-name descname"><span class="pre">solve_hd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ECOS'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_hd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_hd" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">solve_hd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'ECOS'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_hd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_hd" title="Link to this definition">¶</a></dt>
 <dd><p>Solves the optimization problem for DF methods using Hellinger Distance</p>
 <p>This method just uses cvxpy library</p>
 <dl class="field-list simple">
@@ -277,7 +277,7 @@ you may need to install additional libraries.</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_l1">
-<span class="sig-name descname"><span class="pre">solve_l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l1" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">solve_l1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l1" title="Link to this definition">¶</a></dt>
 <dd><p>Solves AC, PAC, DF and Friedman optimization problems for L1 loss function</p>
 <blockquote>
 <div><p><cite>min   |train_distrib * prevalences - test_distrib|</cite></p>
@@ -319,7 +319,7 @@ you need to install additional libraries</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.optimization.solve_l2">
-<span class="sig-name descname"><span class="pre">solve_l2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l2" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">solve_l2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_distrib</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/optimization.html#solve_l2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.optimization.solve_l2" title="Link to this definition">¶</a></dt>
 <dd><p>Solves AC, PAC, DF and Friedman optimization problems for L2 loss function</p>
 <blockquote>
 <div><p>min    (test_distrib - train_distrib * prevalences).T * (test_distrib - train_distrib * prevalences)</p>
@@ -450,8 +450,8 @@ quadprog is used here because it is faster than cvxpy.</p>
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

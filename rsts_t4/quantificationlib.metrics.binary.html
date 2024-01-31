@@ -2,18 +2,18 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>quantificationlib.metrics.binary module &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../_static/doctools.js?v=888ff710"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -52,11 +52,11 @@
           <div class="body" role="main">
             
   <section id="module-quantificationlib.metrics.binary">
-<span id="quantificationlib-metrics-binary-module"></span><h1>quantificationlib.metrics.binary module<a class="headerlink" href="#module-quantificationlib.metrics.binary" title="Permalink to this heading">¶</a></h1>
+<span id="quantificationlib-metrics-binary-module"></span><h1>quantificationlib.metrics.binary module<a class="headerlink" href="#module-quantificationlib.metrics.binary" title="Link to this heading">¶</a></h1>
 <p>Score functions and loss functions for binary quantification problems</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.absolute_error">
-<span class="sig-name descname"><span class="pre">absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.absolute_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.absolute_error" title="Link to this definition">¶</a></dt>
 <dd><p>Binary version of the absolute error</p>
 <p>Absolute difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
 <blockquote>
@@ -80,7 +80,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.bias">
-<span class="sig-name descname"><span class="pre">bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.bias" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bias</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#bias"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.bias" title="Link to this definition">¶</a></dt>
 <dd><p>Bias of a binary quantifier</p>
 <p>It is just the difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
 <blockquote>
@@ -105,7 +105,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.binary_kld">
-<span class="sig-name descname"><span class="pre">binary_kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#binary_kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.binary_kld" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">binary_kld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#binary_kld"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.binary_kld" title="Link to this definition">¶</a></dt>
 <dd><p>A binary version of the Kullback-Leiber divergence (KLD)</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(kld = p \cdot \log(p/\hat{p}) + (1-p) \cdot \log((1-p)/(1-\hat{p}))\)</span></p>
@@ -129,7 +129,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.normalized_absolute_score">
-<span class="sig-name descname"><span class="pre">normalized_absolute_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_absolute_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_absolute_score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">normalized_absolute_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_absolute_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_absolute_score" title="Link to this definition">¶</a></dt>
 <dd><p>A score version of the normalized binary absolute error</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(nas = 1 - | \hat{p} - p | / max(p, 1-p)\)</span></p>
@@ -152,7 +152,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.normalized_squared_score">
-<span class="sig-name descname"><span class="pre">normalized_squared_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_squared_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_squared_score" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">normalized_squared_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#normalized_squared_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.normalized_squared_score" title="Link to this definition">¶</a></dt>
 <dd><p>A score version of the normalized binary squared error</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(nss = 1 - ( (\hat{p} - p) / max(p, 1-p) )^2\)</span></p>
@@ -175,7 +175,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.relative_absolute_error">
-<span class="sig-name descname"><span class="pre">relative_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#relative_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.relative_absolute_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">relative_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#relative_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.relative_absolute_error" title="Link to this definition">¶</a></dt>
 <dd><p>A binary relative version of the absolute error</p>
 <p>It is the relation between the absolute error and the true prevalence.</p>
 <blockquote>
@@ -200,7 +200,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.squared_error">
-<span class="sig-name descname"><span class="pre">squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.squared_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.squared_error" title="Link to this definition">¶</a></dt>
 <dd><p>Binary version of the squared error. Only the prevalence of the positive class is used</p>
 <p>It is the quadratic difference between the predicted prevalence (<span class="math notranslate nohighlight">\(\hat{p}\)</span>) and
 the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p>
@@ -226,7 +226,7 @@ the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p
 
 <dl class="py function">
 <dt class="sig sig-object py" id="quantificationlib.metrics.binary.symmetric_absolute_percentage_error">
-<span class="sig-name descname"><span class="pre">symmetric_absolute_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#symmetric_absolute_percentage_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.symmetric_absolute_percentage_error" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">symmetric_absolute_percentage_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_pred</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/quantificationlib/metrics/binary.html#symmetric_absolute_percentage_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#quantificationlib.metrics.binary.symmetric_absolute_percentage_error" title="Link to this definition">¶</a></dt>
 <dd><p>A symmetric binary version of RAE</p>
 <blockquote>
 <div><p><span class="math notranslate nohighlight">\(sape = | \hat{p} - p | / (\hat{p} + p)\)</span></p>
@@ -325,8 +325,8 @@ the true prevalence (<span class="math notranslate nohighlight">\(p\)</span>)</p
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>

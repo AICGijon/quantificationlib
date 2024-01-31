@@ -2,17 +2,17 @@
 
 <!doctype html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>quantificationlib.estimators.cross_validation &#8212; quantificationlib 0.1.1 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/bizstyle.css?v=cdcebea6" />
     
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=a58bc63e"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/bizstyle.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -62,7 +62,9 @@
 <span class="kn">from</span> <span class="nn">sklearn.model_selection._split</span> <span class="kn">import</span> <span class="n">check_cv</span>
 
 
-<div class="viewcode-block" id="CV_estimator"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator">[docs]</a><span class="k">class</span> <span class="nc">CV_estimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
+<div class="viewcode-block" id="CV_estimator">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator">[docs]</a>
+<span class="k">class</span> <span class="nc">CV_estimator</span><span class="p">(</span><span class="n">BaseEstimator</span><span class="p">,</span> <span class="n">ClassifierMixin</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Cross Validation Estimator</span>
 
 <span class="sd">        The idea is to have an estimator in which the model is formed by the models of a CV. This object is needed</span>
@@ -175,7 +177,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">y_train_</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="CV_estimator.fit"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<div class="viewcode-block" id="CV_estimator.fit">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.fit">[docs]</a>
+    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Fit the models</span>
 <span class="sd">            It calls `cross_validate` to fit the models and save them in `estimators_` attribute.</span>
 <span class="sd">            It also stores some attributes needed by `predict` and `predict_proba`, namely, `le_`, `classes_`, `X_train`</span>
@@ -204,7 +208,10 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-<div class="viewcode-block" id="CV_estimator.predict"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CV_estimator.predict">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns the crisp predictions given by a CV estimator</span>
 
 <span class="sd">            Parameters</span>
@@ -253,7 +260,10 @@
             <span class="n">preds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">le_</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">preds</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">preds</span></div>
 
-<div class="viewcode-block" id="CV_estimator.predict_proba"><a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict_proba">[docs]</a>    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+
+<div class="viewcode-block" id="CV_estimator.predict_proba">
+<a class="viewcode-back" href="../../../rsts_t4/quantificationlib.estimators.cross_validation.html#quantificationlib.estimators.cross_validation.CV_estimator.predict_proba">[docs]</a>
+    <span class="k">def</span> <span class="nf">predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns probabilistic predictions given by a CV estimator</span>
 
 <span class="sd">            Parameters</span>
@@ -285,6 +295,7 @@
             <span class="n">preds</span> <span class="o">=</span> <span class="n">preds</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classes_</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">preds</span></div>
 
+
     <span class="k">def</span> <span class="nf">_predict_proba</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Returns all probabilistic predictions given by a CV estimator</span>
 
@@ -305,7 +316,7 @@
 <span class="sd">            When X is a test bag, each examples is predicted by all estimators</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">n_examples</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">X</span> <span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">X_train_</span><span class="p">):</span>
             <span class="c1"># predicting over training examples, same partitions</span>
             <span class="c1">#  computing number of repetitions</span>
             <span class="n">n_preds</span> <span class="o">=</span> <span class="mi">0</span>
@@ -330,6 +341,7 @@
                 <span class="n">preds</span><span class="p">[</span><span class="n">n_est</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">preds</span></div>
+
 </pre></div>
 
             <div class="clearer"></div>
@@ -378,8 +390,8 @@
       </ul>
     </div>
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, AIC Gijón.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.0.
+    &#169; Copyright 2023, AIC Gijón.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.6.
     </div>
   </body>
 </html>
