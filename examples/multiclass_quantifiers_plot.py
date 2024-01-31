@@ -150,5 +150,5 @@ if __name__ == '__main__':
      #main(dataset='./datasets/multiclass/MaternalHealthRisk.csv', estimator_name='RF',
      #     n_reps=4, n_bags=50, master_seed=2032)
      
-     main(dataset='C:\\Users\\jalon\\PycharmProjects\\QLIB_AIC_PLOT\\quantificationlib\\examples\\datasets\\multiclass\\MaternalHealthRisk.csv', estimator_name='RF',
+     main(dataset='datasets/multiclass/MaternalHealthRisk.csv', estimator_name='RF',
           n_reps=4, n_bags=50, master_seed=2032)
