@@ -261,7 +261,7 @@ class CV_estimator(BaseEstimator, ClassifierMixin):
             When X is a test bag, each examples is predicted by all estimators
         """
         n_examples = len(X)
-        if np.array(X == self.X_train_).all():
+        if np.array_equal(X ,self.X_train_):
             # predicting over training examples, same partitions
             #  computing number of repetitions
             n_preds = 0
