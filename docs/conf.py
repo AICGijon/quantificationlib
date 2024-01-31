@@ -7,9 +7,9 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'quantificationlib'
-copyright = '2023, AIC Gijón'
+copyright = '2024, AIC Gijón'
 author = 'Alberto Castaño, Pablo González, Jaime Alonso, Pablo Pérez, Juan José del Coz'
-release = '0.1.1'
+release = '0.1.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
