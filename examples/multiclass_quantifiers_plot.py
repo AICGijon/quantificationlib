@@ -111,12 +111,12 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
 
     # Plot the truth data in the first subplot
     plot_line_prevalences(axs[0], total_prev_true, order="descending")
-    axs[0].set_title("TRUTH", fontsize=16)
+    axs[0].set_title("TRUTH", fontsize=22)
 
     # Loop through each method and plot the data in the corresponding subplot
     for i, name in enumerate(method_name):
         plot_line_prevalences(axs[i+1], total_prev_preds[i::len(method_name), :], order="descending")
-        axs[i+1].set_title("%s (AE=%.5f)" % (name,avg[i]), fontsize=16)
+        axs[i+1].set_title("%s (AE=%.5f)" % (name,avg[i]), fontsize=22)
 
     # Adjust the layout and display the plot
     plt.tight_layout()
@@ -129,19 +129,6 @@ def main(dataset, estimator_name, n_reps, n_bags, master_seed):
     plot_boxes(axs2[1], results, vert=False, y_title=None, x_title='MAE',
                labels=method_name, colors=list(mcolors.TABLEAU_COLORS))
     plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 if __name__ == '__main__':
      #main(dataset='./datasets/multiclass/iris.csv', estimator_name='RF',
